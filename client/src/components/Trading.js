@@ -104,7 +104,7 @@ const useStyles = makeStyles(theme => ({
       '&.dark': {
         backgroundColor: 'black !important',
         '& .MuiTypography-body2': {
-          color: 'white'
+          color: 'white !important'
         }
       },
 
@@ -356,7 +356,8 @@ export default function Trading(props) {
                   Price per share:
                 </Typography>
                 <Typography variant="body2" color="textPrimary" padding="20px" className={classes.price_display}>
-                  ${props.pricePerShare}
+                   {(props.fromToken === props.daiContractAddress || props.toToken === props.daiContractAddress) && ( '$')}
+                   {props.pricePerShare}
                 </Typography>                
               </div>
               )}

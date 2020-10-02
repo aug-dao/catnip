@@ -26,6 +26,9 @@ const useStyles = makeStyles(theme => ({
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
+  logo: {
+    margin: '15px 0 0 15px'
+  }
 }));
 
 const IOSSwitch = withStyles((theme) => ({
@@ -100,7 +103,7 @@ export default function PageHeader(props) {
     <Grid container spacing={0} >
         <Grid item xs={3}>
           <Box textAlign="left"> 
-              <div>
+              <div className={classes.logo}>
                 {
                   isContrast ? 
                     <img src={DarkLogo} width="100"/> : 
