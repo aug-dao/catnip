@@ -719,10 +719,10 @@ swapExactAmountOut = async () => {
         spotPrice = spotPrice / tokenMultiple;
         pricePerShare = toAmount / fromAmount;
         console.log("pricePerShare: ", pricePerShare)
-        spotPrice = spotPrice.toFixed(3);
-        pricePerShare = pricePerShare.toFixed(3);
         console.log("spotPrice: ", spotPrice)
         priceImpact = (spotPrice - pricePerShare) * 100 / spotPrice
+        spotPrice = spotPrice.toFixed(3);
+        pricePerShare = pricePerShare.toFixed(3);
        console.log("priceImpact: ", priceImpact)  
         if (priceImpact < 1) {
           this.setState({ priceImpactColor: "green" });
