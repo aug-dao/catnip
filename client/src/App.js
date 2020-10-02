@@ -8,6 +8,7 @@ import getWeb3 from "./getWeb3";
 import "./App.css";
 import Trading from './components/Trading.js';
 import PageHeader from './components/PageHeader.js';
+import {connect} from 'react-redux'
 const { abi } = require('./contracts/BPool.json');
 const BigNumber = require('bignumber.js');
 const unlimitedAllowance = new BigNumber(2).pow(256).minus(1);
@@ -771,32 +772,37 @@ swapExactAmountOut = async () => {
   };
 
   render() {
+
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
     return (
-      <div className="App">
-      <PageHeader/>
-      <Trading 
-        handleChange={this.handleChange}
-        fromAmount={this.state.fromAmount}
-        fromToken={this.state.fromToken}
-        toAmount={this.state.toAmount}
-        toToken={this.state.toToken}
-        fromBalance={this.state.fromBalance}  
-        toBalance={this.state.toBalance}        
-        yesContractAddress={this.state.yesContractAddress}
-        noContractAddress={this.state.noContractAddress}
-        daiContractAddress={this.state.daiContractAddress}
-        pricePerShare={this.state.pricePerShare}
-        maxProfit={this.state.maxProfit}
-        priceImpact={this.state.priceImpact}
-        priceImpactColor={this.state.priceImpactColor}
-        swapBranch={this.swapBranch}
-      />
+      <div className={`App ${this.props.isContrast ? "dark" : "light"}`}>
+        <PageHeader/>
+        <Trading 
+          handleChange={this.handleChange}
+          fromAmount={this.state.fromAmount}
+          fromToken={this.state.fromToken}
+          toAmount={this.state.toAmount}
+          toToken={this.state.toToken}
+          fromBalance={this.state.fromBalance}  
+          toBalance={this.state.toBalance}        
+          yesContractAddress={this.state.yesContractAddress}
+          noContractAddress={this.state.noContractAddress}
+          daiContractAddress={this.state.daiContractAddress}
+          pricePerShare={this.state.pricePerShare}
+          maxProfit={this.state.maxProfit}
+          priceImpact={this.state.priceImpact}
+          priceImpactColor={this.state.priceImpactColor}
+          swapBranch={this.swapBranch}
+        />
       </div>
     );
   };
 };
 
-export default App;
+function mapStateToProps(state) {
+  return { isContrast: state.settings.isContrast };
+}
+
+export default connect(mapStateToProps)(App);
