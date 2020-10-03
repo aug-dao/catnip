@@ -8,6 +8,10 @@
   background-color: black !important;
 }
 
+.App.light {
+  background-image: radial-gradient(50% 50% at 50% 50%, rgba(255, 0, 122, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
 .App-logo {
   height: 40vmin;
 }
