@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
 
     '& .MuiTypography-h6': {
-      color: '#6f6f6f',
+      color: '#545454',
       marginBottom: '15px',
       lineHeight: '23px'
     },
@@ -47,7 +47,12 @@ const useStyles = makeStyles(theme => ({
     },
 
     '& hr': {
-      border: '1px solid #f4f4f7'
+      '&.light': {
+        border: '1px solid #ccc'
+      },
+      '&.dark': {
+        border: '1px solid #5f5f5f'
+      }
     },
 
     '& .main_part': {
@@ -63,14 +68,14 @@ const useStyles = makeStyles(theme => ({
 
       '&.dark': {
         backgroundColor: 'rgb(33, 36, 41)',
-        color: 'white !important',
+        color: '#eaeaea !important',
 
         '& .MuiInputBase-root': {
           color: 'white !important'
         },
 
         '& .MuiTypography-h6': {
-          color: 'white'
+          color: '#eaeaea'
         }
       }
     },
@@ -78,12 +83,12 @@ const useStyles = makeStyles(theme => ({
     '& .info_logo': {
       '&.dark': {
         '& .MuiSvgIcon-root': {
-          color: 'white'
+          color: '#d8d8d8'
         }
       },
       '&.light': {
         '& .MuiSvgIcon-root': {
-          color: 'black'
+          color: '#888'
         }
       }
     },
@@ -104,14 +109,39 @@ const useStyles = makeStyles(theme => ({
       '&.dark': {
         backgroundColor: 'black !important',
         '& .MuiTypography-body2': {
-          color: 'white !important'
+          color: '#eaeaea'
         }
+      },
+
+      '&.light': {
+        backgroundColor: 'transparent !important', 
+        '& .MuiTypography-body2': {
+          color: 'rgba(0, 0, 0, 0.54)'
+        }        
       },
 
       '& .MuiTypography-body2': {
         '&.green': {
           color: '#25b525 !important'
         }
+      }
+    },
+
+    '& .input-item': {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: '20px',
+      padding: '15px',
+      borderRadius: '20px',
+      float: 'left',
+
+      '&.dark': {
+        border: '1px solid #5f5f5f',
+      },
+
+      '&.light': {
+        border: '1px solid rgb(247, 248, 250)',
       }
     }
   },
@@ -121,16 +151,6 @@ const useStyles = makeStyles(theme => ({
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
-  },
-  inputItem: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: '20px',
-    padding: '15px',
-    border: '1px solid rgb(247, 248, 250)',
-    borderRadius: '20px',
-    float: 'left'
   },
   displayFlex: {
     display: 'flex',
@@ -237,7 +257,7 @@ export default function Trading(props) {
                   </div>                  
                 </a> 
               </div>
-              <div className={classes.inputItem}>
+              <div className={isContrast ? 'input-item dark' : 'input-item light'}>
                 <div>
                   <Typography variant="body2" align="left" >
                       From
@@ -293,7 +313,7 @@ export default function Trading(props) {
                   }                  
                 </div>
               </div>
-              <div className={classes.inputItem}>
+              <div className={isContrast ? 'input-item dark' : 'input-item light'}>
                 <div>
                   <Typography variant="body2" align="left" >
                     To
@@ -389,7 +409,7 @@ export default function Trading(props) {
                       </Typography>
                     </div>                
                   </form>
-                  <hr/>
+                  <hr className={isContrast ? 'dark' : 'light'}/>
                 </Box>
               </Paper>
             )}
