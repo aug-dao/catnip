@@ -26,10 +26,10 @@ const useStyles = makeStyles((theme) => ({
       },
 
       '&.dark': {
-        color: '#00b2e2',
+        backgroundColor: '#00b2e2',
 
         '&:hover': {
-          color: '#00a2d2',
+          backgroundColor: '#00a2d2',
         },
       }
     }    

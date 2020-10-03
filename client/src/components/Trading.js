@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
 
     '& .MuiTypography-h6': {
-      color: '#6f6f6f',
+      color: '#545454',
       marginBottom: '15px',
       lineHeight: '23px'
     },
@@ -75,7 +75,7 @@ const useStyles = makeStyles(theme => ({
         },
 
         '& .MuiTypography-h6': {
-          color: 'white'
+          color: '#eaeaea'
         }
       }
     },
@@ -83,12 +83,12 @@ const useStyles = makeStyles(theme => ({
     '& .info_logo': {
       '&.dark': {
         '& .MuiSvgIcon-root': {
-          color: 'white'
+          color: '#d8d8d8'
         }
       },
       '&.light': {
         '& .MuiSvgIcon-root': {
-          color: 'black'
+          color: '#888'
         }
       }
     },
@@ -109,7 +109,7 @@ const useStyles = makeStyles(theme => ({
       '&.dark': {
         backgroundColor: 'black !important',
         '& .MuiTypography-body2': {
-          color: '#eaeaea !important'
+          color: '#eaeaea'
         }
       },
 
