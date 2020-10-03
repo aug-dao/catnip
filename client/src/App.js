@@ -9,6 +9,8 @@ import "./App.css";
 import Trading from './components/Trading.js';
 import PageHeader from './components/PageHeader.js';
 import {connect} from 'react-redux'
+import TImg from './assets/images/t.png';
+import NTImg from './assets/images/nt.png';
 const { abi } = require('./contracts/BPool.json');
 const BigNumber = require('bignumber.js');
 const unlimitedAllowance = new BigNumber(2).pow(256).minus(1);
@@ -33,6 +35,8 @@ const kovanContracts = {
 
 const contracts = (network === "mainnet") ? mainnetContracts : kovanContracts;
 
+
+
 //App controls the user interface
 class App extends Component {
   constructor(props) {
@@ -47,6 +51,7 @@ class App extends Component {
     yesContract: null,
     noContract: null,
     daiContract: null,
+    erc20Contract: null,
     pool: null,
     bpoolAddress: null,
     fromToken: "",
@@ -231,9 +236,10 @@ class App extends Component {
         toToken: this.state.yesContractAddress,
       });
         await this.updateBalances();
-        this.setState({ fromAmount: 100 })
+        this.setState({ fromAmount: 100 });
     // Set starting parameters
-    await this.calcToGivenFrom()
+    await this.calcToGivenFrom();
+    this.AddTokenToMetamask(this.state.yesContractAddress);
 
     } catch (error) {
       // Catch any errors for any of the above operations.
@@ -768,6 +774,64 @@ swapExactAmountOut = async () => {
         });
   
       }
+    }
+  };
+
+  // Add token to Metamask
+  AddTokenToMetamask = async (tokenAddress) => {
+    const { yesContractAddress } = this.state;
+    const { noContractAddress } = this.state;
+    const { yesContract } = this.state;
+    const { noContract } = this.state;    
+    let tokenSymbol;    
+    let decimals;
+    let tokenImage;
+    if (tokenAddress === yesContractAddress) {
+      tokenSymbol = await yesContract.methods.symbol().call();
+      decimals = await yesContract.methods.decimals().call();
+      tokenImage = TImg;
+    } else if (tokenAddress === noContractAddress) {
+      tokenSymbol = await noContract.methods.symbol().call();
+      decimals = await noContract.methods.decimals().call();
+      tokenImage = NTImg;
+    } else {
+      throw new Error("Cannot add this token to Metamask");
+    }
+    const provider = window.web3.currentProvider;
+    try {
+      provider.sendAsync(
+        {
+          method: "metamask_watchAsset",
+          params: {
+            type: "ERC20",
+            options: {
+              address: tokenAddress,
+              symbol: tokenSymbol,
+              decimals: decimals,
+              image: tokenImage,
+            },
+          },
+          id: Math.round(Math.random() * 100000),
+        },
+        (err, added) => {
+          console.log("provider returned", err, added);
+          if (err || "error" in added) {
+            this.openNotification(
+              "error",
+              "There was an error in adding the custom token in metamask",
+              ""
+            );
+            return;
+          }
+          console.log("Successfully added token to Metamask");
+        }
+      );
+  
+    } catch (error) {
+      alert(
+        `Add token to Metamask failed. Check console for details.`,
+      );
+      console.error(error);
     }
   };
 
