@@ -421,6 +421,8 @@ class App extends Component {
     console.log("SEAI maxPrice: ", maxPrice)
     console.log("SEAI typeof maxPrice: ", typeof maxPrice)
 
+    maxPrice = maxPrice.toFixed(18);
+
     toAmount = toAmount * 0.997;
     toAmount = web3.utils.toWei(toAmount.toString());
     maxPrice = web3.utils.toWei(maxPrice.toString())
@@ -511,6 +513,7 @@ swapExactAmountOut = async () => {
     toAmount = toAmount / tokenMultiple;
     maxPrice = maxPrice * tokenMultiple;
   }
+  maxPrice = maxPrice.toFixed(18);
   console.log("SEAO toAmount: ", toAmount)
   if (fromToken !== daiContractAddress) {
     fromAmount = fromAmount / tokenMultiple;
