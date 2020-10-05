@@ -70,6 +70,10 @@ class App extends Component {
     swapFee: 0,
     tokenMultiple: tokenMultiple,
     priceImpactColor: "black",
+    yesBalance: 0,
+    noBalance: 0,
+    yesPrice: 0,
+    noPrice: 0,
   };
 
   componentDidMount = async () => {
@@ -608,56 +612,49 @@ swapExactAmountOut = async () => {
     const { accounts } = this.state;
     const { tokenMultiple } = this.state;
 
+    var yesBalance = await yesContract.methods.balanceOf(accounts[0]).call();
+    yesBalance = web3.utils.fromWei(yesBalance);
+    yesBalance = Number(yesBalance);
+    yesBalance = tokenMultiple * yesBalance;
+    yesBalance = yesBalance.toFixed(2);
+    this.setState({ yesBalance: yesBalance });
+    console.log("yesBalance", yesBalance)
     if (fromToken === yesContractAddress) {
-      var trader1YesBalance = await yesContract.methods.balanceOf(accounts[0]).call();
-      trader1YesBalance = web3.utils.fromWei(trader1YesBalance)
-      trader1YesBalance = Number(trader1YesBalance);
-      trader1YesBalance = tokenMultiple * trader1YesBalance;
-      trader1YesBalance = trader1YesBalance.toFixed(2);
-      this.setState({ fromBalance: trader1YesBalance});
-    }
-    if (fromToken === noContractAddress) {
-      var trader1NoBalance = await noContract.methods.balanceOf(accounts[0]).call();
-      trader1NoBalance = web3.utils.fromWei(trader1NoBalance)
-      trader1NoBalance = Number(trader1NoBalance);
-      trader1NoBalance = tokenMultiple * trader1NoBalance;
-      trader1NoBalance = trader1NoBalance.toFixed(2);
-      this.setState({ fromBalance: trader1NoBalance});
-    }
-    if (fromToken === daiContractAddress) {
-      var trader1DaiBalance = await daiContract.methods.balanceOf(accounts[0]).call();
-      trader1DaiBalance = web3.utils.fromWei(trader1DaiBalance)
-      trader1DaiBalance = Number(trader1DaiBalance);
-      trader1DaiBalance = trader1DaiBalance.toFixed(2);
-      this.setState({ fromBalance: trader1DaiBalance})
+      this.setState({ fromBalance: yesBalance });
     }
     if (toToken === yesContractAddress) {
-      trader1YesBalance = await yesContract.methods.balanceOf(accounts[0]).call();
-      trader1YesBalance = web3.utils.fromWei(trader1YesBalance)
-      trader1YesBalance = Number(trader1YesBalance);
-      trader1YesBalance = tokenMultiple * trader1YesBalance;
-      trader1YesBalance = trader1YesBalance.toFixed(2);
-      this.setState({ toBalance: trader1YesBalance});
+      this.setState({ toBalance: yesBalance });
+    }
+
+    var noBalance = await noContract.methods.balanceOf(accounts[0]).call();
+    noBalance = web3.utils.fromWei(noBalance);
+    noBalance = Number(noBalance);
+    noBalance = tokenMultiple * noBalance;
+    noBalance = noBalance.toFixed(2);
+    this.setState({ noBalance: noBalance });
+    console.log("noBalance", noBalance)
+    if (fromToken === noContractAddress) {
+      this.setState({ fromBalance: noBalance });
     }
     if (toToken === noContractAddress) {
-      trader1NoBalance = await noContract.methods.balanceOf(accounts[0]).call();
-      trader1NoBalance = web3.utils.fromWei(trader1NoBalance)
-      trader1NoBalance = Number(trader1NoBalance);
-      trader1NoBalance = tokenMultiple * trader1NoBalance;
-      trader1NoBalance = trader1NoBalance.toFixed(2);
-      this.setState({ toBalance: trader1NoBalance});
+      this.setState({ toBalance: noBalance });
+    }
+
+    var daiBalance = await daiContract.methods.balanceOf(accounts[0]).call();
+    daiBalance = web3.utils.fromWei(daiBalance);
+    daiBalance = Number(daiBalance);
+    daiBalance = daiBalance.toFixed(2);
+    console.log("daiBalance", daiBalance)
+    if (fromToken === daiContractAddress) {
+      this.setState({ fromBalance: daiBalance });
     }
     if (toToken === daiContractAddress) {
-      console.log("hit fromToken === daiContractAddress")
-      trader1DaiBalance = await daiContract.methods.balanceOf(accounts[0]).call();
-      trader1DaiBalance = web3.utils.fromWei(trader1DaiBalance)
-      trader1DaiBalance = Number(trader1DaiBalance);
-      trader1DaiBalance = trader1DaiBalance.toFixed(2);
-      console.log("trader1DaiBalance for form: ", trader1DaiBalance)
-      this.setState({ toBalance: trader1DaiBalance})
+      this.setState({ toBalance: daiBalance });
     }
+
+
     this.setState({ fromAmount: 0, toAmount: 0, pricePerShare: 0, maxProfit: 0, priceImpact: 0})
-  };
+  }
 
   // This function calculates miscellaneous numbers after quote
   calcPriceProfitSlippage = async () => {
