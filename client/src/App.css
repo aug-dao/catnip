@@ -42,3 +42,16 @@
 .bold {
   font-weight: bold !important;
 }
+
+.loadAlert {
+  font-size: 120%;
+  text-align: center;
+  margin: 200px auto 0 auto;
+  width: 450px;
+}
+
+.loadAlert a {
+  text-decoration: none;
+  color: #03a9f4;
+  font-weight: bold;
+}

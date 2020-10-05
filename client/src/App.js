@@ -237,9 +237,6 @@ class App extends Component {
 
     } catch (error) {
       // Catch any errors for any of the above operations.
-      alert(
-        `Failed to load web3, accounts, contract or tokens. Check console for details.`,
-      );
       console.error(error);
     }
     
@@ -777,7 +774,7 @@ swapExactAmountOut = async () => {
   render() {
 
     if (!this.state.web3) {
-      return <div>Loading Web3, accounts, and contract...</div>;
+      return <div className="loadAlert">Please make sure to have <a href="https://metamask.io/" target="_blank">MetaMask</a> installed and connected to use catnip. meow.</div>;
     }
     return (
       <div className={`App ${this.props.isContrast ? "dark" : "light"}`}>
