@@ -457,7 +457,7 @@ class App extends Component {
         }
       } 
       fromAmount = web3.utils.toWei(fromAmount.toString());
-      var tx = await pool.methods.swapExactAmountIn(fromToken, fromAmount, toToken, toAmount, maxPrice).send({from: accounts[0], gas: 130000 });
+      var tx = await pool.methods.swapExactAmountIn(fromToken, fromAmount, toToken, toAmount, maxPrice).send({from: accounts[0], gas: 150000 });
       console.log("Successful transaction: ", tx.status)
       console.log("Checking balances after transaction ...")
       var trader1YesBalance = await yesContract.methods.balanceOf(accounts[0]).call();
@@ -558,7 +558,7 @@ swapExactAmountOut = async () => {
       }
     } 
     fromAmount = web3.utils.toWei(fromAmount.toString());
-    var tx2 = await pool.methods.swapExactAmountOut(fromToken, fromAmount, toToken, toAmount, maxPrice).send({from: accounts[0], gas: 130000 });
+    var tx2 = await pool.methods.swapExactAmountOut(fromToken, fromAmount, toToken, toAmount, maxPrice).send({from: accounts[0], gas: 150000 });
       console.log("Successful transaction: ", tx2.status)
       console.log("tx2: ", tx2)
       console.log("Checking balances after transaction ...")
