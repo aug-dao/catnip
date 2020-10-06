@@ -419,6 +419,7 @@ class App extends Component {
     console.log("SEAI typeof maxPrice: ", typeof maxPrice)
 
     maxPrice = maxPrice.toFixed(18);
+    toAmount = toAmount.toFixed(18);
 
     toAmount = toAmount * 0.997;
     toAmount = web3.utils.toWei(toAmount.toString());
@@ -456,6 +457,7 @@ class App extends Component {
           console.log("daiAllowance: ", daiAllowance);
         }
       } 
+      fromAmount = fromAmount.toFixed(18);
       fromAmount = web3.utils.toWei(fromAmount.toString());
       var tx = await pool.methods.swapExactAmountIn(fromToken, fromAmount, toToken, toAmount, maxPrice).send({from: accounts[0], gas: 150000 });
       console.log("Successful transaction: ", tx.status)
@@ -511,6 +513,7 @@ swapExactAmountOut = async () => {
     maxPrice = maxPrice * tokenMultiple;
   }
   maxPrice = maxPrice.toFixed(18);
+  toAmount = toAmount.toFixed(18);
   console.log("SEAO toAmount: ", toAmount)
   if (fromToken !== daiContractAddress) {
     fromAmount = fromAmount / tokenMultiple;
@@ -557,6 +560,7 @@ swapExactAmountOut = async () => {
         console.log("daiAllowance: ", daiAllowance);
       }
     } 
+    fromAmount = fromAmount.toFixed(18);
     fromAmount = web3.utils.toWei(fromAmount.toString());
     var tx2 = await pool.methods.swapExactAmountOut(fromToken, fromAmount, toToken, toAmount, maxPrice).send({from: accounts[0], gas: 150000 });
       console.log("Successful transaction: ", tx2.status)
