@@ -11,6 +11,8 @@ import PageHeader from './components/PageHeader.js';
 import {connect} from 'react-redux'
 import TImg from './assets/images/t.png';
 import NTImg from './assets/images/nt.png';
+const yesIcon = "https://cloudflare-ipfs.com/ipfs/QmRWo92JEL6s2ydN1fK2Q3KAX2rzBnTnfqkABFYHmA5EUT"
+const noIcon = "https://cloudflare-ipfs.com/ipfs/QmUVCPwVDCTzM2kBxejB85MS2m3KRjSW7f2w81pSr8ZvTL"
 const { abi } = require('./contracts/BPool.json');
 const BigNumber = require('bignumber.js');
 const unlimitedAllowance = new BigNumber(2).pow(256).minus(1);
@@ -243,7 +245,9 @@ class App extends Component {
         this.setState({ fromAmount: 100 });
     // Set starting parameters
     await this.calcToGivenFrom();
-    this.AddTokenToMetamask(this.state.yesContractAddress);
+    this.AddTokenToMetamask(this.state.noContractAddress);
+
+
 
     } catch (error) {
       // Catch any errors for any of the above operations.
@@ -611,6 +615,8 @@ swapExactAmountOut = async () => {
     const { daiContractAddress } = this.state;
     const { accounts } = this.state;
     const { tokenMultiple } = this.state;
+    const { pool } = this.state;
+
 
     var yesBalance = await yesContract.methods.balanceOf(accounts[0]).call();
     yesBalance = web3.utils.fromWei(yesBalance);
@@ -639,6 +645,25 @@ swapExactAmountOut = async () => {
     if (toToken === noContractAddress) {
       this.setState({ toBalance: noBalance });
     }
+
+    var yesPrice = await pool.methods.getSpotPrice(daiContractAddress, yesContractAddress).call();
+    yesPrice = web3.utils.fromWei(yesPrice)
+    yesPrice = Number(yesPrice);
+    yesPrice = yesPrice / tokenMultiple;
+    console.log("yesPrice", yesPrice);
+    yesPrice = yesPrice.toFixed(2);
+    console.log("yesPrice", yesPrice);
+    this.setState({ yesPrice: yesPrice });
+
+    var noPrice = await pool.methods.getSpotPrice(daiContractAddress, noContractAddress).call();
+    noPrice = web3.utils.fromWei(noPrice)
+    noPrice = Number(noPrice);
+    noPrice = noPrice / tokenMultiple;
+    console.log("noPrice", noPrice);
+    noPrice = noPrice.toFixed(2);
+    console.log("noPrice", noPrice);
+    this.setState({ noPrice: noPrice });
+
 
     var daiBalance = await daiContract.methods.balanceOf(accounts[0]).call();
     daiBalance = web3.utils.fromWei(daiBalance);
@@ -786,11 +811,11 @@ swapExactAmountOut = async () => {
     if (tokenAddress === yesContractAddress) {
       tokenSymbol = await yesContract.methods.symbol().call();
       decimals = await yesContract.methods.decimals().call();
-      tokenImage = TImg;
+      tokenImage = yesIcon;
     } else if (tokenAddress === noContractAddress) {
       tokenSymbol = await noContract.methods.symbol().call();
       decimals = await noContract.methods.decimals().call();
-      tokenImage = NTImg;
+      tokenImage = noIcon;
     } else {
       throw new Error("Cannot add this token to Metamask");
     }
@@ -856,6 +881,9 @@ swapExactAmountOut = async () => {
           priceImpact={this.state.priceImpact}
           priceImpactColor={this.state.priceImpactColor}
           swapBranch={this.swapBranch}
+          yesBalance={this.state.yesBalance}
+          noBalance={this.state.noBalance}
+          AddTokenToMetamask={this.AddTokenToMetamask}
         />
       </div>
     );
