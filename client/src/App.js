@@ -420,9 +420,10 @@ class App extends Component {
     console.log("SEAI typeof maxPrice: ", typeof maxPrice)
 
     maxPrice = maxPrice.toFixed(18);
-    toAmount = Number(toAmount).toFixed(18);
 
     toAmount = toAmount * 0.997;
+    toAmount = Number(toAmount).toFixed(18);
+
     toAmount = web3.utils.toWei(toAmount.toString());
     maxPrice = web3.utils.toWei(maxPrice.toString())
     var allowanceLimit = web3.utils.toWei(unlimitedAllowance.toFixed());
