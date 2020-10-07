@@ -8,6 +8,9 @@ import Typography from '@material-ui/core/Typography'
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import DarkLogo from '../assets/images/dark_logo.png';
+import TImg from '../assets/images/t.png';
+import NTImg from '../assets/images/nt.png';
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -26,6 +29,17 @@ const useStyles = makeStyles(theme => ({
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
+  holdingsDisplay: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: '20px',
+    padding: '15px',
+    border: '1px solid rgb(247, 248, 250)',
+    borderRadius: '20px',
+    float: 'left'
+  },
+
 }));
 
 const IOSSwitch = withStyles((theme) => ({
@@ -121,6 +135,32 @@ export default function PageHeader(props) {
               label="Toggle Dark Mode"
             />
           </Box>
+        </Grid>
+      </Grid>
+      <Grid container spacing={0} >
+        <Grid item xs={8}>
+        </Grid>
+        <Grid item xs={2}>
+        <div className={classes.holdingsDisplay}>
+              <div>
+              <Typography variant="body1" paddingRight="100px" textAlign="left">
+                    Holdings
+                  </Typography>
+                  <Typography variant="body1" paddingRight="100px" textAlign="left">
+                  <img src={TImg} /> {props.yesBalance} yTrump
+                  </Typography>
+
+              </div>
+          </div>
+        </Grid>
+        <Grid item xs={2}>
+        <div className={classes.holdingsDisplay}>
+              <div>
+              <Typography variant="body1"  padding="20px" textAlign="right">
+                    Current Price
+                  </Typography>
+          </div>
+          </div>
         </Grid>
       </Grid>
     </div>

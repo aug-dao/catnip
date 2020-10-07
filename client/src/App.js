@@ -245,10 +245,6 @@ class App extends Component {
         this.setState({ fromAmount: 100 });
     // Set starting parameters
     await this.calcToGivenFrom();
-    this.AddTokenToMetamask(this.state.noContractAddress);
-
-
-
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -864,7 +860,13 @@ swapExactAmountOut = async () => {
     }
     return (
       <div className={`App ${this.props.isContrast ? "dark" : "light"}`}>
-        <PageHeader/>
+        <PageHeader
+          yesBalance={this.state.yesBalance}        
+          noBalance={this.state.noBalance}  
+          yesPrice={this.state.yesPrice}        
+          noPrice={this.state.noPrice} 
+          AddTokenToMetamask={this.AddTokenToMetamask}       
+        />
         <Trading 
           handleChange={this.handleChange}
           fromAmount={this.state.fromAmount}
