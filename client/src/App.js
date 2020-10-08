@@ -9,10 +9,14 @@ import "./App.css";
 import Trading from './components/Trading.js';
 import PageHeader from './components/PageHeader.js';
 import {connect} from 'react-redux'
+import TImg from './assets/images/t.png';
+import NTImg from './assets/images/nt.png';
+const yesIcon = "https://cloudflare-ipfs.com/ipfs/QmRWo92JEL6s2ydN1fK2Q3KAX2rzBnTnfqkABFYHmA5EUT"
+const noIcon = "https://cloudflare-ipfs.com/ipfs/QmUVCPwVDCTzM2kBxejB85MS2m3KRjSW7f2w81pSr8ZvTL"
 const { abi } = require('./contracts/BPool.json');
 const BigNumber = require('bignumber.js');
 const unlimitedAllowance = new BigNumber(2).pow(256).minus(1);
-const network = "mainnet"; // set network as "ganache" or "kovan" or "mainnet"
+const network = "kovan"; // set network as "ganache" or "kovan" or "mainnet"
 const tokenMultiple = (network === "kovan") ? 100 : 1000;
 // if network is ganache, run truffle migrate --develop and disable metamask
 // if network is kovan, enable metamask, set to kovan network and open account with kovan eth
@@ -33,6 +37,8 @@ const kovanContracts = {
 
 const contracts = (network === "mainnet") ? mainnetContracts : kovanContracts;
 
+
+
 //App controls the user interface
 class App extends Component {
   constructor(props) {
@@ -47,6 +53,7 @@ class App extends Component {
     yesContract: null,
     noContract: null,
     daiContract: null,
+    erc20Contract: null,
     pool: null,
     bpoolAddress: null,
     fromToken: "",
@@ -65,6 +72,10 @@ class App extends Component {
     swapFee: 0,
     tokenMultiple: tokenMultiple,
     priceImpactColor: "black",
+    yesBalance: 0,
+    noBalance: 0,
+    yesPrice: 0,
+    noPrice: 0,
   };
 
   componentDidMount = async () => {
@@ -231,10 +242,9 @@ class App extends Component {
         toToken: this.state.yesContractAddress,
       });
         await this.updateBalances();
-        this.setState({ fromAmount: 100 })
+        this.setState({ fromAmount: 100 });
     // Set starting parameters
-    await this.calcToGivenFrom()
-
+    await this.calcToGivenFrom();
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -601,57 +611,71 @@ swapExactAmountOut = async () => {
     const { daiContractAddress } = this.state;
     const { accounts } = this.state;
     const { tokenMultiple } = this.state;
+    const { pool } = this.state;
 
+
+    var yesBalance = await yesContract.methods.balanceOf(accounts[0]).call();
+    yesBalance = web3.utils.fromWei(yesBalance);
+    yesBalance = Number(yesBalance);
+    yesBalance = tokenMultiple * yesBalance;
+    yesBalance = yesBalance.toFixed(2);
+    this.setState({ yesBalance: yesBalance });
+    console.log("yesBalance", yesBalance)
     if (fromToken === yesContractAddress) {
-      var trader1YesBalance = await yesContract.methods.balanceOf(accounts[0]).call();
-      trader1YesBalance = web3.utils.fromWei(trader1YesBalance)
-      trader1YesBalance = Number(trader1YesBalance);
-      trader1YesBalance = tokenMultiple * trader1YesBalance;
-      trader1YesBalance = trader1YesBalance.toFixed(2);
-      this.setState({ fromBalance: trader1YesBalance});
-    }
-    if (fromToken === noContractAddress) {
-      var trader1NoBalance = await noContract.methods.balanceOf(accounts[0]).call();
-      trader1NoBalance = web3.utils.fromWei(trader1NoBalance)
-      trader1NoBalance = Number(trader1NoBalance);
-      trader1NoBalance = tokenMultiple * trader1NoBalance;
-      trader1NoBalance = trader1NoBalance.toFixed(2);
-      this.setState({ fromBalance: trader1NoBalance});
-    }
-    if (fromToken === daiContractAddress) {
-      var trader1DaiBalance = await daiContract.methods.balanceOf(accounts[0]).call();
-      trader1DaiBalance = web3.utils.fromWei(trader1DaiBalance)
-      trader1DaiBalance = Number(trader1DaiBalance);
-      trader1DaiBalance = trader1DaiBalance.toFixed(2);
-      this.setState({ fromBalance: trader1DaiBalance})
+      this.setState({ fromBalance: yesBalance });
     }
     if (toToken === yesContractAddress) {
-      trader1YesBalance = await yesContract.methods.balanceOf(accounts[0]).call();
-      trader1YesBalance = web3.utils.fromWei(trader1YesBalance)
-      trader1YesBalance = Number(trader1YesBalance);
-      trader1YesBalance = tokenMultiple * trader1YesBalance;
-      trader1YesBalance = trader1YesBalance.toFixed(2);
-      this.setState({ toBalance: trader1YesBalance});
+      this.setState({ toBalance: yesBalance });
+    }
+
+    var noBalance = await noContract.methods.balanceOf(accounts[0]).call();
+    noBalance = web3.utils.fromWei(noBalance);
+    noBalance = Number(noBalance);
+    noBalance = tokenMultiple * noBalance;
+    noBalance = noBalance.toFixed(2);
+    this.setState({ noBalance: noBalance });
+    console.log("noBalance", noBalance)
+    if (fromToken === noContractAddress) {
+      this.setState({ fromBalance: noBalance });
     }
     if (toToken === noContractAddress) {
-      trader1NoBalance = await noContract.methods.balanceOf(accounts[0]).call();
-      trader1NoBalance = web3.utils.fromWei(trader1NoBalance)
-      trader1NoBalance = Number(trader1NoBalance);
-      trader1NoBalance = tokenMultiple * trader1NoBalance;
-      trader1NoBalance = trader1NoBalance.toFixed(2);
-      this.setState({ toBalance: trader1NoBalance});
+      this.setState({ toBalance: noBalance });
+    }
+
+    var yesPrice = await pool.methods.getSpotPrice(daiContractAddress, yesContractAddress).call();
+    yesPrice = web3.utils.fromWei(yesPrice)
+    yesPrice = Number(yesPrice);
+    yesPrice = yesPrice / tokenMultiple;
+    console.log("yesPrice", yesPrice);
+    yesPrice = yesPrice.toFixed(2);
+    console.log("yesPrice", yesPrice);
+    this.setState({ yesPrice: yesPrice });
+
+    var noPrice = await pool.methods.getSpotPrice(daiContractAddress, noContractAddress).call();
+    noPrice = web3.utils.fromWei(noPrice)
+    noPrice = Number(noPrice);
+    noPrice = noPrice / tokenMultiple;
+    console.log("noPrice", noPrice);
+    noPrice = noPrice.toFixed(2);
+    console.log("noPrice", noPrice);
+    this.setState({ noPrice: noPrice });
+
+
+    var daiBalance = await daiContract.methods.balanceOf(accounts[0]).call();
+    daiBalance = web3.utils.fromWei(daiBalance);
+    daiBalance = Number(daiBalance);
+    daiBalance = daiBalance.toFixed(2);
+    console.log("daiBalance", daiBalance)
+    if (fromToken === daiContractAddress) {
+      this.setState({ fromBalance: daiBalance });
     }
     if (toToken === daiContractAddress) {
-      console.log("hit fromToken === daiContractAddress")
-      trader1DaiBalance = await daiContract.methods.balanceOf(accounts[0]).call();
-      trader1DaiBalance = web3.utils.fromWei(trader1DaiBalance)
-      trader1DaiBalance = Number(trader1DaiBalance);
-      trader1DaiBalance = trader1DaiBalance.toFixed(2);
-      console.log("trader1DaiBalance for form: ", trader1DaiBalance)
-      this.setState({ toBalance: trader1DaiBalance})
+      this.setState({ toBalance: daiBalance });
     }
+
+
     this.setState({ fromAmount: 0, toAmount: 0, pricePerShare: 0, maxProfit: 0, priceImpact: 0})
-  };
+  }
 
   // This function calculates miscellaneous numbers after quote
   calcPriceProfitSlippage = async () => {
@@ -771,6 +795,90 @@ swapExactAmountOut = async () => {
     }
   };
 
+  //Add yes token to Metamask
+  AddYesTokenToMetamask = async () => {
+    console.log("hit add yes token")
+    try {
+      await this.AddTokenToMetamask(this.state.yesContractAddress)
+    } catch (error) {
+      alert(
+        `Add yes token to Metamask failed. Check console for details.`,
+      );
+      console.error(error);
+    }
+  }
+
+  //Add no token to Metamask
+  AddNoTokenToMetamask = async () => {
+    console.log("hit add no token")
+    try {
+      await this.AddTokenToMetamask(this.state.noContractAddress)
+    } catch (error) {
+      alert(
+        `Add no token to Metamask failed. Check console for details.`,
+      );
+      console.error(error);
+    }
+  }
+
+  // Add token to Metamask
+  AddTokenToMetamask = async (tokenAddress) => {
+    const { yesContractAddress } = this.state;
+    const { noContractAddress } = this.state;
+    const { yesContract } = this.state;
+    const { noContract } = this.state;    
+    let tokenSymbol;    
+    let decimals;
+    let tokenImage;
+    if (tokenAddress === yesContractAddress) {
+      tokenSymbol = await yesContract.methods.symbol().call();
+      decimals = await yesContract.methods.decimals().call();
+      tokenImage = yesIcon;
+    } else if (tokenAddress === noContractAddress) {
+      tokenSymbol = await noContract.methods.symbol().call();
+      decimals = await noContract.methods.decimals().call();
+      tokenImage = noIcon;
+    } else {
+      throw new Error("Cannot add this token to Metamask");
+    }
+    const provider = window.web3.currentProvider;
+    try {
+      provider.sendAsync(
+        {
+          method: "metamask_watchAsset",
+          params: {
+            type: "ERC20",
+            options: {
+              address: tokenAddress,
+              symbol: tokenSymbol,
+              decimals: decimals,
+              image: tokenImage,
+            },
+          },
+          id: Math.round(Math.random() * 100000),
+        },
+        (err, added) => {
+          console.log("provider returned", err, added);
+          if (err || "error" in added) {
+            this.openNotification(
+              "error",
+              "There was an error in adding the custom token in metamask",
+              ""
+            );
+            return;
+          }
+          console.log("Successfully added token to Metamask");
+        }
+      );
+  
+    } catch (error) {
+      alert(
+        `Add token to Metamask failed. Check console for details.`,
+      );
+      console.error(error);
+    }
+  };
+
   render() {
 
     if (!this.state.web3) {
@@ -778,7 +886,15 @@ swapExactAmountOut = async () => {
     }
     return (
       <div className={`App ${this.props.isContrast ? "dark" : "light"}`}>
-        <PageHeader/>
+        <PageHeader
+          yesBalance={this.state.yesBalance}        
+          noBalance={this.state.noBalance}  
+          yesPrice={this.state.yesPrice}        
+          noPrice={this.state.noPrice} 
+          AddYesTokenToMetamask={this.AddYesTokenToMetamask} 
+          AddNoTokenToMetamask={this.AddNoTokenToMetamask}       
+      
+        />
         <Trading 
           handleChange={this.handleChange}
           fromAmount={this.state.fromAmount}
@@ -795,6 +911,8 @@ swapExactAmountOut = async () => {
           priceImpact={this.state.priceImpact}
           priceImpactColor={this.state.priceImpactColor}
           swapBranch={this.swapBranch}
+          yesBalance={this.state.yesBalance}
+          noBalance={this.state.noBalance}
         />
       </div>
     );
