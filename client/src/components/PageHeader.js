@@ -12,7 +12,7 @@ import DarkLogo from '../assets/images/dark_logo.png';
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
-    marginBottom: '-15px',
+    marginBottom: '15px',
 
     '& .MuiSwitch-track': {
       border: 'none',

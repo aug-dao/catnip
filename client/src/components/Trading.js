@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
     "& .main_part": {
       padding: "30px 16px 20px",
       textAlign: "center",
-      marginBottom: "30px",
+      marginBottom: "15px",
       borderRadius: "30px",
 
       "&.light": {
@@ -197,6 +197,18 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "2px",
     marginLeft: "18px",
   },
+  flip: {
+    clear: 'both',
+    marginBottom: '12px',
+    cursor: 'pointer'
+  },
+  balance_display: {
+    width: '110px'
+  },
+  max_icon: {
+    marginTop: '19px',
+    cursor: 'pointer'
+    }
 }));
 
 const iconStyles = {
@@ -295,10 +307,10 @@ export default function Trading(props) {
                   />
                 </div>
 
-                <img src={maxIcon} alt="" onClick={props.getMax} />
+                <img className={classes.max_icon} src={maxIcon} alt="" onClick={props.getMax} />
 
                 <div>
-                  <Typography variant="body2" align="right" padding="20px">
+                  <Typography className={classes.balance_display} variant="body2" >
                     Balance: {props.fromBalance}
                   </Typography>
                   {isContrast ? (
@@ -318,13 +330,13 @@ export default function Trading(props) {
                           value={props.yesContractAddress}
                           className={classes.menu_item}
                         >
-                          <img src={TImg} alt="" /> <span>YES TRUMP</span>
+                          <img src={TImg} alt="" /> <span>YES</span>
                         </MenuItem>
                         <MenuItem
                           value={props.noContractAddress}
                           className={classes.menu_item}
                         >
-                          <img src={NTImg} alt="" /> <span>NO TRUMP</span>
+                          <img src={NTImg} alt="" /> <span>NO</span>
                         </MenuItem>
                         <MenuItem
                           value={props.daiContractAddress}
@@ -350,13 +362,13 @@ export default function Trading(props) {
                         value={props.yesContractAddress}
                         className={classes.menu_item}
                       >
-                        <img src={TImg} alt="" /> <span>YES TRUMP</span>
+                        <img src={TImg} alt="" /> <span>YES</span>
                       </MenuItem>
                       <MenuItem
                         value={props.noContractAddress}
                         className={classes.menu_item}
                       >
-                        <img src={NTImg} alt="" /> <span>NO TRUMP</span>
+                        <img src={NTImg} alt="" /> <span>NO</span>
                       </MenuItem>
                       <MenuItem
                         value={props.daiContractAddress}
@@ -366,12 +378,12 @@ export default function Trading(props) {
                       </MenuItem>
                     </Select>
                   )}
-                  <div class="flip" onClick={props.reversePair}>
-                    <img src={flipUpIcon} alt="hiiiii" />
-                    <img src={flipDownIcon} alt="hiiiii" />
-                  </div>
                 </div>
               </div>
+              <div className={classes.flip} onClick={props.reversePair}>
+                    <img src={flipUpIcon} alt="up arrow" />
+                    <img src={flipDownIcon} alt="down arrow" />
+                  </div>
 
               <div
                 className={isContrast ? "input-item dark" : "input-item light"}
@@ -390,7 +402,7 @@ export default function Trading(props) {
                   />
                 </div>
                 <div>
-                  <Typography variant="body2" align="right" padding="20px">
+                  <Typography className={classes.balance_display} variant="body2"  >
                     Balance: {props.toBalance}
                   </Typography>
                   {isContrast ? (
@@ -410,13 +422,13 @@ export default function Trading(props) {
                           value={props.yesContractAddress}
                           className={classes.menu_item}
                         >
-                          <img src={TImg} alt="" /> <span>YES TRUMP</span>
+                          <img src={TImg} alt="" /> <span>YES</span>
                         </MenuItem>
                         <MenuItem
                           value={props.noContractAddress}
                           className={classes.menu_item}
                         >
-                          <img src={NTImg} alt="" /> <span>NO TRUMP</span>
+                          <img src={NTImg} alt="" /> <span>NO</span>
                         </MenuItem>
                         <MenuItem
                           value={props.daiContractAddress}
@@ -442,13 +454,13 @@ export default function Trading(props) {
                         value={props.yesContractAddress}
                         className={classes.menu_item}
                       >
-                        <img src={TImg} alt="" /> <span>YES TRUMP</span>
+                        <img src={TImg} alt="" /> <span>YES</span>
                       </MenuItem>
                       <MenuItem
                         value={props.noContractAddress}
                         className={classes.menu_item}
                       >
-                        <img src={NTImg} alt="" /> <span>NO TRUMP</span>
+                        <img src={NTImg} alt="" /> <span>NO</span>
                       </MenuItem>
                       <MenuItem
                         value={props.daiContractAddress}

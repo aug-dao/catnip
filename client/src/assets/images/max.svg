@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="44" height="19" viewBox="0 0 44 19">
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="20" viewBox="0 0 44 19">
   <g id="Group_685" data-name="Group 685" transform="translate(0.063 0.423)">
     <rect id="Rectangle_31" data-name="Rectangle 31" width="44" height="19" rx="3" transform="translate(-0.063 -0.423)" fill="#d9d7d1"/>
-    <text id="MAX" transform="translate(21.938 13.577)" fill="#0e0b0d" font-size="12" font-family="Montserrat-SemiBold, Montserrat" font-weight="600" letter-spacing="0.013em"><tspan x="-14.322" y="0">MAX</tspan></text>
+    <text id="MAX" transform="translate(21.938 13.577)" fill="#0e0b0d" font-size="12" font-family="sans-serif" font-weight="400" letter-spacing="0.013em"><tspan x="-14.322" y="0">MAX</tspan></text>
   </g>
 </svg>

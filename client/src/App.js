@@ -389,15 +389,18 @@ class App extends Component {
     }
   };
   getMax = async () => {
-    const { web3, accounts, erc20Instance, fromToken } = this.state;
+    const { web3, accounts, erc20Instance, fromToken, daiContractAddress } = this.state;
     console.log(fromToken);
     erc20Instance.options.address = fromToken;
 
     let balanceInWei = await erc20Instance.methods
       .balanceOf(accounts[0])
       .call();
-
-    this.setState({ fromAmount: web3.utils.fromWei(balanceInWei) });
+    
+    let maxFromAmount = web3.utils.fromWei(balanceInWei)
+    maxFromAmount = (fromToken !== daiContractAddress) ? maxFromAmount * tokenMultiple : maxFromAmount;
+    maxFromAmount = Number(maxFromAmount).toFixed(2)
+    this.setState({ fromAmount: maxFromAmount });
     console.log("max:" + web3.utils.fromWei(balanceInWei));
 
     await this.calcToGivenFrom();
