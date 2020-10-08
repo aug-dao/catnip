@@ -187,7 +187,7 @@ export default function PageHeader(props) {
         <Grid item xs={8}></Grid>
         <Grid item xs={3}>
           {
-            props.yesBalance != 0 && props.noBalance != 0 ? 
+            props.yesBalance != 0 || props.noBalance != 0 ? 
             <div className="holding-status">
               <div className="flex-item">
                 <Typography variant="h6"  textAlign="center" fontWeight="fontWeightBold" padding="0px" >
@@ -197,30 +197,35 @@ export default function PageHeader(props) {
                   Price
                 </Typography>
               </div>
-              <div className="flex-item">
+              {props.yesBalance != 0 &&
                 <div className="flex-item">
-                  <img src={TImg} display='inline'/>
-                  <div>
-                    <Typography>{props.yesBalance} <span className="yes">y</span>Trump</Typography>
-                    <Link onClick={props.AddYesTokenToMetamask} component="button" variant="body2"> Show in wallet</Link>
+                  <div className="flex-item">
+                    <img src={TImg} display='inline'/>
+                    <div>
+                      <Typography>{props.yesBalance} <span className="yes">y</span>Trump</Typography>
+                      <Link onClick={props.AddYesTokenToMetamask} component="button" variant="body2"> Show in wallet</Link>
+                    </div>
                   </div>
+                  <Typography variant="body2" textAlign="center" padding="20px">
+                    ${props.yesPrice}
+                  </Typography>
                 </div>
-                <Typography variant="body2" textAlign="center" padding="20px">
-                  ${props.yesPrice}
-                </Typography>
-              </div>
-              <div className="flex-item last">
-                <div className="flex-item">
-                  <img src={NTImg} display='inline'/>
-                  <div>
-                    <Typography>{props.noBalance} <span className="no">n</span>Trump</Typography>
-                    <Link onClick={props.AddNoTokenToMetamask} component="button" variant="body2"> Show in wallet</Link>
+              }
+              {
+                props.noBalance != 0 &&
+                  <div className="flex-item last">
+                    <div className="flex-item">
+                      <img src={NTImg} display='inline'/>
+                      <div>
+                        <Typography>{props.noBalance} <span className="no">n</span>Trump</Typography>
+                        <Link onClick={props.AddNoTokenToMetamask} component="button" variant="body2"> Show in wallet</Link>
+                      </div>
+                    </div>
+                    <Typography variant="body2" textAlign="center" marginTop="1150px" >
+                      ${props.noPrice}
+                    </Typography>
                   </div>
-                </div>
-                <Typography variant="body2" textAlign="center" marginTop="1150px" >
-                  ${props.noPrice}
-                </Typography>
-              </div>
+              }              
             </div> : ''
           }          
          </Grid>
