@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography'
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import DarkLogo from '../assets/images/dark_logo.png';
+import discordIcon from '../assets/images/discordIcon.png';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -28,6 +29,12 @@ const useStyles = makeStyles(theme => ({
   },
   logo: {
     margin: '15px 0 0 15px'
+  },
+  discord_icon: {
+    margin: '15px 20px 0 0'
+  },
+  darkmode_toggle: {
+    marginTop: '-22px'
   }
 }));
 
@@ -119,9 +126,10 @@ export default function PageHeader(props) {
         </Grid>
         <Grid item xs={4}>
           <Box fontWeight="fontWeightBold" textAlign="right">
-            <FormControlLabel
+            <a href="https://discord.gg/a4hpuwd" target="_blank"><img className={classes.discord_icon} src={discordIcon} width="34"/></a>
+            <FormControlLabel className={classes.darkmode_toggle}
               control={<IOSSwitch checked={isContrast} onChange={handleChange} />}
-              label="Toggle Dark Mode"
+              label="Dark Mode"
             />
           </Box>
         </Grid>

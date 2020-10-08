@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
     "& .main_part": {
       padding: "30px 16px 20px",
       textAlign: "center",
-      marginBottom: "15px",
+      marginBottom: "10px",
       borderRadius: "30px",
 
       "&.light": {
