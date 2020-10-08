@@ -8,8 +8,10 @@ import Typography from '@material-ui/core/Typography'
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import DarkLogo from '../assets/images/dark_logo.png';
+import Link from '@material-ui/core/Link';
 import TImg from '../assets/images/t.png';
 import NTImg from '../assets/images/nt.png';
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -31,13 +33,14 @@ const useStyles = makeStyles(theme => ({
   },
   holdingsDisplay: {
     display: 'flex',
-    alignItems: 'center',
+    //alignItems: 'left',
     justifyContent: 'space-between',
     marginBottom: '20px',
-    padding: '15px',
+    //padding: '15px',
     border: '1px solid rgb(247, 248, 250)',
     borderRadius: '20px',
-    float: 'left'
+    float: 'left',
+    verticalAlign: 'top'
   },
 
 }));
@@ -139,29 +142,51 @@ export default function PageHeader(props) {
       </Grid>
       <Grid container spacing={0} >
         <Grid item xs={8}>
-        </Grid>
-        <Grid item xs={2}>
-        <div className={classes.holdingsDisplay}>
+       </Grid>
+        <Grid item xs={1.5}>
+        <Box  >
+            <div className={classes.holdingsDisplay}>
               <div>
-              <Typography variant="body1" paddingRight="100px" textAlign="left">
-                    Holdings
-                  </Typography>
-                  <Typography variant="body1" paddingRight="100px" textAlign="left">
-                  <img src={TImg} /> {props.yesBalance} yTrump
-                  </Typography>
-
+                <Typography variant="h6"  textAlign="center" fontWeight="fontWeightBold" padding="20px" >
+                  Holdings
+                </Typography>
+                <Typography variant="body2"  textAlign="center" >
+                <img src={TImg} width="15" height="15" display='inline'/>yTrump {props.yesBalance} 
+                </Typography> 
+                <Typography>
+                <Link onClick={props.AddYesTokenToMetamask} component="button" variant="body2"> Show in wallet
+                </Link>
+                </Typography>               
+                <Typography variant="body2"  textAlign="center" >
+                <img src={NTImg} width="15" height="15" display='inline'/>nTrump {props.noBalance} 
+                </Typography> 
+                <Typography>
+                <Link onClick={props.AddNoTokenToMetamask} component="button" variant="body2"> Show in wallet
+                </Link>
+                </Typography>               
               </div>
-          </div>
-        </Grid>
-        <Grid item xs={2}>
-        <div className={classes.holdingsDisplay}>
-              <div>
-              <Typography variant="body1"  padding="20px" textAlign="right">
-                    Current Price
+            </div> 
+          </Box>
+         </Grid>
+        <Grid item xs={1}>
+          <box>
+        <div>
+                <Typography variant="h6"  textAlign="center" padding="20px">
+                    Price
+                    </Typography>                
+                  <Typography variant="body2" textAlign="center" padding="20px">
+                   ${props.yesPrice}
                   </Typography>
-          </div>
-          </div>
+                  <Box mt={3}>
+                  <Typography variant="body2" textAlign="center" marginTop="1150px" >
+                   ${props.noPrice}
+                  </Typography>
+                  </Box>
+
+              </div> 
+          </box>
         </Grid>
+
       </Grid>
     </div>
   );

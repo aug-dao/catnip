@@ -795,6 +795,32 @@ swapExactAmountOut = async () => {
     }
   };
 
+  //Add yes token to Metamask
+  AddYesTokenToMetamask = async () => {
+    console.log("hit add yes token")
+    try {
+      await this.AddTokenToMetamask(this.state.yesContractAddress)
+    } catch (error) {
+      alert(
+        `Add yes token to Metamask failed. Check console for details.`,
+      );
+      console.error(error);
+    }
+  }
+
+  //Add no token to Metamask
+  AddNoTokenToMetamask = async () => {
+    console.log("hit add no token")
+    try {
+      await this.AddTokenToMetamask(this.state.noContractAddress)
+    } catch (error) {
+      alert(
+        `Add no token to Metamask failed. Check console for details.`,
+      );
+      console.error(error);
+    }
+  }
+
   // Add token to Metamask
   AddTokenToMetamask = async (tokenAddress) => {
     const { yesContractAddress } = this.state;
@@ -865,7 +891,9 @@ swapExactAmountOut = async () => {
           noBalance={this.state.noBalance}  
           yesPrice={this.state.yesPrice}        
           noPrice={this.state.noPrice} 
-          AddTokenToMetamask={this.AddTokenToMetamask}       
+          AddYesTokenToMetamask={this.AddYesTokenToMetamask} 
+          AddNoTokenToMetamask={this.AddNoTokenToMetamask}       
+      
         />
         <Trading 
           handleChange={this.handleChange}
@@ -885,7 +913,6 @@ swapExactAmountOut = async () => {
           swapBranch={this.swapBranch}
           yesBalance={this.state.yesBalance}
           noBalance={this.state.noBalance}
-          AddTokenToMetamask={this.AddTokenToMetamask}
         />
       </div>
     );
