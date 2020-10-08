@@ -147,7 +147,7 @@ export default function PageHeader(props) {
         <Box  >
             <div className={classes.holdingsDisplay}>
               <div>
-                <Typography variant="h6"  textAlign="center" fontWeight="fontWeightBold" padding="20px" >
+                <Typography variant="h6"  textAlign="center" fontWeight="fontWeightBold" padding="0px" >
                   Holdings
                 </Typography>
                 <Typography variant="body2"  textAlign="center" >
