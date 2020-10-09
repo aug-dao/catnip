@@ -9,13 +9,23 @@ import "./App.css";
 import Trading from "./components/Trading.js";
 import PageHeader from "./components/PageHeader.js";
 import { connect } from "react-redux";
+//notification
+import { notification } from "antd";
+import "antd/dist/antd.css";
 const { abi } = require("./contracts/BPool.json");
 const BigNumber = require("bignumber.js");
 const unlimitedAllowance = new BigNumber(2).pow(256).minus(1);
-const network = "mainnet"; // set network as "ganache" or "kovan" or "mainnet"
+const network = "kovan"; // set network as "ganache" or "kovan" or "mainnet"
 const tokenMultiple = network === "kovan" ? 100 : 1000;
 // if network is ganache, run truffle migrate --develop and disable metamask
 // if network is kovan, enable metamask, set to kovan network and open account with kovan eth
+const kovanEtherscanPrefix = "https://kovan.etherscan.io/tx/";
+const mainnetEtherscanPrefix = "https://etherscan.io/tx/";
+const etherscanPrefix =
+  network === "kovan" ? kovanEtherscanPrefix : mainnetEtherscanPrefix;
+// notification.config({
+//   duration: null,
+// });
 
 const mainnetContracts = {
   yes: "0x3af375d9f77ddd4f16f86a5d51a9386b7b4493fa",
@@ -389,17 +399,26 @@ class App extends Component {
     }
   };
   getMax = async () => {
-    const { web3, accounts, erc20Instance, fromToken, daiContractAddress } = this.state;
+    const {
+      web3,
+      accounts,
+      erc20Instance,
+      fromToken,
+      daiContractAddress,
+    } = this.state;
     console.log(fromToken);
     erc20Instance.options.address = fromToken;
 
     let balanceInWei = await erc20Instance.methods
       .balanceOf(accounts[0])
       .call();
-    
-    let maxFromAmount = web3.utils.fromWei(balanceInWei)
-    maxFromAmount = (fromToken !== daiContractAddress) ? maxFromAmount * tokenMultiple : maxFromAmount;
-    maxFromAmount = Number(maxFromAmount).toFixed(2)
+
+    let maxFromAmount = web3.utils.fromWei(balanceInWei);
+    maxFromAmount =
+      fromToken !== daiContractAddress
+        ? maxFromAmount * tokenMultiple
+        : maxFromAmount;
+    maxFromAmount = Number(maxFromAmount).toFixed(2);
     this.setState({ fromAmount: maxFromAmount });
     console.log("max:" + web3.utils.fromWei(balanceInWei));
 
@@ -528,6 +547,7 @@ class App extends Component {
     var { fromAmount } = this.state;
     var { toAmount } = this.state;
     var { tokenMultiple } = this.state;
+    var { erc20Instance } = this.state;
 
     console.log("SEAI toAmount: ", toAmount);
     if (fromToken !== daiContractAddress) {
@@ -550,64 +570,97 @@ class App extends Component {
 
     toAmount = web3.utils.toWei(toAmount.toString());
     maxPrice = web3.utils.toWei(maxPrice.toString());
-    var allowanceLimit = web3.utils.toWei(unlimitedAllowance.toFixed());
+    var allowanceLimit = unlimitedAllowance.toFixed();
 
     try {
       //approve fromAmount of fromToken for spending by Trader1
-      if (fromToken === noContractAddress) {
-        var noAllowance = await noContract.methods
-          .allowance(accounts[0], bpoolAddress)
-          .call();
-        noAllowance = web3.utils.fromWei(noAllowance);
-        if (Number(noAllowance) < Number(fromAmount)) {
-          await noContract.methods
-            .approve(bpoolAddress, allowanceLimit)
-            .send({ from: accounts[0], gas: 46000 });
-          noAllowance = await noContract.methods
-            .allowance(accounts[0], bpoolAddress)
-            .call();
-          console.log("SEAI noAllowance after approval: ", noAllowance);
-        }
-      } else if (fromToken === yesContractAddress) {
-        var yesAllowance = await yesContract.methods
-          .allowance(accounts[0], bpoolAddress)
-          .call();
-        yesAllowance = web3.utils.fromWei(yesAllowance);
-        console.log("SEAI yesAllowance: ", yesAllowance);
-        console.log("SEAI fromAmount: ", fromAmount);
-        if (Number(yesAllowance) < Number(fromAmount)) {
-          await yesContract.methods
-            .approve(bpoolAddress, allowanceLimit)
-            .send({ from: accounts[0], gas: 46000 });
-          yesAllowance = await yesContract.methods
-            .allowance(accounts[0], bpoolAddress)
-            .call();
-          console.log("yesAllowance: ", yesAllowance);
-        }
-      } else if (fromToken === daiContractAddress) {
-        var daiAllowance = await daiContract.methods
-          .allowance(accounts[0], bpoolAddress)
-          .call();
-        daiAllowance = web3.utils.fromWei(daiAllowance);
 
-        if (Number(daiAllowance) < Number(fromAmount)) {
-          console.log("hit dai approve function");
-          await daiContract.methods
-            .approve(bpoolAddress, allowanceLimit)
-            .send({ from: accounts[0], gas: 46000 });
-          daiAllowance = await daiContract.methods
-            .allowance(accounts[0], bpoolAddress)
-            .call();
-          console.log("daiAllowance: ", daiAllowance);
-        }
+      //here we are just going to do the same thing but without the if conditions
+      erc20Instance.options.address = fromToken;
+
+      var allowance = await erc20Instance.methods
+        .allowance(accounts[0], bpoolAddress)
+        .call();
+      allowance = web3.utils.fromWei(allowance);
+      console.log("allowance Before:" + allowance.toString());
+      if (Number(allowance) < Number(fromAmount)) {
+        await erc20Instance.methods
+          .approve(bpoolAddress, allowanceLimit)
+          .send({ from: accounts[0], gas: 46000 })
+          .on("transactionHash", (transactionHash) => {
+            notification.info({
+              description: "Aprove Pending",
+              message: "doing aprove",
+            });
+            console.log(transactionHash);
+          })
+          .on("receipt", function (receipt) {
+            notification.success({
+              message: "Approve Done",
+            });
+          })
+          .on("error", function (error) {
+            if (error.message.includes("User denied transaction signature")) {
+              notification.error({
+                message: "Transaction Rejected",
+                // description: "",
+              });
+            } else {
+              notification.error({
+                message: "There was an error in executing the transaction",
+                // description: "",
+              });
+            }
+          });
+        // this.onError(methodCall);
+        allowance = await erc20Instance.methods
+          .allowance(accounts[0], bpoolAddress)
+          .call();
+
+        console.log("Allowance of fromToken after approval: ", allowance);
       }
 
       fromAmount = web3.utils.toWei(fromAmount.toString());
-      var tx = await pool.methods
+      await pool.methods
         .swapExactAmountIn(fromToken, fromAmount, toToken, toAmount, maxPrice)
-        .send({ from: accounts[0], gas: 150000 });
-      console.log("Successful transaction: ", tx.status);
-      console.log("Checking balances after transaction ...");
+        .send({ from: accounts[0], gas: 150000 })
+        .on("transactionHash", (transactionHash) => {
+          notification.info({
+            message: "Transaction Pending",
+            description: this.getEtherscanLink(transactionHash),
+          });
+        })
+        .on("receipt", function (receipt) {
+          // console.log("receipt", receipt);
+          notification.success({
+            message: "swap done",
+            //maybe I am missing something but using this.getEtherscanLink(receipt.transactionHash) is not working
+            description: (
+              <a
+                href={etherscanPrefix + receipt.transactionHash}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                See on Etherscan
+              </a>
+            ),
+          });
+        })
+        .on("error", function (error) {
+          if (error.message.includes("User denied transaction signature")) {
+            notification.error({
+              message: "Transaction Rejected",
+              // description: "",
+            });
+          } else {
+            notification.error({
+              message: "There was an error in executing the transaction",
+              // description: "",
+            });
+          }
+        });
+      // console.log("Successful transaction: ", tx.status);
+      // console.log("Checking balances after transaction ...");
       var trader1YesBalance = await yesContract.methods
         .balanceOf(accounts[0])
         .call();
@@ -658,6 +711,7 @@ class App extends Component {
     var { fromAmount } = this.state;
     var { toAmount } = this.state;
     var { tokenMultiple } = this.state;
+    var { erc20Instance } = this.state;
 
     var maxPrice = 2 * (toAmount / fromAmount);
 
@@ -678,65 +732,99 @@ class App extends Component {
 
     toAmount = web3.utils.toWei(toAmount.toString());
     maxPrice = web3.utils.toWei(maxPrice.toString());
-    var allowanceLimit = web3.utils.toWei(unlimitedAllowance.toFixed());
+    var allowanceLimit = unlimitedAllowance.toFixed();
 
     try {
       //approve fromAmount of fromToken for spending by Trader1
 
-      if (fromToken === noContractAddress) {
-        var noAllowance = await noContract.methods
+      //here we are just going to do the same thing but without the if conditions
+      erc20Instance.options.address = fromToken;
+
+      var allowance = await erc20Instance.methods
+        .allowance(accounts[0], bpoolAddress)
+        .call();
+      allowance = web3.utils.fromWei(allowance);
+      console.log("allowance Before:" + allowance.toString());
+      if (Number(allowance) < Number(fromAmount)) {
+        await erc20Instance.methods
+          .approve(bpoolAddress, allowanceLimit)
+          .send({ from: accounts[0], gas: 46000 })
+          .on("transactionHash", (transactionHash) => {
+            notification.info({
+              description: "Aprove Pending",
+              message: "doing aprove",
+            });
+            console.log(transactionHash);
+          })
+          .on("receipt", function (receipt) {
+            notification.success({
+              message: "Approve Done",
+            });
+          })
+          .on("error", function (error) {
+            if (error.message.includes("User denied transaction signature")) {
+              notification.error({
+                message: "Transaction Rejected",
+                // description: "",
+              });
+            } else {
+              notification.error({
+                message: "There was an error in executing the transaction",
+                // description: "",
+              });
+            }
+          });
+        // this.onError(methodCall);
+        allowance = await erc20Instance.methods
           .allowance(accounts[0], bpoolAddress)
           .call();
-        noAllowance = web3.utils.fromWei(noAllowance);
-        console.log("SEAO noAllowance: ", noAllowance);
-        console.log("SEAO fromAmount: ", fromAmount);
-        if (Number(noAllowance) < Number(fromAmount)) {
-          await noContract.methods
-            .approve(bpoolAddress, allowanceLimit)
-            .send({ from: accounts[0], gas: 46000 });
-          noAllowance = await noContract.methods
-            .allowance(accounts[0], bpoolAddress)
-            .call();
-          console.log("SEAO noAllowance after approval: ", noAllowance);
-        }
-      } else if (fromToken === yesContractAddress) {
-        var yesAllowance = await yesContract.methods
-          .allowance(accounts[0], bpoolAddress)
-          .call();
-        yesAllowance = web3.utils.fromWei(yesAllowance);
-        console.log("SEAO yesAllowance: ", yesAllowance);
-        console.log("SEAO fromAmount: ", fromAmount);
-        if (Number(yesAllowance) < Number(fromAmount)) {
-          await yesContract.methods
-            .approve(bpoolAddress, allowanceLimit)
-            .send({ from: accounts[0], gas: 46000 });
-          yesAllowance = await yesContract.methods
-            .allowance(accounts[0], bpoolAddress)
-            .call();
-          console.log("yesAllowance: ", yesAllowance);
-        }
-      } else if (fromToken === daiContractAddress) {
-        var daiAllowance = await daiContract.methods
-          .allowance(accounts[0], bpoolAddress)
-          .call();
-        daiAllowance = web3.utils.fromWei(daiAllowance);
-        if (Number(daiAllowance) < Number(fromAmount)) {
-          await daiContract.methods
-            .approve(bpoolAddress, allowanceLimit)
-            .send({ from: accounts[0], gas: 46000 });
-          daiAllowance = await daiContract.methods
-            .allowance(accounts[0], bpoolAddress)
-            .call();
-          console.log("daiAllowance: ", daiAllowance);
-        }
+
+        console.log("Allowance of fromToken after approval: ", allowance);
       }
+
       fromAmount = Number(fromAmount).toFixed(18);
       fromAmount = web3.utils.toWei(fromAmount.toString());
-      var tx2 = await pool.methods
+
+      await pool.methods
         .swapExactAmountOut(fromToken, fromAmount, toToken, toAmount, maxPrice)
-        .send({ from: accounts[0], gas: 150000 });
-      console.log("Successful transaction: ", tx2.status);
-      console.log("tx2: ", tx2);
+        .send({ from: accounts[0], gas: 150000 })
+        .on("transactionHash", (transactionHash) => {
+          notification.info({
+            message: "Transaction Pending",
+            description: this.getEtherscanLink(transactionHash),
+          });
+        })
+        .on("receipt", function (receipt) {
+          // console.log("receipt", receipt);
+          notification.success({
+            message: "swap done",
+            //maybe I am missing something but using this.getEtherscanLink(receipt.transactionHash) is not working
+            description: (
+              <a
+                href={etherscanPrefix + receipt.transactionHash}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                See on Etherscan
+              </a>
+            ),
+          });
+        })
+        .on("error", function (error) {
+          if (error.message.includes("User denied transaction signature")) {
+            notification.error({
+              message: "Transaction Rejected",
+              // description: "",
+            });
+          } else {
+            notification.error({
+              message: "There was an error in executing the transaction",
+              // description: "",
+            });
+          }
+        });
+      // console.log("Successful transaction: ", tx2.status);
+      // console.log("tx2: ", tx2);
       console.log("Checking balances after transaction ...");
       var trader1YesBalance = await yesContract.methods
         .balanceOf(accounts[0])
@@ -773,6 +861,33 @@ class App extends Component {
     }
   };
 
+  onError = (methodCall) => {
+    methodCall.on("error", function (error) {
+      if (error.message.includes("User denied transaction signature")) {
+        notification.error({
+          message: "Transaction Rejected",
+          // description: "",
+        });
+      } else {
+        notification.error({
+          message: "There was an error in executing the transaction",
+          // description: "",
+        });
+      }
+    });
+  };
+  getEtherscanLink = (transactionHash) => {
+    console.log("etherscanLink", etherscanPrefix + transactionHash);
+    return (
+      <a
+        href={etherscanPrefix + transactionHash}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        See on Etherscan
+      </a>
+    );
+  };
   // This function updates trader balances initially and after sale
   // Also resets price per share, max profit and price impact to 0
   updateBalances = async () => {
@@ -846,6 +961,7 @@ class App extends Component {
       console.log("trader1DaiBalance for form: ", trader1DaiBalance);
       this.setState({ toBalance: trader1DaiBalance });
     }
+
     // this.setState({
     //   fromAmount: 0,
     //   toAmount: 0,
