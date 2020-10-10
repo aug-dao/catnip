@@ -56,7 +56,9 @@
   font-weight: bold;
 }
 
-
+.ant-notification {
+  margin-right: 12px !important;
+}
 
 /* Hide number input field arrows on Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,

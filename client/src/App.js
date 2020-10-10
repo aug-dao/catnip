@@ -12,11 +12,12 @@ import { connect } from "react-redux";
 //notification
 import { notification } from "antd";
 import "antd/dist/antd.css";
+import { LoadingOutlined } from '@ant-design/icons';
 const { abi } = require("./contracts/BPool.json");
 const BigNumber = require("bignumber.js");
 const unlimitedAllowance = new BigNumber(2).pow(256).minus(1);
-const network = "mainnet"; // set network as "ganache" or "kovan" or "mainnet"
-const tokenMultiple = network === "kovan" ? 100 : 1000;
+const network = "kovan"; // set network as "ganache" or "kovan" or "mainnet"
+const tokenMultiple = network === "mainnet" ? 100 : 1000;
 // if network is ganache, run truffle migrate --develop and disable metamask
 // if network is kovan, enable metamask, set to kovan network and open account with kovan eth
 const kovanEtherscanPrefix = "https://kovan.etherscan.io/tx/";
@@ -25,6 +26,8 @@ const etherscanPrefix =
   network === "kovan" ? kovanEtherscanPrefix : mainnetEtherscanPrefix;
 notification.config({
   duration: null,
+  top: 7,
+  icon: 'LoadingOutlined'
 });
 
 const mainnetContracts = {
@@ -640,7 +643,8 @@ class App extends Component {
         .on("transactionHash", (transactionHash) => {
           notification.info({
             message: "Transaction Pending",
-            description: this.getEtherscanLink(transactionHash),
+            description: (<div><p>This can take a moment...</p>{this.getEtherscanLink(transactionHash)}</div>),
+            icon: <LoadingOutlined />,
           });
         })
         .on("receipt", function (receipt) {
@@ -776,7 +780,7 @@ class App extends Component {
           .send({ from: accounts[0], gas: 46000 })
           .on("transactionHash", (transactionHash) => {
             notification.info({
-              message: "Approve Pending",
+              message: "Approval Pending",
               description: "Please Wait....",
             });
             console.log(transactionHash);
@@ -785,7 +789,7 @@ class App extends Component {
             notification.destroy();
             notification.success({
               duration: 7,
-              message: "Approve Done",
+              message: "Approval Done",
             });
           })
           .on("error", function (error) {
@@ -822,7 +826,8 @@ class App extends Component {
         .on("transactionHash", (transactionHash) => {
           notification.info({
             message: "Transaction Pending",
-            description: this.getEtherscanLink(transactionHash),
+            description: (<div><p>This can take a moment...</p>{this.getEtherscanLink(transactionHash)}</div>),
+            icon: <LoadingOutlined />,
           });
         })
         .on("receipt", function (receipt) {
