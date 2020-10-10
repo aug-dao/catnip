@@ -26,8 +26,7 @@ const etherscanPrefix =
   network === "kovan" ? kovanEtherscanPrefix : mainnetEtherscanPrefix;
 notification.config({
   duration: null,
-  top: 7,
-  icon: 'LoadingOutlined'
+  top: 7
 });
 
 const mainnetContracts = {
