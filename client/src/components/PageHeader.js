@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
     margin: '15px 20px 0 0'
   },
   darkmode_toggle: {
-    marginTop: '-22px'
+    marginTop: '17px'
   }
 }));
 
