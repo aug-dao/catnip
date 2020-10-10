@@ -198,17 +198,17 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "18px",
   },
   flip: {
-    clear: 'both',
-    marginBottom: '12px',
-    cursor: 'pointer'
+    clear: "both",
+    marginBottom: "12px",
+    cursor: "pointer",
   },
   balance_display: {
-    width: '110px'
+    width: "110px",
   },
   max_icon: {
-    marginTop: '19px',
-    cursor: 'pointer'
-    }
+    marginTop: "19px",
+    cursor: "pointer",
+  },
 }));
 
 const iconStyles = {
@@ -307,10 +307,18 @@ export default function Trading(props) {
                   />
                 </div>
 
-                <img className={classes.max_icon} src={maxIcon} alt="" onClick={props.getMax} />
+                <img
+                  className={classes.max_icon}
+                  src={maxIcon}
+                  alt=""
+                  onClick={props.getMax}
+                />
 
                 <div>
-                  <Typography className={classes.balance_display} variant="body2" >
+                  <Typography
+                    className={classes.balance_display}
+                    variant="body2"
+                  >
                     Balance: {props.fromBalance}
                   </Typography>
                   {isContrast ? (
@@ -381,9 +389,9 @@ export default function Trading(props) {
                 </div>
               </div>
               <div className={classes.flip} onClick={props.reversePair}>
-                    <img src={flipUpIcon} alt="up arrow" />
-                    <img src={flipDownIcon} alt="down arrow" />
-                  </div>
+                <img src={flipUpIcon} alt="up arrow" />
+                <img src={flipDownIcon} alt="down arrow" />
+              </div>
 
               <div
                 className={isContrast ? "input-item dark" : "input-item light"}
@@ -402,7 +410,10 @@ export default function Trading(props) {
                   />
                 </div>
                 <div>
-                  <Typography className={classes.balance_display} variant="body2"  >
+                  <Typography
+                    className={classes.balance_display}
+                    variant="body2"
+                  >
                     Balance: {props.toBalance}
                   </Typography>
                   {isContrast ? (
@@ -490,8 +501,12 @@ export default function Trading(props) {
                   </Typography>
                 </div>
               )}
-              <StyledButton variant="contained" onClick={props.swapBranch}>
-                Swap
+              <StyledButton
+                variant="contained"
+                onClick={props.swapBranch}
+                disabled={props.isSwapDisabled}
+              >
+                swap
               </StyledButton>
             </Paper>
             {props.fromAmount > 0 && (

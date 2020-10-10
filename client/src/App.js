@@ -23,9 +23,9 @@ const kovanEtherscanPrefix = "https://kovan.etherscan.io/tx/";
 const mainnetEtherscanPrefix = "https://etherscan.io/tx/";
 const etherscanPrefix =
   network === "kovan" ? kovanEtherscanPrefix : mainnetEtherscanPrefix;
-// notification.config({
-//   duration: null,
-// });
+notification.config({
+  duration: null,
+});
 
 const mainnetContracts = {
   yes: "0x3af375d9f77ddd4f16f86a5d51a9386b7b4493fa",
@@ -77,6 +77,7 @@ class App extends Component {
     swapFee: 0,
     tokenMultiple: tokenMultiple,
     priceImpactColor: "black",
+    isSwapDisabled: false,
   };
 
   componentDidMount = async () => {
@@ -241,9 +242,11 @@ class App extends Component {
         this.setState({ bpoolAddress: bpoolAddress });
         var pool = new web3.eth.Contract(abi, this.state.bpoolAddress);
         this.setState({ pool: pool });
+
         await yesContract.methods
           .approve(this.state.bpoolAddress, web3.utils.toWei("5000"))
           .send({ from: accounts[1], gas: 6000000 });
+
         await pool.methods
           .bind(
             yesContract.options.address,
@@ -577,42 +580,52 @@ class App extends Component {
 
       //here we are just going to do the same thing but without the if conditions
       erc20Instance.options.address = fromToken;
-
+      //uncomment for testing
+      // await erc20Instance.methods
+      //   .approve(bpoolAddress, "0")
+      //   .send({ from: accounts[0], gas: 46000 });
       var allowance = await erc20Instance.methods
         .allowance(accounts[0], bpoolAddress)
         .call();
+
       allowance = web3.utils.fromWei(allowance);
       console.log("allowance Before:" + allowance.toString());
       if (Number(allowance) < Number(fromAmount)) {
+        this.setState({ isSwapDisabled: true });
         await erc20Instance.methods
           .approve(bpoolAddress, allowanceLimit)
           .send({ from: accounts[0], gas: 46000 })
           .on("transactionHash", (transactionHash) => {
             notification.info({
-              description: "Aprove Pending",
-              message: "doing aprove",
+              message: "Approve Pending",
+              description: "Please Wait....",
             });
             console.log(transactionHash);
           })
           .on("receipt", function (receipt) {
+            notification.destroy();
             notification.success({
+              duration: 7,
               message: "Approve Done",
             });
           })
           .on("error", function (error) {
+            notification.destroy();
             if (error.message.includes("User denied transaction signature")) {
               notification.error({
+                duration: 7,
                 message: "Transaction Rejected",
                 // description: "",
               });
             } else {
               notification.error({
+                duration: 7,
                 message: "There was an error in executing the transaction",
                 // description: "",
               });
             }
           });
-        // this.onError(methodCall);
+
         allowance = await erc20Instance.methods
           .allowance(accounts[0], bpoolAddress)
           .call();
@@ -631,8 +644,10 @@ class App extends Component {
           });
         })
         .on("receipt", function (receipt) {
+          notification.destroy();
           // console.log("receipt", receipt);
           notification.success({
+            duration: 7,
             message: "swap done",
             //maybe I am missing something but using this.getEtherscanLink(receipt.transactionHash) is not working
             description: (
@@ -647,18 +662,22 @@ class App extends Component {
           });
         })
         .on("error", function (error) {
+          notification.destroy();
           if (error.message.includes("User denied transaction signature")) {
             notification.error({
+              duration: 7,
               message: "Transaction Rejected",
               // description: "",
             });
           } else {
             notification.error({
+              duration: 7,
               message: "There was an error in executing the transaction",
               // description: "",
             });
           }
         });
+      this.setState({ isSwapDisabled: false });
       // console.log("Successful transaction: ", tx.status);
       // console.log("Checking balances after transaction ...");
       var trader1YesBalance = await yesContract.methods
@@ -689,7 +708,8 @@ class App extends Component {
       });
       await this.updateBalances();
     } catch (error) {
-      alert(`Swap with from tokens fixed failed. Check console for details.`);
+      // alert(`Swap with from tokens fixed failed. Check console for details.`);
+      this.setState({ isSwapDisabled: false });
       console.error(error);
     }
   };
@@ -737,44 +757,55 @@ class App extends Component {
     try {
       //approve fromAmount of fromToken for spending by Trader1
 
-      //here we are just going to do the same thing but without the if conditions
       erc20Instance.options.address = fromToken;
+      //uncomment for testing
+      // await erc20Instance.methods
+      //   .approve(bpoolAddress, "0")
+      //   .send({ from: accounts[0], gas: 46000 });
 
       var allowance = await erc20Instance.methods
         .allowance(accounts[0], bpoolAddress)
         .call();
       allowance = web3.utils.fromWei(allowance);
       console.log("allowance Before:" + allowance.toString());
+
       if (Number(allowance) < Number(fromAmount)) {
+        this.setState({ isSwapDisabled: true });
         await erc20Instance.methods
           .approve(bpoolAddress, allowanceLimit)
           .send({ from: accounts[0], gas: 46000 })
           .on("transactionHash", (transactionHash) => {
             notification.info({
-              description: "Aprove Pending",
-              message: "doing aprove",
+              message: "Approve Pending",
+              description: "Please Wait....",
             });
             console.log(transactionHash);
           })
           .on("receipt", function (receipt) {
+            notification.destroy();
             notification.success({
+              duration: 7,
               message: "Approve Done",
             });
           })
           .on("error", function (error) {
+            notification.destroy();
+
             if (error.message.includes("User denied transaction signature")) {
               notification.error({
+                duration: 7,
                 message: "Transaction Rejected",
                 // description: "",
               });
             } else {
               notification.error({
+                duration: 7,
                 message: "There was an error in executing the transaction",
                 // description: "",
               });
             }
           });
-        // this.onError(methodCall);
+
         allowance = await erc20Instance.methods
           .allowance(accounts[0], bpoolAddress)
           .call();
@@ -795,8 +826,10 @@ class App extends Component {
           });
         })
         .on("receipt", function (receipt) {
+          notification.destroy();
           // console.log("receipt", receipt);
           notification.success({
+            duration: 7,
             message: "swap done",
             //maybe I am missing something but using this.getEtherscanLink(receipt.transactionHash) is not working
             description: (
@@ -811,20 +844,23 @@ class App extends Component {
           });
         })
         .on("error", function (error) {
+          notification.destroy();
           if (error.message.includes("User denied transaction signature")) {
             notification.error({
+              duration: 7,
               message: "Transaction Rejected",
               // description: "",
             });
           } else {
             notification.error({
+              duration: 7,
               message: "There was an error in executing the transaction",
               // description: "",
             });
           }
         });
-      // console.log("Successful transaction: ", tx2.status);
-      // console.log("tx2: ", tx2);
+      this.setState({ isSwapDisabled: false });
+
       console.log("Checking balances after transaction ...");
       var trader1YesBalance = await yesContract.methods
         .balanceOf(accounts[0])
@@ -854,28 +890,14 @@ class App extends Component {
       });
       await this.updateBalances();
     } catch (error) {
-      alert(
-        `Swap with number of from tokens fixed failed. Check console for details.`
-      );
+      // alert(
+      //   `Swap with number of from tokens fixed failed. Check console for details.`
+      // );
+      this.setState({ isSwapDisabled: false });
       console.error(error);
     }
   };
 
-  onError = (methodCall) => {
-    methodCall.on("error", function (error) {
-      if (error.message.includes("User denied transaction signature")) {
-        notification.error({
-          message: "Transaction Rejected",
-          // description: "",
-        });
-      } else {
-        notification.error({
-          message: "There was an error in executing the transaction",
-          // description: "",
-        });
-      }
-    });
-  };
   getEtherscanLink = (transactionHash) => {
     console.log("etherscanLink", etherscanPrefix + transactionHash);
     return (
@@ -1138,6 +1160,7 @@ class App extends Component {
           swapBranch={this.swapBranch}
           getMax={this.getMax}
           reversePair={this.reversePair}
+          isSwapDisabled={this.state.isSwapDisabled}
         />
       </div>
     );
