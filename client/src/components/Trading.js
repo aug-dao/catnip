@@ -25,7 +25,8 @@ import maxIcon from "../assets/images/max.svg";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import classNames from "classnames";
 import { useSelector } from "react-redux";
-import { InfoOutlined } from "@material-ui/icons";
+import { InfoOutlined, HelpOutline } from "@material-ui/icons";
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -209,6 +210,23 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "19px",
     cursor: "pointer",
   },
+  info_text: {
+    '& p': {
+      marginRight: 10
+    },
+    '& .question_logo': {
+      fontSize: 20,
+      '&.light': {
+        color: 'rgba(0, 0, 0, 0.54) !important',
+      },
+      '&.dark': {
+        color: 'white',
+      }
+    }    
+  },
+  tooltip: {
+    fontSize: 18,    
+  }
 }));
 
 const iconStyles = {
@@ -248,6 +266,11 @@ export default function Trading(props) {
           color: "white",
         },
       },
+      MuiTooltip: {
+        tooltip: {
+          fontSize: 20
+        }
+      }
     },
   };
 
@@ -521,13 +544,20 @@ export default function Trading(props) {
                       <div
                         className={`${classes.displayFlex} ${classes.width90}`}
                       >
-                        <Typography
-                          variant="body2"
-                          color="textPrimary"
-                          padding="20px"
-                        >
-                          Max profit:
-                        </Typography>
+                        <div className={`${classes.displayFlex} ${classes.info_text}`}>
+                          <Typography
+                            variant="body2"
+                            color="textPrimary"
+                            padding="20px"
+                          >
+                            Max profit                                                      
+                          </Typography>
+                          <Tooltip 
+                            title="<Typography>The amount you will gain in DAI if the market resolves to Token. Winning shares pay out one DAI each, and losing shares pay out zero.</Typography>"                            
+                            placement="right" className={classes.tooltip}>
+                            <HelpOutline color="textPrimary" className={`question_logo ${isContrast ? "dark" : "light"}`} />
+                          </Tooltip>
+                        </div>                        
                         <Typography
                           variant="body2"
                           color="textPrimary"
@@ -541,13 +571,20 @@ export default function Trading(props) {
                     <div
                       className={`${classes.displayFlex} ${classes.width90}`}
                     >
-                      <Typography
-                        variant="body2"
-                        color="textPrimary"
-                        padding="20px"
-                      >
-                        Price impact:
-                      </Typography>
+                      <div className={`${classes.displayFlex} ${classes.info_text}`}>
+                        <Typography
+                          variant="body2"
+                          color="textPrimary"
+                          padding="20px"
+                        >
+                          Price impact
+                        </Typography>
+                        <Tooltip 
+                          title={<Typography color="inherit">The difference between the market price and estimated price due to trade size. The larger the trade, the greater the slippage.</Typography>}
+                          placement="right" className={classes.tooltip}>
+                          <HelpOutline color="textPrimary" className={`question_logo ${isContrast ? "dark" : "light"}`}/>
+                        </Tooltip>
+                      </div>                      
                       <Typography
                         variant="body2"
                         color="textPrimary"
