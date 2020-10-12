@@ -553,7 +553,7 @@ export default function Trading(props) {
                             Max profit                                                      
                           </Typography>
                           <Tooltip 
-                            title="<Typography>The amount you will gain in DAI if the market resolves to Token. Winning shares pay out one DAI each, and losing shares pay out zero.</Typography>"                            
+                            title={<Typography>The estimated amount you will gain in DAI if the market resolves to {props.toToken === props.yesContractAddress ? 'YES' : 'NO'}. Winning shares pay out one DAI each, and losing shares pay out zero.</Typography>}                            
                             placement="right" className={classes.tooltip}>
                             <HelpOutline color="textPrimary" className={`question_logo ${isContrast ? "dark" : "light"}`} />
                           </Tooltip>
@@ -580,7 +580,7 @@ export default function Trading(props) {
                           Price impact
                         </Typography>
                         <Tooltip 
-                          title={<Typography color="inherit">The difference between the market price and estimated price due to trade size. The larger the trade, the greater the slippage.</Typography>}
+                          title={<Typography color="inherit">The difference between the market price and the estimated price you'll pay due to trade size. The larger the trade, the greater the price impact.</Typography>}
                           placement="right" className={classes.tooltip}>
                           <HelpOutline color="textPrimary" className={`question_logo ${isContrast ? "dark" : "light"}`}/>
                         </Tooltip>
