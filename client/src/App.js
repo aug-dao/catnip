@@ -4,7 +4,7 @@ import BPoolContract from "./contracts/BPool.json";
 import YesContract from "./contracts/Yes.json";
 import NoContract from "./contracts/No.json";
 import DaiContract from "./contracts/Dai.json";
-import getWeb3 from "./getWeb3";
+import Web3 from "web3";
 import "./App.css";
 import Trading from "./components/Trading.js";
 import PageHeader from "./components/PageHeader.js";
@@ -12,11 +12,14 @@ import { connect } from "react-redux";
 //notification
 import { notification } from "antd";
 import "antd/dist/antd.css";
-import { LoadingOutlined } from '@ant-design/icons';
+import { LoadingOutlined } from "@ant-design/icons";
+
+import configData from "./config.json";
+
 const { abi } = require("./contracts/BPool.json");
 const BigNumber = require("bignumber.js");
 const unlimitedAllowance = new BigNumber(2).pow(256).minus(1);
-const network = "mainnet"; // set network as "ganache" or "kovan" or "mainnet"
+const network = "kovan"; // set network as "ganache" or "kovan" or "mainnet"
 const tokenMultiple = network === "kovan" ? 100 : 1000;
 // if network is ganache, run truffle migrate --develop and disable metamask
 // if network is kovan, enable metamask, set to kovan network and open account with kovan eth
@@ -26,8 +29,14 @@ const etherscanPrefix =
   network === "kovan" ? kovanEtherscanPrefix : mainnetEtherscanPrefix;
 notification.config({
   duration: null,
-  top: 7
+  top: 7,
 });
+const infuraProvider =
+  network === "kovan"
+    ? configData.providers.infura.kovan
+    : configData.providers.infura.mainnet;
+
+const provider = new Web3.providers.HttpProvider(infuraProvider);
 
 const mainnetContracts = {
   yes: "0x3af375d9f77ddd4f16f86a5d51a9386b7b4493fa",
@@ -84,12 +93,19 @@ class App extends Component {
 
   componentDidMount = async () => {
     try {
-      // Get network provider and web3 instance.
-      const web3 = await getWeb3();
-
-      // Use web3 to get the user's accounts.
-      const accounts = await web3.eth.getAccounts();
-      console.log("accounts: ", accounts);
+      var { web3, accounts } = this.state;
+      if (!window.ethereum) {
+        accounts = null;
+        web3 = new Web3(provider);
+        await web3.eth.net.isListening();
+      } else {
+        web3 = new Web3(window.ethereum);
+        await window.ethereum
+          .enable()
+          .then((response) => (accounts = response))
+          .catch((err) => console.log(err));
+        console.log("accounts", accounts);
+      }
 
       var yesInstance = new web3.eth.Contract(YesContract.abi, contracts.yes);
       var noInstance = new web3.eth.Contract(NoContract.abi, contracts.no);
@@ -289,6 +305,7 @@ class App extends Component {
         toToken: this.state.yesContractAddress,
       });
       await this.updateBalances();
+
       this.setState({ fromAmount: 100 });
       // Set starting parameters
       await this.calcToGivenFrom();
@@ -326,16 +343,45 @@ class App extends Component {
       await this.calcFromGivenTo();
       await this.calcPriceProfitSlippage();
     }
-    if (e.target.name === "toToken" || e.target.name === "fromToken") {
+    //add a condition when toToken == fromToken
+    if (e.target.name === "toToken") {
+      await this.setState({
+        [e.target.name]: e.target.value,
+      });
       console.log("about to update balances");
       this.updateBalances();
-      this.setState({
-        fromAmount: 0,
-        toAmount: 0,
-        pricePerShare: 0,
-        maxProfit: 0,
-        priceImpact: 0,
-      });
+
+      await this.calcToGivenFrom();
+      await this.calcPriceProfitSlippage();
+    }
+    if (e.target.name === "fromToken") {
+      await this.setState({ [e.target.name]: e.target.value });
+      console.log("about to update balances");
+      this.updateBalances();
+
+      await this.calcFromGivenTo();
+      await this.calcPriceProfitSlippage();
+    }
+  };
+  connectWallet = async () => {
+    if (window.ethereum) {
+      console.log("connecting wallet");
+      var web3 = new Web3(window.ethereum);
+
+      await window.ethereum.enable();
+      console.log(await web3.eth.net.isListening());
+
+      // console.log(web3);
+      var accounts = await web3.eth.getAccounts();
+      // console.log(accounts);
+
+      console.log(web3.currentProvider);
+
+      this.setState({ web3: web3, accounts: accounts });
+      await this.componentDidMount();
+      await this.updateBalances();
+    } else {
+      alert("Please Install Metamask");
     }
   };
 
@@ -413,6 +459,9 @@ class App extends Component {
     } = this.state;
     console.log(fromToken);
     erc20Instance.options.address = fromToken;
+    if (!accounts) {
+      return;
+    }
 
     let balanceInWei = await erc20Instance.methods
       .balanceOf(accounts[0])
@@ -423,7 +472,11 @@ class App extends Component {
       fromToken !== daiContractAddress
         ? maxFromAmount * tokenMultiple
         : maxFromAmount;
-    maxFromAmount = Number(maxFromAmount).toFixed(2);
+    //rounding error solution
+    maxFromAmount = Number(maxFromAmount)
+      .toString()
+      .match(/^-?\d+(?:\.\d{0,2})?/)[0];
+
     this.setState({ fromAmount: maxFromAmount });
     console.log("max:" + web3.utils.fromWei(balanceInWei));
 
@@ -642,7 +695,12 @@ class App extends Component {
         .on("transactionHash", (transactionHash) => {
           notification.info({
             message: "Transaction Pending",
-            description: (<div><p>This can take a moment...</p>{this.getEtherscanLink(transactionHash)}</div>),
+            description: (
+              <div>
+                <p>This can take a moment...</p>
+                {this.getEtherscanLink(transactionHash)}
+              </div>
+            ),
             icon: <LoadingOutlined />,
           });
         })
@@ -825,7 +883,12 @@ class App extends Component {
         .on("transactionHash", (transactionHash) => {
           notification.info({
             message: "Transaction Pending",
-            description: (<div><p>This can take a moment...</p>{this.getEtherscanLink(transactionHash)}</div>),
+            description: (
+              <div>
+                <p>This can take a moment...</p>
+                {this.getEtherscanLink(transactionHash)}
+              </div>
+            ),
             icon: <LoadingOutlined />,
           });
         })
@@ -928,7 +991,9 @@ class App extends Component {
     const { daiContractAddress } = this.state;
     const { accounts } = this.state;
     const { tokenMultiple } = this.state;
-
+    if (!accounts) {
+      return;
+    }
     if (fromToken === yesContractAddress) {
       var trader1YesBalance = await yesContract.methods
         .balanceOf(accounts[0])
@@ -1132,17 +1197,17 @@ class App extends Component {
   };
 
   render() {
-    if (!this.state.web3) {
-      return (
-        <div className="loadAlert">
-          Please make sure to have{" "}
-          <a href="https://metamask.io/" target="_blank">
-            MetaMask
-          </a>{" "}
-          installed and connected to use catnip. meow.
-        </div>
-      );
-    }
+    // if (!this.state.web3) {
+    //   return (
+    //     <div className="loadAlert">
+    //       Please make sure to have{" "}
+    //       <a href="https://metamask.io/" target="_blank">
+    //         MetaMask
+    //       </a>{" "}
+    //       installed and connected to use catnip. meow.
+    //     </div>
+    //   );
+    // }
     return (
       <div className={`App ${this.props.isContrast ? "dark" : "light"}`}>
         <PageHeader />
@@ -1165,6 +1230,8 @@ class App extends Component {
           getMax={this.getMax}
           reversePair={this.reversePair}
           isSwapDisabled={this.state.isSwapDisabled}
+          accounts={this.state.accounts}
+          connectWallet={this.connectWallet}
         />
       </div>
     );
