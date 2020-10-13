@@ -94,17 +94,10 @@ class App extends Component {
   componentDidMount = async () => {
     try {
       var { web3, accounts } = this.state;
-      if (!window.ethereum) {
+      if (!accounts) {
         accounts = null;
         web3 = new Web3(provider);
         await web3.eth.net.isListening();
-      } else {
-        web3 = new Web3(window.ethereum);
-        await window.ethereum
-          .enable()
-          .then((response) => (accounts = response))
-          .catch((err) => console.log(err));
-        console.log("accounts", accounts);
       }
 
       var yesInstance = new web3.eth.Contract(YesContract.abi, contracts.yes);
