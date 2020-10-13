@@ -293,7 +293,6 @@ class App extends Component {
         this.setState({ tokenMultiple: tokenMultiple });
       }
       this.setState({
-        toAmount: 0,
         fromToken: this.state.daiContractAddress,
         toToken: this.state.yesContractAddress,
       });
