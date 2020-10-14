@@ -49,8 +49,7 @@
 
 .loadAlert {
   font-size: 120%;
-  text-align: center;
-  /* margin: 200px auto 0 auto; */
+  text-align: left;
   width: 450px;
 }
 
@@ -58,6 +57,10 @@
   text-decoration: none;
   color: #03a9f4;
   font-weight: bold;
+}
+
+.modal-footer {
+  justify-content: left !important;
 }
 
 .ant-notification {

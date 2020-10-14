@@ -211,6 +211,10 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "19px",
     cursor: "pointer",
   },
+  cta_button: {
+    background: '#03A9F4',
+    border: 'none',
+  },
   info_text: {
     "& p": {
       marginRight: 10,
@@ -535,29 +539,26 @@ export default function Trading(props) {
                 </StyledButton>
               )}
             </Paper>
-            <Modal
+            <Modal className={classes.modal_display}
               show={props.show}
               onHide={props.hideModal}
               backdrop="static"
               keyboard={false}
             >
               <Modal.Header closeButton>
-                <Modal.Title>Metamask is not Installed</Modal.Title>
+                <Modal.Title>Metamask is not installed</Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <div className="loadAlert">
-                  Please make sure to have{" "}
+                  Please make sure to install{" "}
                   <a href="https://metamask.io/" target="_blank">
                     MetaMask
                   </a>{" "}
-                  installed to use catnip. meow.
+                  to use catnip. meow.
                 </div>
               </Modal.Body>
               <Modal.Footer>
-                <Button variant="secondary" onClick={props.hideModal}>
-                  Close
-                </Button>
-                <Button
+                <Button className={classes.cta_button}
                   variant="primary"
                   onClick={() => window.open("https://metamask.io/", "_blank")}
                 >
