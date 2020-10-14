@@ -89,6 +89,7 @@ class App extends Component {
     tokenMultiple: tokenMultiple,
     priceImpactColor: "black",
     isSwapDisabled: false,
+    show: false,
   };
 
   componentDidMount = async () => {
@@ -373,7 +374,7 @@ class App extends Component {
       await this.componentDidMount();
       await this.updateBalances();
     } else {
-      alert("Please Install Metamask");
+      this.showModal();
     }
   };
 
@@ -1187,19 +1188,17 @@ class App extends Component {
       }
     }
   };
+  showModal = () => {
+    this.setState({ show: true });
+  };
+
+  hideModal = () => {
+    this.setState({ show: false });
+  };
+
+  // render(<Example />);
 
   render() {
-    // if (!this.state.web3) {
-    //   return (
-    //     <div className="loadAlert">
-    //       Please make sure to have{" "}
-    //       <a href="https://metamask.io/" target="_blank">
-    //         MetaMask
-    //       </a>{" "}
-    //       installed and connected to use catnip. meow.
-    //     </div>
-    //   );
-    // }
     return (
       <div className={`App ${this.props.isContrast ? "dark" : "light"}`}>
         <PageHeader />
@@ -1224,6 +1223,9 @@ class App extends Component {
           isSwapDisabled={this.state.isSwapDisabled}
           accounts={this.state.accounts}
           connectWallet={this.connectWallet}
+          showModal={this.showModal}
+          hideModal={this.hideModal}
+          show={this.state.show}
         />
       </div>
     );

@@ -9,7 +9,11 @@
 }
 
 .App.light {
-  background-image: radial-gradient(50% 50% at 50% 50%, rgb(3 169 244 / 13%) 0%, rgba(255, 255, 255, 0) 100%)
+  background-image: radial-gradient(
+    50% 50% at 50% 50%,
+    rgb(3 169 244 / 13%) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
 }
 
 .App-logo {
@@ -46,7 +50,7 @@
 .loadAlert {
   font-size: 120%;
   text-align: center;
-  margin: 200px auto 0 auto;
+  /* margin: 200px auto 0 auto; */
   width: 450px;
 }
 
@@ -68,6 +72,6 @@ input::-webkit-inner-spin-button {
 }
 
 /* Hide number input field arrows on Firefox */
-input[type=number] {
+input[type="number"] {
   -moz-appearance: textfield;
 }

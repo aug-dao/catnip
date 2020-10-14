@@ -27,7 +27,8 @@ import classNames from "classnames";
 import { useSelector } from "react-redux";
 import { InfoOutlined, HelpOutline } from "@material-ui/icons";
 import Tooltip from "@material-ui/core/Tooltip";
-
+import { Modal, Button } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -534,6 +535,36 @@ export default function Trading(props) {
                 </StyledButton>
               )}
             </Paper>
+            <Modal
+              show={props.show}
+              onHide={props.hideModal}
+              backdrop="static"
+              keyboard={false}
+            >
+              <Modal.Header closeButton>
+                <Modal.Title>Metamask is not Installed</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <div className="loadAlert">
+                  Please make sure to have{" "}
+                  <a href="https://metamask.io/" target="_blank">
+                    MetaMask
+                  </a>{" "}
+                  installed to use catnip. meow.
+                </div>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={props.hideModal}>
+                  Close
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={() => window.open("https://metamask.io/", "_blank")}
+                >
+                  Go to Metamask.io
+                </Button>
+              </Modal.Footer>
+            </Modal>
             {props.fromAmount > 0 && (
               <Paper
                 square={true}
