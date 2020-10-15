@@ -285,12 +285,12 @@ export default function Trading(props) {
     <div className={classes.root}>
       <Container>
         <Grid container spacing={0}>
-          <Grid item xs={4}>
+          <Grid item xs={false} sm={3} md={4}>
             <Paper square={true} elevation={0}>
               <Box fontWeight="fontWeightBold" textAlign="left"></Box>
             </Paper>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} sm={6} md={4}>
             <Paper
               className={`main_part ${isContrast ? "dark" : "light"}`}
               square={true}
