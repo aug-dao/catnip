@@ -211,10 +211,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "19px",
     cursor: "pointer",
   },
-  cta_button: {
-    background: '#03A9F4',
-    border: 'none',
-  },
   info_text: {
     "& p": {
       marginRight: 10,
@@ -516,6 +512,7 @@ export default function Trading(props) {
                   <Typography variant="body2" padding="20px">
                     Price per share:
                   </Typography>
+
                   <Typography
                     variant="body2"
                     color="textPrimary"
@@ -526,6 +523,43 @@ export default function Trading(props) {
                       props.toToken === props.daiContractAddress) &&
                       "$"}
                     {props.pricePerShare}
+                  </Typography>
+
+                  {/* <Typography variant="body2" padding="20px">
+                    Implied Odds:
+                  </Typography>
+
+                  <Typography
+                    variant="body2"
+                    color="textPrimary"
+                    padding="20px"
+                    className={classes.price_display}
+                  >
+                    {(props.fromToken === props.yesContractAddress ||
+                      props.fromToken === props.noContractAddress) &&
+                      "$"}
+                    {props.impliedOdds}
+                  </Typography> */}
+                </div>
+              )}
+              {props.impliedOdds > 0 && (
+                <div className={`${classes.displayFlex} ${classes.width90}`}>
+                  <Typography variant="body2" padding="20px">
+                    Implied Odds for{" "}
+                    {props.toToken === props.yesContractAddress ? "YES" : "NO"}
+                    {":"}
+                  </Typography>
+
+                  <Typography
+                    variant="body2"
+                    color="textPrimary"
+                    padding="20px"
+                    className={classes.price_display}
+                  >
+                    {props.fromToken === props.yesContractAddress ||
+                      props.fromToken === props.noContractAddress}
+                    {props.impliedOdds}
+                    {"%"}
                   </Typography>
                 </div>
               )}
@@ -539,26 +573,29 @@ export default function Trading(props) {
                 </StyledButton>
               )}
             </Paper>
-            <Modal className={classes.modal_display}
+            <Modal
               show={props.show}
               onHide={props.hideModal}
               backdrop="static"
               keyboard={false}
             >
               <Modal.Header closeButton>
-                <Modal.Title>Metamask is not installed</Modal.Title>
+                <Modal.Title>Metamask is not Installed</Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <div className="loadAlert">
-                  Please make sure to install{" "}
+                  Please make sure to have{" "}
                   <a href="https://metamask.io/" target="_blank">
                     MetaMask
                   </a>{" "}
-                  to use catnip. meow.
+                  installed to use catnip. meow.
                 </div>
               </Modal.Body>
               <Modal.Footer>
-                <Button className={classes.cta_button}
+                <Button variant="secondary" onClick={props.hideModal}>
+                  Close
+                </Button>
+                <Button
                   variant="primary"
                   onClick={() => window.open("https://metamask.io/", "_blank")}
                 >

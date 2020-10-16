@@ -101,6 +101,7 @@ class App extends Component {
     noBalance: 0,
     yesPrice: 0,
     noPrice: 0,
+    impliedOdds: 0,
   };
 
   componentDidMount = async () => {
@@ -304,13 +305,15 @@ class App extends Component {
         tokenMultiple = 1;
         this.setState({ tokenMultiple: tokenMultiple });
       }
-      this.setState({
-        fromToken: this.state.daiContractAddress,
-        toToken: this.state.yesContractAddress,
-      });
+      if (!this.state.fromToken) {
+        this.setState({
+          fromToken: this.state.daiContractAddress,
+          toToken: this.state.yesContractAddress,
+        });
+        this.setState({ fromAmount: 100 });
+      }
       await this.updateBalances();
 
-      this.setState({ fromAmount: 100 });
       // Set starting parameters
       await this.calcToGivenFrom();
     } catch (error) {
@@ -383,7 +386,6 @@ class App extends Component {
 
       this.setState({ web3: web3, accounts: accounts });
       await this.componentDidMount();
-      await this.updateBalances();
     } else {
       this.showModal();
     }
@@ -997,6 +999,31 @@ class App extends Component {
     const { tokenMultiple } = this.state;
     const { pool } = this.state;
 
+    var yesPrice = await pool.methods
+      .getSpotPrice(daiContractAddress, yesContractAddress)
+      .call();
+    yesPrice = web3.utils.fromWei(yesPrice);
+    yesPrice = Number(yesPrice);
+    yesPrice = yesPrice / tokenMultiple;
+    console.log("yesPrice", yesPrice);
+    yesPrice = yesPrice.toFixed(2);
+    console.log("yesPrice", yesPrice);
+
+    var noPrice = await pool.methods
+      .getSpotPrice(daiContractAddress, noContractAddress)
+      .call();
+    noPrice = web3.utils.fromWei(noPrice);
+    noPrice = Number(noPrice);
+    noPrice = noPrice / tokenMultiple;
+    console.log("noPrice", noPrice);
+    noPrice = noPrice.toFixed(2);
+    console.log("noPrice", noPrice);
+    //update all the state variables at one for smoother experience
+    this.setState({
+      yesPrice: yesPrice,
+      noPrice: noPrice,
+    });
+
     if (!accounts) return;
     var yesBalance = await yesContract.methods.balanceOf(accounts[0]).call();
     yesBalance = web3.utils.fromWei(yesBalance);
@@ -1025,31 +1052,10 @@ class App extends Component {
       this.setState({ toBalance: noBalance });
     }
 
-    var yesPrice = await pool.methods
-      .getSpotPrice(daiContractAddress, yesContractAddress)
-      .call();
-    yesPrice = web3.utils.fromWei(yesPrice);
-    yesPrice = Number(yesPrice);
-    yesPrice = yesPrice / tokenMultiple;
-    console.log("yesPrice", yesPrice);
-    yesPrice = yesPrice.toFixed(2);
-    console.log("yesPrice", yesPrice);
-
-    var noPrice = await pool.methods
-      .getSpotPrice(daiContractAddress, noContractAddress)
-      .call();
-    noPrice = web3.utils.fromWei(noPrice);
-    noPrice = Number(noPrice);
-    noPrice = noPrice / tokenMultiple;
-    console.log("noPrice", noPrice);
-    noPrice = noPrice.toFixed(2);
-    console.log("noPrice", noPrice);
     //update all the state variables at one for smoother experience
     this.setState({
       noBalance: noBalance,
       yesBalance: yesBalance,
-      yesPrice: yesPrice,
-      noPrice: noPrice,
     });
 
     var daiBalance = await daiContract.methods.balanceOf(accounts[0]).call();
@@ -1178,11 +1184,16 @@ class App extends Component {
         spotPrice = spotPrice.toFixed(6);
         console.log("spotPrice", spotPrice);
         pricePerShare = fromAmount / toAmount;
+        let impliedOdds;
+        impliedOdds = 100 / (1 + pricePerShare);
+        impliedOdds = Number(impliedOdds).toFixed(2);
+
         priceImpact = ((pricePerShare - spotPrice) * 100) / pricePerShare;
         pricePerShare = Number(pricePerShare);
         console.log("pricePerShare: ", pricePerShare);
         pricePerShare = pricePerShare.toFixed(3);
         priceImpact = priceImpact.toFixed(2);
+
         if (priceImpact < 1) {
           this.setState({ priceImpactColor: "green" });
         } else if (priceImpact >= 1 && priceImpact <= 3) {
@@ -1194,6 +1205,7 @@ class App extends Component {
           pricePerShare: pricePerShare,
           maxProfit: 0,
           priceImpact: priceImpact,
+          impliedOdds: impliedOdds,
         });
       }
     }
@@ -1318,6 +1330,7 @@ class App extends Component {
           show={this.state.show}
           yesBalance={this.state.yesBalance}
           noBalance={this.state.noBalance}
+          impliedOdds={this.state.impliedOdds}
         />
       </div>
     );
