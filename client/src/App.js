@@ -9,8 +9,7 @@ import "./App.css";
 import Trading from "./components/Trading.js";
 import PageHeader from "./components/PageHeader.js";
 import { connect } from "react-redux";
-import TImg from "./assets/images/t.png";
-import NTImg from "./assets/images/nt.png";
+import MultiCall from "./contracts/Multicall.json";
 //notification
 import { notification } from "antd";
 import "antd/dist/antd.css";
@@ -24,9 +23,14 @@ const noIcon =
 
 const { abi } = require("./contracts/BPool.json");
 const BigNumber = require("bignumber.js");
+
+const BN = require("bn.js");
+const MAX_UINT256 = new BN(2).pow(new BN(256)).sub(new BN(1));
+const THOUSAND_BN = new BN(1000);
 const unlimitedAllowance = new BigNumber(2).pow(256).minus(1);
+
 const network = "kovan"; // set network as "ganache" or "kovan" or "mainnet"
-const tokenMultiple = network === "kovan" ? 100 : 1000;
+const tokenMultiple = network === "kovan" ? new BN(100) : new BN(1000);
 // if network is ganache, run truffle migrate --develop and disable metamask
 // if network is kovan, enable metamask, set to kovan network and open account with kovan eth
 const kovanEtherscanPrefix = "https://kovan.etherscan.io/tx/";
@@ -49,6 +53,7 @@ const mainnetContracts = {
   no: "0x44ea84a85616f8e9cd719fc843de31d852ad7240",
   dai: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
   pool: "0x6b74fb4e4b3b177b8e95ba9fa4c3a3121d22fbfb",
+  multicall: "0xeefBa1e63905eF1D7ACbA5a8513c70307C1cE441",
 };
 
 const kovanContracts = {
@@ -56,6 +61,7 @@ const kovanContracts = {
   no: "0xeb69840f09A9235df82d9Ed9D43CafFFea2a1eE9",
   dai: "0xb6085abd65e21d205aead0b1b9981b8b221fa14e",
   pool: "0xbc6d6f508657c3c84983cd92f3eda6997e877e90",
+  multicall: "0x2cc8688C5f75E365aaEEb4ea8D6a480405A48D2A",
 };
 
 const contracts = network === "mainnet" ? mainnetContracts : kovanContracts;
@@ -80,8 +86,11 @@ class App extends Component {
     bpoolAddress: null,
     fromToken: "",
     toToken: "",
-    fromAmount: 0,
-    toAmount: 0,
+    fromAmount: new BN(0),
+    fromAmountDisplay: 0,
+    toAmountDisplay: 0,
+    toAmount: new BN(0),
+    slippage: new BN(3), //parts per thousand(0.03% )
     yesContractAddress: "",
     noContractAddress: "",
     daiContractAddress: "",
@@ -121,7 +130,10 @@ class App extends Component {
         BPoolContract.abi,
         contracts.pool
       );
-
+      var multicallContract = new web3.eth.Contract(
+        MultiCall.abi,
+        contracts.multicall
+      );
       this.setState({
         web3: web3,
         accounts: accounts,
@@ -130,6 +142,7 @@ class App extends Component {
         daiContract: daiInstance,
         erc20Instance: erc20Instance,
         pool: poolInstance,
+        multicall: multicallContract,
         yesContractAddress: contracts.yes,
         noContractAddress: contracts.no,
         daiContractAddress: contracts.dai,
@@ -310,7 +323,10 @@ class App extends Component {
           fromToken: this.state.daiContractAddress,
           toToken: this.state.yesContractAddress,
         });
-        this.setState({ fromAmount: 100 });
+        this.setState({
+          fromAmount: this.convertDisplayToAmount(100, this.state.fromToken),
+          fromAmountDisplay: 100,
+        });
       }
       await this.updateBalances();
 
@@ -333,24 +349,43 @@ class App extends Component {
       "this.state.yesContractAddress: ",
       this.state.yesContractAddress
     );
-
     if (
-      e.target.name === "fromAmount" &&
+      e.target.name === "fromAmountDisplay" &&
       this.state.fromToken &&
       this.state.toToken
     ) {
-      await this.calcToGivenFrom();
-      await this.calcPriceProfitSlippage();
+      if (e.target.value > 0) {
+        this.setState({
+          fromAmount: this.convertDisplayToAmount(
+            e.target.value,
+            this.state.fromToken
+          ),
+        });
+        await this.calcToGivenFrom();
+        await this.calcPriceProfitSlippage();
+      } else {
+        this.setState({ toAmount: new BN(0), toAmountDisplay: 0 });
+      }
     }
     if (
-      e.target.name === "toAmount" &&
+      e.target.name === "toAmountDisplay" &&
       this.state.fromToken &&
       this.state.toToken
     ) {
-      await this.calcFromGivenTo();
-      await this.calcPriceProfitSlippage();
+      if (e.target.value > 0) {
+        this.setState({
+          toAmount: this.convertDisplayToAmount(
+            e.target.value,
+            this.state.toToken
+          ),
+        });
+        await this.calcFromGivenTo();
+        await this.calcPriceProfitSlippage();
+      } else {
+        this.setState({ fromAmount: new BN(0), fromAmountDisplay: 0 });
+      }
     }
-    //add a condition when toToken == fromToken
+    //To Do:If user selects fromToke == toToken convert the other one into DAI
     if (e.target.name === "toToken") {
       await this.setState({
         [e.target.name]: e.target.value,
@@ -369,6 +404,28 @@ class App extends Component {
       await this.calcFromGivenTo();
       await this.calcPriceProfitSlippage();
     }
+  };
+  convertAmountToDisplay = (amount, token) => {
+    const { web3, daiContractAddress } = this.state;
+
+    //if the token is yes/no then decimals are 15
+    if (token !== daiContractAddress) {
+      amount = amount.mul(tokenMultiple);
+    }
+    amount = new BigNumber(web3.utils.fromWei(amount.toString()));
+    //maybe round the number here
+    return amount.toFixed(2);
+  };
+  convertDisplayToAmount = (amount, token) => {
+    const { web3, daiContractAddress } = this.state;
+
+    amount = new BN(web3.utils.toWei(amount.toString()));
+
+    if (token !== daiContractAddress) {
+      amount = amount.div(tokenMultiple);
+    }
+
+    return amount;
   };
   connectWallet = async () => {
     if (window.ethereum) {
@@ -391,70 +448,6 @@ class App extends Component {
     }
   };
 
-  // Calculates number of "to" tokens received for a given number of "from" tokens
-  calcToGivenFrom = async () => {
-    const { pool } = this.state;
-    const { web3 } = this.state;
-    const { fromToken } = this.state;
-    const { toToken } = this.state;
-    const { daiContractAddress } = this.state;
-    const { swapFee } = this.state;
-    const { tokenMultiple } = this.state;
-
-    try {
-      var fromTokenBalance = await pool.methods.getBalance(fromToken).call();
-      fromTokenBalance = Number(web3.utils.fromWei(fromTokenBalance));
-      if (fromToken !== daiContractAddress) {
-        fromTokenBalance = tokenMultiple * fromTokenBalance;
-      }
-      console.log("CTGF fromTokenBalance: ", fromTokenBalance);
-
-      var fromTokenWeight = await pool.methods
-        .getNormalizedWeight(fromToken)
-        .call();
-      fromTokenWeight = web3.utils.fromWei(fromTokenWeight);
-
-      var toTokenBalance = await pool.methods.getBalance(toToken).call();
-      toTokenBalance = web3.utils.fromWei(toTokenBalance);
-      if (toToken !== daiContractAddress) {
-        toTokenBalance = tokenMultiple * toTokenBalance;
-      }
-      console.log("CFGT toTokenBalance: ", toTokenBalance);
-
-      var toTokenWeight = await pool.methods
-        .getNormalizedWeight(toToken)
-        .call();
-      toTokenWeight = web3.utils.fromWei(toTokenWeight);
-
-      console.log(
-        "fromTokenBalance + fromAmount: ",
-        Number(fromTokenBalance) + Number(this.state.fromAmount)
-      );
-
-      var intermediate1 =
-        Number(fromTokenBalance) /
-        (Number(fromTokenBalance) + Number(this.state.fromAmount));
-      console.log(
-        "fromTokenWeight / toTokenWeight: ",
-        fromTokenWeight / toTokenWeight
-      );
-      var intermediate2 = intermediate1 ** (fromTokenWeight / toTokenWeight);
-      console.log("intermediate2: ", intermediate2);
-      var toAmount = Number(toTokenBalance) * (1 - intermediate2);
-      toAmount = toAmount * (1.0 - swapFee);
-      toAmount = toAmount.toFixed(2);
-      console.log("toAmount: ", toAmount);
-      this.setState({ toAmount: toAmount, fromExact: true });
-      await this.calcPriceProfitSlippage();
-
-      return toAmount;
-    } catch (error) {
-      alert(
-        `Calculate number of to tokens received failed. Check console for details.`
-      );
-      console.error(error);
-    }
-  };
   getMax = async () => {
     const {
       web3,
@@ -464,27 +457,20 @@ class App extends Component {
       daiContractAddress,
     } = this.state;
     console.log(fromToken);
-    erc20Instance.options.address = fromToken;
+
     if (!accounts) {
       return;
     }
+    erc20Instance.options.address = fromToken;
 
-    let balanceInWei = await erc20Instance.methods
-      .balanceOf(accounts[0])
-      .call();
+    let maxAmount = new BN(
+      await erc20Instance.methods.balanceOf(accounts[0]).call()
+    );
 
-    let maxFromAmount = web3.utils.fromWei(balanceInWei);
-    maxFromAmount =
-      fromToken !== daiContractAddress
-        ? maxFromAmount * tokenMultiple
-        : maxFromAmount;
-    //rounding error solution
-    maxFromAmount = Number(maxFromAmount)
-      .toString()
-      .match(/^-?\d+(?:\.\d{0,2})?/)[0];
-
-    this.setState({ fromAmount: maxFromAmount });
-    console.log("max:" + web3.utils.fromWei(balanceInWei));
+    this.setState({
+      fromAmount: maxAmount,
+      fromAmountDisplay: this.convertAmountToDisplay(maxAmount, fromToken),
+    });
 
     await this.calcToGivenFrom();
     await this.calcPriceProfitSlippage();
@@ -494,6 +480,8 @@ class App extends Component {
     const {
       fromAmount,
       toAmount,
+      fromAmountDisplay,
+      toAmountDisplay,
       fromToken,
       toToken,
       shouldUpdateFrom,
@@ -501,6 +489,7 @@ class App extends Component {
     if (shouldUpdateFrom) {
       await this.setState({
         toAmount: fromAmount,
+        toAmountDisplay: fromAmountDisplay,
         fromToken: toToken,
         toToken: fromToken,
         shouldUpdateFrom: false,
@@ -511,6 +500,7 @@ class App extends Component {
     } else {
       await this.setState({
         fromAmount: toAmount,
+        fromAmountDisplay: toAmountDisplay,
         fromToken: toToken,
         toToken: fromToken,
         shouldUpdateFrom: true,
@@ -521,61 +511,192 @@ class App extends Component {
     }
     //the toAmount will be the same as fromAmount and the fromAmount will be recalculated(uniswap)
   };
+  //get pools current info
+  //Uses multicall to be a bit faster
+  getPoolInfo = async (fromToken, toToken) => {
+    const { pool } = this.state;
+    const { web3 } = this.state;
+    const { multicall } = this.state;
+
+    var fromTokenBalanceCall = {};
+    fromTokenBalanceCall.target = pool.options.address;
+    fromTokenBalanceCall.callData = pool.methods
+      .getBalance(fromToken)
+      .encodeABI();
+
+    var toTokenBalanceCall = {};
+    toTokenBalanceCall.target = pool.options.address;
+    toTokenBalanceCall.callData = pool.methods.getBalance(toToken).encodeABI();
+
+    var fromTokenDenormlizedWeightCall = {};
+    fromTokenDenormlizedWeightCall.target = pool.options.address;
+    fromTokenDenormlizedWeightCall.callData = pool.methods
+      .getDenormalizedWeight(fromToken)
+      .encodeABI();
+
+    var toTokenDenormlizedWeightCall = {};
+    toTokenDenormlizedWeightCall.target = pool.options.address;
+    toTokenDenormlizedWeightCall.callData = pool.methods
+      .getDenormalizedWeight(toToken)
+      .encodeABI();
+
+    var swapFeesCall = {};
+    swapFeesCall.target = pool.options.address;
+    swapFeesCall.callData = pool.methods.getSwapFee().encodeABI();
+
+    let result = await multicall.methods
+      .aggregate([
+        fromTokenBalanceCall,
+        toTokenBalanceCall,
+        fromTokenDenormlizedWeightCall,
+        toTokenDenormlizedWeightCall,
+        swapFeesCall,
+      ])
+      .call();
+    console.log("multicall done");
+
+    let info = {};
+    info.fromTokenBalance = web3.eth.abi.decodeParameter(
+      "uint256",
+      result.returnData[0]
+    );
+    info.toTokenBalance = web3.eth.abi.decodeParameter(
+      "uint256",
+      result.returnData[1]
+    );
+    info.fromTokenDenormlizedWeight = web3.eth.abi.decodeParameter(
+      "uint256",
+      result.returnData[2]
+    );
+    info.toTokenDenormlizedWeight = web3.eth.abi.decodeParameter(
+      "uint256",
+      result.returnData[3]
+    );
+    info.swapFees = web3.eth.abi.decodeParameter(
+      "uint256",
+      result.returnData[4]
+    );
+    return info;
+  };
+  // Calculates number of "to" tokens received for a given number of "from" tokens
+  calcToGivenFrom = async () => {
+    const { pool } = this.state;
+    const { web3 } = this.state;
+    const { fromToken, fromAmount } = this.state;
+    const { toToken } = this.state;
+    const { daiContractAddress } = this.state;
+    const { swapFee } = this.state;
+    const { tokenMultiple } = this.state;
+    const { multicall } = this.state;
+
+    try {
+      //just to make things faster
+
+      let poolInfo = await this.getPoolInfo(fromToken, toToken);
+      // console.log(
+      //   "compare",
+      //   poolInfo.fromTokenBalance,
+      //   poolInfo.fromTokenDenormlizedWeight,
+      //   poolInfo.toTokenBalance,
+      //   poolInfo.toTokenDenormlizedWeight,
+      //   poolInfo.swapFees
+      // );
+
+      // console.log(
+      //   "values",
+      //   await pool.methods.getBalance(fromToken).call(),
+      //   await pool.methods.getBalance(toToken).call(),
+      //   await pool.methods.getDenormalizedWeight(fromToken).call(),
+      //   await pool.methods.getDenormalizedWeight(toToken).call(),
+      //   await pool.methods.getSwapFee().call()
+      // );
+
+      var toAmount = await pool.methods
+        .calcOutGivenIn(
+          poolInfo.fromTokenBalance,
+          poolInfo.fromTokenDenormlizedWeight,
+          poolInfo.toTokenBalance,
+          poolInfo.toTokenDenormlizedWeight,
+          fromAmount.toString(),
+          poolInfo.swapFees
+        )
+        .call();
+
+      console.log("toAmount", toAmount);
+
+      toAmount = new BN(toAmount);
+
+      this.setState({
+        toAmount: toAmount,
+        fromExact: true,
+        toAmountDisplay: this.convertAmountToDisplay(toAmount, toToken),
+      });
+      await this.calcPriceProfitSlippage();
+
+      return toAmount;
+    } catch (error) {
+      alert(
+        `Calculate number of to tokens received failed. Check console for details.`
+      );
+      console.error(error);
+    }
+  };
+
   // Calculates number of "from" tokens spent for a given number of "to" tokens
   calcFromGivenTo = async () => {
     const { pool } = this.state;
     const { web3 } = this.state;
     const { fromToken } = this.state;
-    const { toToken } = this.state;
+    const { toToken, toAmount } = this.state;
     const { daiContractAddress } = this.state;
     const { swapFee } = this.state;
     const { tokenMultiple } = this.state;
+    const { multicall } = this.state;
 
     try {
-      var fromTokenBalance = await pool.methods.getBalance(fromToken).call();
-      fromTokenBalance = Number(web3.utils.fromWei(fromTokenBalance));
-      if (fromToken !== daiContractAddress) {
-        fromTokenBalance = tokenMultiple * fromTokenBalance;
-      }
-      console.log("CFGT fromTokenBalance: ", fromTokenBalance);
+      //using multicall to make things a bit faster
+      let poolInfo = await this.getPoolInfo(fromToken, toToken);
+      // console.log(
+      //   "compare",
+      //   poolInfo.fromTokenBalance,
+      //   poolInfo.fromTokenDenormlizedWeight,
+      //   poolInfo.toTokenBalance,
+      //   poolInfo.toTokenDenormlizedWeight,
+      //   poolInfo.swapFees
+      // );
 
-      var fromTokenWeight = await pool.methods
-        .getNormalizedWeight(fromToken)
+      // console.log(
+      //   "values",
+      //   await pool.methods.getBalance(fromToken).call(),
+      //   await pool.methods.getBalance(toToken).call(),
+      //   await pool.methods.getDenormalizedWeight(fromToken).call(),
+      //   await pool.methods.getDenormalizedWeight(toToken).call(),
+      //   await pool.methods.getSwapFee().call()
+      // );
+
+      var fromAmount = await pool.methods
+        .calcInGivenOut(
+          poolInfo.fromTokenBalance,
+          poolInfo.fromTokenDenormlizedWeight,
+          poolInfo.toTokenBalance,
+          poolInfo.toTokenDenormlizedWeight,
+          toAmount.toString(),
+          poolInfo.swapFees
+        )
         .call();
-      fromTokenWeight = web3.utils.fromWei(fromTokenWeight);
 
-      var toTokenBalance = await pool.methods.getBalance(toToken).call();
-      toTokenBalance = web3.utils.fromWei(toTokenBalance);
-      if (toToken !== daiContractAddress) {
-        toTokenBalance = tokenMultiple * toTokenBalance;
-      }
-      console.log("CFGT toTokenBalance: ", toTokenBalance);
+      console.log("fromAmount:", fromAmount);
 
-      var toTokenWeight = await pool.methods
-        .getNormalizedWeight(toToken)
-        .call();
-      toTokenWeight = web3.utils.fromWei(toTokenWeight);
+      fromAmount = new BN(fromAmount);
 
-      var intermediate1 =
-        Number(toTokenBalance) /
-        (Number(toTokenBalance) - Number(this.state.toAmount));
-      console.log(
-        "Number(toTokenBalance) + Number(this.state.toAmount): ",
-        Number(toTokenBalance) - Number(this.state.toAmount)
-      );
-      console.log("intermediate1: ", intermediate1);
-      var intermediate2 = intermediate1 ** (toTokenWeight / fromTokenWeight);
-      var exponent = toTokenWeight / fromTokenWeight;
-      console.log("exponent: ", exponent);
-      console.log("intermediate2: ", intermediate2);
-      var fromAmount = fromTokenBalance * (intermediate2 - 1);
-      console.log("fromAmount before add fee: ", fromAmount);
-      fromAmount = fromAmount * (1.0 + swapFee);
-      console.log("fromAmount after add fee: ", fromAmount);
-      fromAmount = fromAmount.toFixed(2);
-      this.setState({ fromAmount: fromAmount, fromExact: false });
-      console.log("fromAmount: ", fromAmount);
+      this.setState({
+        fromAmount: fromAmount,
+        fromExact: false,
+        fromAmountDisplay: this.convertAmountToDisplay(fromAmount, fromToken),
+      });
       await this.calcPriceProfitSlippage();
+
+      return fromAmount;
     } catch (error) {
       alert(
         `Calculate number of from tokens paid failed. Check console for details.`
@@ -596,6 +717,8 @@ class App extends Component {
 
   // Swap with the number of "from" tokens fixed
   swapExactAmountIn = async () => {
+    await this.calcToGivenFrom();
+
     const { web3 } = this.state;
     const { accounts } = this.state;
     const { pool } = this.state;
@@ -609,31 +732,15 @@ class App extends Component {
     const { daiContractAddress } = this.state;
     const { bpoolAddress } = this.state;
     var { fromAmount } = this.state;
-    var { toAmount } = this.state;
+    var { toAmount, slippage } = this.state;
     var { tokenMultiple } = this.state;
     var { erc20Instance } = this.state;
 
-    console.log("SEAI toAmount: ", toAmount);
-    if (fromToken !== daiContractAddress) {
-      fromAmount = fromAmount / tokenMultiple;
-    }
+    var minAmountOut = toAmount.sub(toAmount.mul(slippage).div(THOUSAND_BN));
 
-    console.log("SEAI fromAmount: ", fromAmount);
-    if (toToken !== daiContractAddress) {
-      toAmount = toAmount / tokenMultiple;
-    }
-    console.log("SEAI toAmount: ", toAmount);
-    var maxPrice = 2 * (fromAmount / toAmount);
-    console.log("SEAI maxPrice: ", maxPrice);
-    console.log("SEAI typeof maxPrice: ", typeof maxPrice);
-
-    maxPrice = maxPrice.toFixed(18);
-
-    toAmount = toAmount * 0.997;
-    toAmount = Number(toAmount).toFixed(18);
-
-    toAmount = web3.utils.toWei(toAmount.toString());
-    maxPrice = web3.utils.toWei(maxPrice.toString());
+    console.log(toAmount.toString());
+    console.log(minAmountOut.toString());
+    var maxPrice = MAX_UINT256;
     var allowanceLimit = unlimitedAllowance.toFixed();
 
     try {
@@ -694,9 +801,15 @@ class App extends Component {
         console.log("Allowance of fromToken after approval: ", allowance);
       }
 
-      fromAmount = web3.utils.toWei(fromAmount.toString());
+      // fromAmount = web3.utils.toWei(fromAmount.toString());
       await pool.methods
-        .swapExactAmountIn(fromToken, fromAmount, toToken, toAmount, maxPrice)
+        .swapExactAmountIn(
+          fromToken,
+          fromAmount,
+          toToken,
+          minAmountOut,
+          maxPrice
+        )
         .send({ from: accounts[0], gas: 150000 })
         .on("transactionHash", (transactionHash) => {
           notification.info({
@@ -783,6 +896,8 @@ class App extends Component {
 
   // Swap with the number of "to"" tokens fixed
   swapExactAmountOut = async () => {
+    await this.calcFromGivenTo();
+
     const { web3 } = this.state;
     const { accounts } = this.state;
     const { pool } = this.state;
@@ -796,29 +911,12 @@ class App extends Component {
     const { daiContractAddress } = this.state;
     const { bpoolAddress } = this.state;
     var { fromAmount } = this.state;
-    var { toAmount } = this.state;
+    var { toAmount, slippage } = this.state;
     var { tokenMultiple } = this.state;
     var { erc20Instance } = this.state;
 
-    var maxPrice = 2 * (toAmount / fromAmount);
-
-    if (toToken !== daiContractAddress) {
-      toAmount = toAmount / tokenMultiple;
-      maxPrice = maxPrice * tokenMultiple;
-    }
-    maxPrice = maxPrice.toFixed(18);
-    toAmount = Number(toAmount).toFixed(18);
-    console.log("SEAO toAmount: ", toAmount);
-    if (fromToken !== daiContractAddress) {
-      fromAmount = fromAmount / tokenMultiple;
-    }
-    fromAmount = 1.003 * fromAmount;
-    console.log("SEAO toAmount: ", toAmount);
-    console.log("SEAO fromAmount including allowed slippage: ", fromAmount);
-    console.log("SEAO maxPrice: ", maxPrice);
-
-    toAmount = web3.utils.toWei(toAmount.toString());
-    maxPrice = web3.utils.toWei(maxPrice.toString());
+    var maxAmountIn = fromAmount.add(fromAmount.mul(slippage).div(THOUSAND_BN));
+    var maxPrice = MAX_UINT256;
     var allowanceLimit = unlimitedAllowance.toFixed();
 
     try {
@@ -884,7 +982,7 @@ class App extends Component {
       fromAmount = web3.utils.toWei(fromAmount.toString());
 
       await pool.methods
-        .swapExactAmountOut(fromToken, fromAmount, toToken, toAmount, maxPrice)
+        .swapExactAmountOut(fromToken, maxAmountIn, toToken, toAmount, maxPrice)
         .send({ from: accounts[0], gas: 150000 })
         .on("transactionHash", (transactionHash) => {
           notification.info({
@@ -1075,8 +1173,8 @@ class App extends Component {
   calcPriceProfitSlippage = async () => {
     const { fromToken } = this.state;
     const { toToken } = this.state;
-    var { fromAmount } = this.state;
-    var { toAmount } = this.state;
+    var { fromAmount, fromAmountDisplay } = this.state;
+    var { toAmount, toAmountDisplay } = this.state;
     const { yesContractAddress } = this.state;
     const { noContractAddress } = this.state;
     const { daiContractAddress } = this.state;
@@ -1084,6 +1182,9 @@ class App extends Component {
     const { web3 } = this.state;
     const { swapFee } = this.state;
     const { tokenMultiple } = this.state;
+
+    fromAmount = fromAmountDisplay;
+    toAmount = toAmountDisplay;
 
     if (fromAmount === "" || toAmount === "") {
       this.setState({
@@ -1131,6 +1232,7 @@ class App extends Component {
           pricePerShare: pricePerShare,
           maxProfit: maxProfit,
           priceImpact: priceImpact,
+          impliedOdds: 0,
         });
       } else if (
         (fromToken === yesContractAddress || fromToken === noContractAddress) &&
@@ -1172,6 +1274,7 @@ class App extends Component {
           pricePerShare: pricePerShare,
           maxProfit: 0,
           priceImpact: priceImpact,
+          impliedOdds: 0,
         });
       } else {
         spotPrice = await pool.methods
@@ -1312,6 +1415,9 @@ class App extends Component {
           toToken={this.state.toToken}
           fromBalance={this.state.fromBalance}
           toBalance={this.state.toBalance}
+          fromAmountDisplay={this.state.fromAmountDisplay}
+          toAmountDisplay={this.state.toAmountDisplay}
+          convertAmountToDisplay={this.convertAmountToDisplay}
           yesContractAddress={this.state.yesContractAddress}
           noContractAddress={this.state.noContractAddress}
           daiContractAddress={this.state.daiContractAddress}
