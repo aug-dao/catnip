@@ -29,14 +29,84 @@ import { InfoOutlined, HelpOutline } from "@material-ui/icons";
 import Tooltip from "@material-ui/core/Tooltip";
 import { Modal, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Link from "@material-ui/core/Link";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
 
+    "& .flex-item": {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      marginBottom: 4,
+      textAlign: 'left',
+
+
+      "&.last": {
+        margin: 0,
+      },
+      "& .MuiLink-root": {
+        color: "#00cbff",
+
+        "&:hover": {
+          textDecoration: "none",
+        },
+      },
+
     "& .MuiTypography-h6": {
       color: "#545454",
-      marginBottom: "15px",
-      lineHeight: "23px",
+      marginBottom: "10px",
+      lineHeight: "23px !important",
+      fontSize: "1rem",
+    },
+  },
+
+  "& .MuiTypography-h6": {
+      lineHeight: '23px !important',
+      marginBottom: '15px',
+  },
+
+
+   "& .holding-status": {
+      marginLeft: 15,
+      padding: 20,
+      paddingRight: 50,
+      border: "1px solid #ccc",
+      borderRadius: 8,
+      border: 'none',
+      boxShadow:
+        "rgba(0, 0, 0, 0.01) 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 4px 8px, rgba(0, 0, 0, 0.04) 0px 16px 24px, rgba(0, 0, 0, 0.01) 0px 24px 32px",
+
+      "& img": {
+        width: 40,
+        height: 40,
+        borderRadius: 30,
+        marginRight: 15,
+      },
+    },
+
+    "& .box-light": {
+        background: '#fff',
+        border: 'none',
+      },
+
+    "& .box-dark": {
+        background: '#212429',
+    },
+
+    "& span.yes": {
+      color: "#50d94e",
+      fontWeight: "bold",
+    },
+
+    "& span.no": {
+      color: "#f78689",
+      fontWeight: "bold",
+    },
+
+    "& .holding_num": {
+      marginTop: "-8px",
     },
 
     "& .MuiSelect-root": {
@@ -227,6 +297,15 @@ const useStyles = makeStyles((theme) => ({
   },
   tooltip: {
     fontSize: 18,
+  },
+  holdingsDisplay: {
+    display: "flex",
+    justifyContent: "space-between",
+    marginBottom: "20px",
+    border: "1px solid rgb(247, 248, 250)",
+    borderRadius: "20px",
+    float: "left",
+    verticalAlign: "top",
   },
 }));
 
@@ -708,7 +787,77 @@ export default function Trading(props) {
             )}
           </Grid>
           <Grid item xs={4}>
-            <Box textAlign="left"></Box>
+          {props.yesBalance != 0 || props.noBalance != 0 ? (
+            <div className={`holding-status ${isContrast ? "box-dark" : "box-light"}`}>
+              <div className="flex-item">
+                <Typography
+                  variant="h6"
+                  textAlign="center"
+                  fontWeight="fontWeightBold"
+                  padding="0px"
+                >
+                  Holdings
+                </Typography>
+                <Typography variant="h6" textAlign="center" padding="20px">
+                  Current Price
+                </Typography>
+              </div>
+              {props.yesBalance != 0 && (
+                <div className="flex-item">
+                  <div className="flex-item">
+                    <img src={TImg} display="inline" />
+                    <div>
+                      <Typography>
+                        {props.yesBalance} <span className="yes">y</span>Trump
+                      </Typography>
+                      <Link
+                        className="holding_num"
+                        onClick={props.AddYesTokenToMetamask}
+                        component="button"
+                        variant="body2"
+                      >
+                        {" "}
+                        Show in wallet
+                      </Link>
+                    </div>
+                  </div>
+                  <Typography variant="body2" textAlign="center" padding="20px">
+                    ${props.yesPrice}
+                  </Typography>
+                </div>
+              )}
+              {props.noBalance != 0 && (
+                <div className="flex-item last">
+                  <div className="flex-item">
+                    <img src={NTImg} display="inline" />
+                    <div>
+                      <Typography>
+                        {props.noBalance} <span className="no">n</span>Trump
+                      </Typography>
+                      <Link
+                        className="holding_num"
+                        onClick={props.AddNoTokenToMetamask}
+                        component="button"
+                        variant="body2"
+                      >
+                        {" "}
+                        Show in wallet
+                      </Link>
+                    </div>
+                  </div>
+                  <Typography
+                    variant="body2"
+                    textAlign="center"
+                    marginTop="1150px"
+                  >
+                    ${props.noPrice}
+                  </Typography>
+                </div>
+              )}
+            </div>
+          ) : (
+            ""
+          )}
           </Grid>
         </Grid>
       </Container>

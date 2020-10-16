@@ -1300,12 +1300,6 @@ class App extends Component {
     return (
       <div className={`App ${this.props.isContrast ? "dark" : "light"}`}>
         <PageHeader
-          yesBalance={this.state.yesBalance}
-          noBalance={this.state.noBalance}
-          yesPrice={this.state.yesPrice}
-          noPrice={this.state.noPrice}
-          AddYesTokenToMetamask={this.AddYesTokenToMetamask}
-          AddNoTokenToMetamask={this.AddNoTokenToMetamask}
         />
         <Trading
           handleChange={this.handleChange}
@@ -1334,6 +1328,12 @@ class App extends Component {
           yesBalance={this.state.yesBalance}
           noBalance={this.state.noBalance}
           impliedOdds={this.state.impliedOdds}
+          yesBalance={this.state.yesBalance}
+          noBalance={this.state.noBalance}
+          yesPrice={this.state.yesPrice}
+          noPrice={this.state.noPrice}
+          AddYesTokenToMetamask={this.AddYesTokenToMetamask}
+          AddNoTokenToMetamask={this.AddNoTokenToMetamask}
         />
       </div>
     );

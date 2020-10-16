@@ -4,7 +4,7 @@
 }
 
 .App.dark {
-  color: rgb(255, 255, 255) !important;
+  color: #fff !important;
   background-color: black !important;
 }
 
@@ -14,6 +14,10 @@
     rgb(3 169 244 / 13%) 0%,
     rgba(255, 255, 255, 0) 100%
   );
+}
+
+.App.dark h6 {
+  color: #fff !important;
 }
 
 .App-logo {
