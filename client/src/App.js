@@ -1090,6 +1090,7 @@ class App extends Component {
         pricePerShare: 0,
         maxProfit: 0,
         priceImpact: 0,
+        impliedOdds: 0,
       });
     } else {
       if (
@@ -1131,6 +1132,7 @@ class App extends Component {
           pricePerShare: pricePerShare,
           maxProfit: maxProfit,
           priceImpact: priceImpact,
+          impliedOdds: 0,
         });
       } else if (
         (fromToken === yesContractAddress || fromToken === noContractAddress) &&
@@ -1172,6 +1174,7 @@ class App extends Component {
           pricePerShare: pricePerShare,
           maxProfit: 0,
           priceImpact: priceImpact,
+          impliedOdds: 0,
         });
       } else {
         spotPrice = await pool.methods
