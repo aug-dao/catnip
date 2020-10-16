@@ -1185,7 +1185,7 @@ class App extends Component {
         console.log("spotPrice", spotPrice);
         pricePerShare = fromAmount / toAmount;
         let impliedOdds;
-        impliedOdds = 100 / (1 + pricePerShare);
+        impliedOdds = 100 - 100 / (1 + pricePerShare);
         impliedOdds = Number(impliedOdds).toFixed(2);
 
         priceImpact = ((pricePerShare - spotPrice) * 100) / pricePerShare;
