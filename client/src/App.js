@@ -102,6 +102,7 @@ class App extends Component {
     yesPrice: 0,
     noPrice: 0,
     impliedOdds: 0,
+    hasEnoughBalance: false,
   };
 
   componentDidMount = async () => {
@@ -340,6 +341,7 @@ class App extends Component {
       this.state.toToken
     ) {
       await this.calcToGivenFrom();
+      await this.checkIfhasEnoughBalance();
       await this.calcPriceProfitSlippage();
     }
     if (
@@ -348,26 +350,27 @@ class App extends Component {
       this.state.toToken
     ) {
       await this.calcFromGivenTo();
+      await this.checkIfhasEnoughBalance();
       await this.calcPriceProfitSlippage();
     }
     //add a condition when toToken == fromToken
     if (e.target.name === "toToken") {
-      await this.setState({
-        [e.target.name]: e.target.value,
-      });
-      console.log("about to update balances");
-      this.updateBalances();
+      if (e.target.value) {
+        await this.updateBalances();
 
-      await this.calcToGivenFrom();
-      await this.calcPriceProfitSlippage();
+        await this.calcToGivenFrom();
+        await this.checkIfhasEnoughBalance();
+        await this.calcPriceProfitSlippage();
+      }
     }
     if (e.target.name === "fromToken") {
-      await this.setState({ [e.target.name]: e.target.value });
-      console.log("about to update balances");
-      this.updateBalances();
+      if (e.target.value) {
+        await this.updateBalances();
 
-      await this.calcFromGivenTo();
-      await this.calcPriceProfitSlippage();
+        await this.calcFromGivenTo();
+        await this.checkIfhasEnoughBalance();
+        await this.calcPriceProfitSlippage();
+      }
     }
   };
   connectWallet = async () => {
@@ -487,6 +490,7 @@ class App extends Component {
     console.log("max:" + web3.utils.fromWei(balanceInWei));
 
     await this.calcToGivenFrom();
+    await this.checkIfhasEnoughBalance();
     await this.calcPriceProfitSlippage();
   };
   reversePair = async () => {
@@ -1025,6 +1029,8 @@ class App extends Component {
     });
 
     if (!accounts) return;
+    await this.checkIfhasEnoughBalance();
+
     var yesBalance = await yesContract.methods.balanceOf(accounts[0]).call();
     yesBalance = web3.utils.fromWei(yesBalance);
     yesBalance = Number(yesBalance);
@@ -1294,13 +1300,44 @@ class App extends Component {
       console.error(error);
     }
   };
-  // render(<Example />);
+
+  checkIfhasEnoughBalance = async () => {
+    const {
+      web3,
+      accounts,
+      fromToken,
+      fromAmount,
+      erc20Instance,
+      daiContractAddress,
+    } = this.state;
+
+    if (!accounts) return;
+    erc20Instance.options.address = fromToken;
+
+    let balance = await erc20Instance.methods.balanceOf(accounts[0]).call();
+    balance = web3.utils.fromWei(balance);
+    balance = Number(balance);
+    if (fromToken !== daiContractAddress) {
+      balance = balance * tokenMultiple;
+    }
+
+    console.log(
+      "Balance and from amount",
+      balance,
+      fromAmount,
+      balance >= fromAmount
+    );
+    if (balance >= fromAmount) {
+      this.setState({ hasEnoughBalance: true });
+    } else {
+      this.setState({ hasEnoughBalance: false });
+    }
+  };
 
   render() {
     return (
       <div className={`App ${this.props.isContrast ? "dark" : "light"}`}>
-        <PageHeader
-        />
+        <PageHeader />
         <Trading
           handleChange={this.handleChange}
           fromAmount={this.state.fromAmount}
@@ -1334,6 +1371,7 @@ class App extends Component {
           noPrice={this.state.noPrice}
           AddYesTokenToMetamask={this.AddYesTokenToMetamask}
           AddNoTokenToMetamask={this.AddNoTokenToMetamask}
+          hasEnoughBalance={this.state.hasEnoughBalance}
         />
       </div>
     );

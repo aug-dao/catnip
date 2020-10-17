@@ -641,9 +641,15 @@ export default function Trading(props) {
                 </div>
               )}
               {props.accounts ? (
-                <StyledButton variant="contained" onClick={props.swapBranch}>
-                  Swap
-                </StyledButton>
+                props.hasEnoughBalance ? (
+                  <StyledButton variant="contained" onClick={props.swapBranch}>
+                    Swap
+                  </StyledButton>
+                ) : (
+                  <StyledButton variant="contained">
+                    Insufficient Balance
+                  </StyledButton>
+                )
               ) : (
                 <StyledButton variant="contained" onClick={props.connectWallet}>
                   connect Wallet
