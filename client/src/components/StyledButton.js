@@ -9,7 +9,7 @@ import {useSelector} from 'react-redux';
 const useStyles = makeStyles((theme) => ({
   root: {
     '& .MuiButton-root': {
-      background: '#77d4ed',
+      background: '#03caffe0',
       borderRadius: 12,
       border: 0,
       color: 'white',
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
       letterSpacing: '1px',
       
       '&:hover': {
-        background: '#67c4dd',
+        background: '#04b7e6e0',
       },
 
       '&.dark': {

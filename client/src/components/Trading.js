@@ -65,6 +65,10 @@ const useStyles = makeStyles((theme) => ({
       lineHeight: "23px !important",
       marginBottom: "15px",
     },
+     
+    "& .Mui-disabled": {
+      background: '#bbb',
+    },
 
     "& .holding-status": {
       marginLeft: 15,
@@ -155,6 +159,9 @@ const useStyles = makeStyles((theme) => ({
         "& .MuiTypography-h6": {
           color: "#eaeaea",
         },
+        "& .Mui-disabled": {
+          background: "#717171",
+        }
       },
     },
 
@@ -304,6 +311,9 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "20px",
     float: "left",
     verticalAlign: "top",
+  },
+  disabled_button: {
+    background: '#a7a8a9',
   },
 }));
 
@@ -646,7 +656,7 @@ export default function Trading(props) {
                     Swap
                   </StyledButton>
                 ) : (
-                  <StyledButton variant="contained">
+                  <StyledButton variant="contained" disabled>
                     Insufficient Balance
                   </StyledButton>
                 )
