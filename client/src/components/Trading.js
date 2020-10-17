@@ -301,7 +301,7 @@ const useStyles = makeStyles((theme) => ({
   holdingsDisplay: {
     display: "flex",
     justifyContent: "space-between",
-    marginBottom: "20px",
+    marginBottom: "0 auto 20px",
     border: "1px solid rgb(247, 248, 250)",
     borderRadius: "20px",
     float: "left",
@@ -786,7 +786,7 @@ export default function Trading(props) {
               </Paper>
             )}
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} sm={6} md={4} style={{margin: "0 auto"}}>
           {props.yesBalance != 0 || props.noBalance != 0 ? (
             <div className={`holding-status ${isContrast ? "box-dark" : "box-light"}`}>
               <div className="flex-item">
