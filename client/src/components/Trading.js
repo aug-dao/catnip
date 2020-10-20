@@ -445,7 +445,6 @@ export default function Trading(props) {
                         }}
                         IconComponent={CustomExpandMore}
                       >
-                        <MenuItem value=""></MenuItem>
                         <MenuItem
                           value={props.yesContractAddress}
                           className={classes.menu_item}
@@ -477,7 +476,6 @@ export default function Trading(props) {
                       }}
                       IconComponent={CustomExpandMore}
                     >
-                      <MenuItem value=""></MenuItem>
                       <MenuItem
                         value={props.yesContractAddress}
                         className={classes.menu_item}
@@ -541,7 +539,6 @@ export default function Trading(props) {
                         }}
                         IconComponent={CustomExpandMore}
                       >
-                        <MenuItem value=""></MenuItem>
                         <MenuItem
                           value={props.yesContractAddress}
                           className={classes.menu_item}
@@ -573,7 +570,6 @@ export default function Trading(props) {
                       }}
                       IconComponent={CustomExpandMore}
                     >
-                      <MenuItem value=""></MenuItem>
                       <MenuItem
                         value={props.yesContractAddress}
                         className={classes.menu_item}
