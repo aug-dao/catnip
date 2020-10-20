@@ -410,9 +410,10 @@ export default function Trading(props) {
                   <InputBase
                     autoFocus
                     className={classes.margin}
-                    name="fromAmount"
-                    value={props.fromAmount}
+                    name="fromAmountDisplay"
+                    value={props.fromAmountDisplay}
                     type="number"
+                    min="0"
                     onChange={props.handleChange}
                     inputProps={{ style: { fontSize: 24, paddingRight: 10 } }}
                   />
@@ -513,9 +514,10 @@ export default function Trading(props) {
                   </Typography>
                   <InputBase
                     className={classes.margin}
-                    name="toAmount"
-                    value={props.toAmount}
+                    name="toAmountDisplay"
+                    value={props.toAmountDisplay}
                     type="number"
+                    min="0"
                     onChange={props.handleChange}
                     inputProps={{ style: { fontSize: 24, paddingRight: 10 } }}
                   />
@@ -611,22 +613,6 @@ export default function Trading(props) {
                       "$"}
                     {props.pricePerShare}
                   </Typography>
-
-                  {/* <Typography variant="body2" padding="20px">
-                    Implied Odds:
-                  </Typography>
-
-                  <Typography
-                    variant="body2"
-                    color="textPrimary"
-                    padding="20px"
-                    className={classes.price_display}
-                  >
-                    {(props.fromToken === props.yesContractAddress ||
-                      props.fromToken === props.noContractAddress) &&
-                      "$"}
-                    {props.impliedOdds}
-                  </Typography> */}
                 </div>
               )}
               {props.impliedOdds > 0 && (
