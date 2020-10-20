@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
       "& .MuiTypography-h6": {
         color: "#545454",
         marginBottom: "10px",
-        lineHeight: "23px !important",
+        lineHeight: "25px !important",
         fontSize: "1rem",
       },
     },
@@ -637,7 +637,7 @@ export default function Trading(props) {
                   props.isApproveRequired ? (
                     <div>
                       <StyledButton variant="contained" onClick={props.approve}>
-                        Approve {props.tokenSymbols[props.fromToken]}
+                        Approve
                       </StyledButton>
                       <StyledButton variant="contained" disabled>
                         Swap
