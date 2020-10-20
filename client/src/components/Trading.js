@@ -65,9 +65,9 @@ const useStyles = makeStyles((theme) => ({
       lineHeight: "23px !important",
       marginBottom: "15px",
     },
-     
+
     "& .Mui-disabled": {
-      background: '#bbb',
+      background: "#bbb",
     },
 
     "& .holding-status": {
@@ -161,7 +161,7 @@ const useStyles = makeStyles((theme) => ({
         },
         "& .Mui-disabled": {
           background: "#717171",
-        }
+        },
       },
     },
 
@@ -313,7 +313,7 @@ const useStyles = makeStyles((theme) => ({
     verticalAlign: "top",
   },
   disabled_button: {
-    background: '#a7a8a9',
+    background: "#a7a8a9",
   },
 }));
 
@@ -634,9 +634,23 @@ export default function Trading(props) {
               )}
               {props.accounts ? (
                 props.hasEnoughBalance ? (
-                  <StyledButton variant="contained" onClick={props.swapBranch}>
-                    Swap
-                  </StyledButton>
+                  props.isApproveRequired ? (
+                    <div>
+                      <StyledButton variant="contained" onClick={props.approve}>
+                        Approve {props.tokenSymbols[props.fromToken]}
+                      </StyledButton>
+                      <StyledButton variant="contained" disabled>
+                        Swap
+                      </StyledButton>
+                    </div>
+                  ) : (
+                    <StyledButton
+                      variant="contained"
+                      onClick={props.swapBranch}
+                    >
+                      Swap
+                    </StyledButton>
+                  )
                 ) : (
                   <StyledButton variant="contained" disabled>
                     Insufficient Balance
