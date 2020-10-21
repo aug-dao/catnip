@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
       "& .MuiTypography-h6": {
         color: "#545454",
         marginBottom: "10px",
-        lineHeight: "23px !important",
+        lineHeight: "25px !important",
         fontSize: "1rem",
       },
     },
@@ -391,7 +391,7 @@ export default function Trading(props) {
               </div>
               <div>
                 <a
-                  href="http://www.predictionexplorer.com/market/0x1EBb89156091EB0d59603C18379C03A5c84D7355"
+                  href="https://www.predictionexplorer.com/market/0x1EBb89156091EB0d59603C18379C03A5c84D7355"
                   target="_blank"
                 >
                   {/* <img className={classes.info_icon} src={infoIcon} alt="info icon"/> */}
@@ -655,7 +655,7 @@ export default function Trading(props) {
                   props.isApproveRequired ? (
                     <div>
                       <StyledButton variant="contained" onClick={props.approve}>
-                        Approve {props.tokenSymbols[props.fromToken]}
+                        Approve
                       </StyledButton>
                       <StyledButton variant="contained" disabled>
                         Swap

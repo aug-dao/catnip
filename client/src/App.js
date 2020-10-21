@@ -751,7 +751,13 @@ class App extends Component {
       .on("transactionHash", (transactionHash) => {
         notification.info({
           message: "Approve Pending",
-          description: "Please Wait....",
+          description: (
+              <div>
+                <p>This can take a moment...</p>
+                {this.getEtherscanLink(transactionHash)}
+              </div>
+            ),
+            icon: <LoadingOutlined />,
         });
         console.log(transactionHash);
       })
