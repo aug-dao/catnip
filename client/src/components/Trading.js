@@ -654,7 +654,11 @@ export default function Trading(props) {
                 props.hasEnoughBalance ? (
                   props.isApproveRequired ? (
                     <div>
-                      <StyledButton variant="contained" onClick={props.approve}>
+                      <StyledButton
+                        variant="contained"
+                        onClick={props.approve}
+                        disabled={props.isSwapDisabled}
+                      >
                         Approve
                       </StyledButton>
                       <StyledButton variant="contained" disabled>
@@ -665,6 +669,7 @@ export default function Trading(props) {
                     <StyledButton
                       variant="contained"
                       onClick={props.swapBranch}
+                      disabled={props.isSwapDisabled}
                     >
                       Swap
                     </StyledButton>

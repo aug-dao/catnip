@@ -116,6 +116,7 @@ class App extends Component {
     hasEnoughBalance: false,
     isApproveRequired: false,
     tokenSymbols: tokenSymbols,
+    isSwapDisabled: false,
   };
 
   componentDidMount = async () => {
@@ -196,7 +197,16 @@ class App extends Component {
       this.state.fromToken &&
       this.state.toToken
     ) {
+      if (e.target.value <= 0) {
+        this.setState({ isSwapDisabled: true });
+        this.setState({
+          toAmountDisplay: 0,
+          toAmount: new BN(0),
+          fromAmount: new BN(0),
+        });
+      }
       if (e.target.value > 0) {
+        this.setState({ isSwapDisabled: false });
         this.setState({
           fromAmount: this.convertDisplayToAmount(
             e.target.value,
@@ -216,7 +226,16 @@ class App extends Component {
       this.state.fromToken &&
       this.state.toToken
     ) {
+      if (e.target.value <= 0) {
+        this.setState({ isSwapDisabled: true });
+        this.setState({
+          fromAmountDisplay: 0,
+          fromAmount: new BN(0),
+          toAmount: new BN(0),
+        });
+      }
       if (e.target.value > 0) {
+        this.setState({ isSwapDisabled: false });
         this.setState({
           toAmount: this.convertDisplayToAmount(
             e.target.value,
@@ -253,6 +272,7 @@ class App extends Component {
         await this.calcPriceProfitSlippage();
       }
     }
+    //add sanity checks for slippage
   };
   convertAmountToDisplay = (amount, token) => {
     const { web3, daiContractAddress } = this.state;
@@ -752,12 +772,12 @@ class App extends Component {
         notification.info({
           message: "Approve Pending",
           description: (
-              <div>
-                <p>This can take a moment...</p>
-                {this.getEtherscanLink(transactionHash)}
-              </div>
-            ),
-            icon: <LoadingOutlined />,
+            <div>
+              <p>This can take a moment...</p>
+              {this.getEtherscanLink(transactionHash)}
+            </div>
+          ),
+          icon: <LoadingOutlined />,
         });
         console.log(transactionHash);
       })
@@ -1223,6 +1243,7 @@ class App extends Component {
           approve={this.approve}
           tokenSymbols={this.state.tokenSymbols}
           slippage={this.state.slippage}
+          isSwapDisabled={this.state.isSwapDisabled}
         />
       </div>
     );
