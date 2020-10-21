@@ -93,7 +93,7 @@ class App extends Component {
     fromAmountDisplay: 0,
     toAmountDisplay: 0,
     toAmount: new BN(0),
-    slippage: new BN(3), //parts per ten thousand * 100 (0.03% )
+    slippage: "0.03", //parts per ten thousand * 100 (0.03% )
     yesContractAddress: "",
     noContractAddress: "",
     daiContractAddress: "",
@@ -570,6 +570,8 @@ class App extends Component {
     var { fromAmount } = this.state;
     var { toAmount, slippage } = this.state;
 
+    slippage = Number(slippage);
+    slippage = new BN(slippage * 100);
     var minAmountOut = toAmount.sub(
       toAmount.mul(slippage).div(TEN_THOUSAND_BN)
     );
@@ -657,6 +659,8 @@ class App extends Component {
     var { fromAmount } = this.state;
     var { toAmount, slippage } = this.state;
 
+    slippage = Number(slippage);
+    slippage = new BN(slippage * 100);
     var maxAmountIn = fromAmount.add(
       fromAmount.mul(slippage).div(TEN_THOUSAND_BN)
     );
@@ -1212,6 +1216,7 @@ class App extends Component {
           isApproveRequired={this.state.isApproveRequired}
           approve={this.approve}
           tokenSymbols={this.state.tokenSymbols}
+          slippage={this.state.slippage}
         />
       </div>
     );
