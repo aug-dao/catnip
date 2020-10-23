@@ -335,12 +335,9 @@ const CustomExpandMore = withStyles(iconStyles)(
 );
 
 export default function Trading(props) {
-  console.log("props", props);
   const classes = useStyles();
 
   const isContrast = useSelector((state) => state.settings.isContrast);
-
-  console.log("isContrast", isContrast);
 
   const Theme = {
     overrides: {
@@ -596,7 +593,7 @@ export default function Trading(props) {
                 <Typography variant="body2" padding="20px">
                   slippage:
                 </Typography>
-                <InputBase
+                {/* <InputBase
                   autoFocus
                   className={classes.margin}
                   name="slippage"
@@ -605,9 +602,9 @@ export default function Trading(props) {
                   min="0"
                   onChange={props.handleChange}
                   inputProps={{ style: { fontSize: 24, paddingRight: 10 } }}
-                />
+                /> */}
                 <Typography variant="body2" padding="20px">
-                  %
+                {props.slippage}%
                 </Typography>
               </div>
               {props.fromAmount > 0 && (

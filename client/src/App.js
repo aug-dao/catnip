@@ -93,7 +93,7 @@ class App extends Component {
     fromAmountDisplay: 0,
     toAmountDisplay: 0,
     toAmount: new BN(0),
-    slippage: "0.03", //parts per ten thousand * 100 (0.03% )
+    slippage: "0.5", //parts per ten thousand * 100 (0.03% )
     yesContractAddress: "",
     noContractAddress: "",
     daiContractAddress: "",
@@ -159,7 +159,6 @@ class App extends Component {
       swapFee = web3.utils.fromWei(swapFee);
       swapFee = Number(swapFee);
       this.setState({ swapFee: swapFee });
-      console.log("swapFee: ", swapFee);
 
       if (!this.state.fromToken) {
         this.setState({
@@ -184,19 +183,16 @@ class App extends Component {
   // This function updates state in response to user input
   handleChange = async (e) => {
     e.persist();
-    console.log("handleChange working", e.target.name, ": ", e.target.value);
     await this.setState({ [e.target.name]: e.target.value });
-    console.log("this.state.toToken: ", this.state.toToken);
-    console.log("this.state.noContractAddress: ", this.state.noContractAddress);
-    console.log(
-      "this.state.yesContractAddress: ",
-      this.state.yesContractAddress
-    );
+
+    console.log('event', e.target.value);
+    console.log('slippage', this.state.slippage);
+
     if (
       e.target.name === "fromAmountDisplay" &&
       this.state.fromToken &&
       this.state.toToken
-    ) {
+    ) {      
       if (e.target.value <= 0) {
         this.setState({ isSwapDisabled: true });
         this.setState({
@@ -221,6 +217,7 @@ class App extends Component {
         this.setState({ toAmount: new BN(0), toAmountDisplay: 0 });
       }
     }
+
     if (
       e.target.name === "toAmountDisplay" &&
       this.state.fromToken &&
@@ -254,6 +251,14 @@ class App extends Component {
     //To Do:If user selects fromToke == toToken convert the other one into DAI
     if (e.target.name === "toToken") {
       if (e.target.value) {
+        if(e.target.value === this.state.fromToken) {
+          if(e.target.value === this.state.yesContractAddress || e.target.value === this.state.noContractAddress) {
+            this.setState({fromToken: this.state.daiContractAddress});
+          }
+          if(e.target.value === this.state.daiContractAddress) {
+            this.setState({fromToken: this.state.yesContractAddress});
+          }
+        }
         await this.updateBalances();
 
         await this.calcToGivenFrom();
@@ -264,6 +269,14 @@ class App extends Component {
     }
     if (e.target.name === "fromToken") {
       if (e.target.value) {
+        if(e.target.value === this.state.toToken) {
+          if(e.target.value === this.state.yesContractAddress || e.target.value === this.state.noContractAddress) {
+            this.setState({toToken: this.state.daiContractAddress});
+          }
+          if(e.target.value === this.state.daiContractAddress) {
+            this.setState({toToken: this.state.yesContractAddress});
+          }
+        }
         await this.updateBalances();
 
         await this.calcFromGivenTo();
@@ -298,17 +311,11 @@ class App extends Component {
   };
   connectWallet = async () => {
     if (window.ethereum) {
-      console.log("connecting wallet");
       var web3 = new Web3(window.ethereum);
 
       await window.ethereum.enable();
-      console.log(await web3.eth.net.isListening());
 
-      // console.log(web3);
       var accounts = await web3.eth.getAccounts();
-      // console.log(accounts);
-
-      console.log(web3.currentProvider);
 
       this.setState({ web3: web3, accounts: accounts });
       await this.componentDidMount();
@@ -328,7 +335,6 @@ class App extends Component {
 
   getMax = async () => {
     const { accounts, erc20Instance, fromToken } = this.state;
-    console.log(fromToken);
 
     if (!accounts) {
       return;
@@ -349,7 +355,6 @@ class App extends Component {
     await this.calcPriceProfitSlippage();
   };
   reversePair = async () => {
-    console.log("reverse the pair");
     const {
       fromAmount,
       toAmount,
@@ -426,7 +431,6 @@ class App extends Component {
         swapFeesCall,
       ])
       .call();
-    console.log("multicall done");
 
     let info = {};
     info.fromTokenBalance = web3.eth.abi.decodeParameter(
@@ -491,8 +495,6 @@ class App extends Component {
         )
         .call();
 
-      console.log("toAmount", toAmount);
-
       toAmount = new BN(toAmount);
 
       this.setState({
@@ -549,8 +551,6 @@ class App extends Component {
         )
         .call();
 
-      console.log("fromAmount:", fromAmount);
-
       fromAmount = new BN(fromAmount);
 
       this.setState({
@@ -571,7 +571,6 @@ class App extends Component {
 
   // This function determines whether to swapExactAmountIn or swapExactAmountOut
   swapBranch = async () => {
-    console.log("swapBranch started");
     if (this.state.fromExact) {
       await this.swapExactAmountIn();
     } else {
@@ -595,11 +594,6 @@ class App extends Component {
     var minAmountOut = toAmount.sub(
       toAmount.mul(slippage).div(TEN_THOUSAND_BN)
     );
-
-    console.log("minAmountOut", minAmountOut.toString());
-    console.log("toAmount", toAmount.toString());
-
-    console.log("slippage", slippage.toString());
 
     var maxPrice = MAX_UINT256;
 
@@ -686,9 +680,6 @@ class App extends Component {
     );
     var maxPrice = MAX_UINT256;
 
-    console.log("maxAmountIn", maxAmountIn.toString());
-    console.log("toAmount", toAmount.toString());
-
     try {
       await pool.methods
         .swapExactAmountOut(fromToken, maxAmountIn, toToken, toAmount, maxPrice)
@@ -762,7 +753,6 @@ class App extends Component {
       .call();
 
     allowance = web3.utils.fromWei(allowance);
-    console.log("allowance Before:" + allowance.toString());
 
     // this.setState({ isSwapDisabled: true });
     await erc20Instance.methods
@@ -779,7 +769,6 @@ class App extends Component {
           ),
           icon: <LoadingOutlined />,
         });
-        console.log(transactionHash);
       })
       .on("receipt", function (receipt) {
         notification.destroy();
@@ -808,12 +797,9 @@ class App extends Component {
     allowance = await erc20Instance.methods
       .allowance(accounts[0], bpoolAddress)
       .call();
-
-    console.log("Allowance of fromToken after approval: ", allowance);
     await this.updateBalances();
   };
   getEtherscanLink = (transactionHash) => {
-    console.log("etherscanLink", etherscanPrefix + transactionHash);
     return (
       <a
         href={etherscanPrefix + transactionHash}
@@ -846,9 +832,7 @@ class App extends Component {
     yesPrice = web3.utils.fromWei(yesPrice);
     yesPrice = Number(yesPrice);
     yesPrice = yesPrice / tokenMultiple;
-    console.log("yesPrice", yesPrice);
     yesPrice = yesPrice.toFixed(2);
-    console.log("yesPrice", yesPrice);
 
     var noPrice = await pool.methods
       .getSpotPrice(daiContractAddress, noContractAddress)
@@ -856,9 +840,7 @@ class App extends Component {
     noPrice = web3.utils.fromWei(noPrice);
     noPrice = Number(noPrice);
     noPrice = noPrice / tokenMultiple;
-    console.log("noPrice", noPrice);
     noPrice = noPrice.toFixed(2);
-    console.log("noPrice", noPrice);
     //update all the state variables at one for smoother experience
     this.setState({
       yesPrice: yesPrice,
@@ -875,7 +857,7 @@ class App extends Component {
     yesBalance = Number(yesBalance);
     yesBalance = tokenMultiple * yesBalance;
     yesBalance = yesBalance.toFixed(2);
-    console.log("yesBalance", yesBalance);
+
     if (fromToken === yesContractAddress) {
       this.setState({ fromBalance: yesBalance });
     }
@@ -889,7 +871,6 @@ class App extends Component {
     noBalance = tokenMultiple * noBalance;
     noBalance = noBalance.toFixed(2);
 
-    console.log("noBalance", noBalance);
     if (fromToken === noContractAddress) {
       this.setState({ fromBalance: noBalance });
     }
@@ -907,7 +888,7 @@ class App extends Component {
     daiBalance = web3.utils.fromWei(daiBalance);
     daiBalance = Number(daiBalance);
     daiBalance = daiBalance.toFixed(2);
-    console.log("daiBalance", daiBalance);
+
     if (fromToken === daiContractAddress) {
       this.setState({ fromBalance: daiBalance });
     }
@@ -949,22 +930,18 @@ class App extends Component {
           .getSpotPriceSansFee(fromToken, toToken)
           .call();
         spotPrice = web3.utils.fromWei(spotPrice);
-        console.log("spotPrice from pool: ", spotPrice);
         spotPrice = Number(spotPrice);
         spotPrice = spotPrice / tokenMultiple;
-        console.log("spotPrice", spotPrice);
         spotPrice = spotPrice * (1.0 + swapFee);
         spotPrice = spotPrice.toFixed(6);
-        console.log("spotPrice", spotPrice);
         var pricePerShare = fromAmount / toAmount;
         var maxProfit = (1 - pricePerShare) * toAmount;
         var priceImpact = ((pricePerShare - spotPrice) * 100) / pricePerShare;
         pricePerShare = Number(pricePerShare);
-        console.log("pricePerShare: ", pricePerShare);
         pricePerShare = pricePerShare.toFixed(3);
         maxProfit = maxProfit.toFixed(2);
         priceImpact = priceImpact.toFixed(2);
-        console.log("maxProfit: ", maxProfit);
+
         if (priceImpact < 1) {
           this.setState({ priceImpactColor: "green" });
         } else if (priceImpact >= 1 && priceImpact <= 3) {
@@ -972,10 +949,7 @@ class App extends Component {
         } else if (priceImpact > 3) {
           this.setState({ priceImpactColor: "red" });
         }
-        console.log(
-          "this.state.priceImpactColor: ",
-          this.state.priceImpactColor
-        );
+        
         this.setState({
           pricePerShare: pricePerShare,
           maxProfit: maxProfit,
@@ -991,19 +965,18 @@ class App extends Component {
           .call();
         spotPrice = web3.utils.fromWei(spotPrice);
         spotPrice = Number(spotPrice);
-        console.log("spotPrice from pool: ", spotPrice);
+        
         spotPrice = 1 / spotPrice;
-        console.log("spotPrice reciprocal: ", spotPrice);
+        
         spotPrice = spotPrice * (1 - swapFee);
-        console.log("Kovan spotPrice with fee", spotPrice);
+        
         spotPrice = spotPrice / tokenMultiple;
         pricePerShare = toAmount / fromAmount;
-        console.log("pricePerShare: ", pricePerShare);
-        console.log("spotPrice: ", spotPrice);
+        
         priceImpact = ((spotPrice - pricePerShare) * 100) / spotPrice;
         spotPrice = spotPrice.toFixed(3);
         pricePerShare = pricePerShare.toFixed(3);
-        console.log("priceImpact: ", priceImpact);
+        
         if (priceImpact < 1) {
           this.setState({ priceImpactColor: "green" });
         } else if (priceImpact >= 1 && priceImpact <= 3) {
@@ -1013,10 +986,7 @@ class App extends Component {
         }
         pricePerShare = Number(pricePerShare);
         priceImpact = priceImpact.toFixed(2);
-        console.log(
-          "this.state.priceImpactColor: ",
-          this.state.priceImpactColor
-        );
+        
         pricePerShare = pricePerShare.toFixed(3);
         this.setState({
           pricePerShare: pricePerShare,
@@ -1029,11 +999,11 @@ class App extends Component {
           .getSpotPriceSansFee(fromToken, toToken)
           .call();
         spotPrice = web3.utils.fromWei(spotPrice);
-        console.log("spotPrice from pool: ", spotPrice);
+        
         spotPrice = Number(spotPrice);
         spotPrice = spotPrice * (1.0 + swapFee);
         spotPrice = spotPrice.toFixed(6);
-        console.log("spotPrice", spotPrice);
+        
         pricePerShare = fromAmount / toAmount;
         let impliedOdds;
         impliedOdds = 100 - 100 / (1 + pricePerShare);
@@ -1041,7 +1011,7 @@ class App extends Component {
 
         priceImpact = ((pricePerShare - spotPrice) * 100) / pricePerShare;
         pricePerShare = Number(pricePerShare);
-        console.log("pricePerShare: ", pricePerShare);
+        
         pricePerShare = pricePerShare.toFixed(3);
         priceImpact = priceImpact.toFixed(2);
 
@@ -1070,7 +1040,6 @@ class App extends Component {
   };
   //Add yes token to Metamask
   AddYesTokenToMetamask = async () => {
-    console.log("hit add yes token");
     try {
       await this.AddTokenToMetamask(this.state.yesContractAddress);
     } catch (error) {
@@ -1081,7 +1050,6 @@ class App extends Component {
 
   //Add no token to Metamask
   AddNoTokenToMetamask = async () => {
-    console.log("hit add no token");
     try {
       await this.AddTokenToMetamask(this.state.noContractAddress);
     } catch (error) {
@@ -1127,7 +1095,7 @@ class App extends Component {
           id: Math.round(Math.random() * 100000),
         },
         (err, added) => {
-          console.log("provider returned", err, added);
+          
           if (err || "error" in added) {
             notification.error({
               duration: 7,
@@ -1159,12 +1127,7 @@ class App extends Component {
       await erc20Instance.methods.balanceOf(accounts[0]).call()
     );
 
-    console.log(
-      "Balance and from amount",
-      balance.toString(),
-      fromAmount.toString(),
-      balance.cmp(fromAmount) == 1
-    );
+    
     if (balance.gte(fromAmount)) {
       this.setState({ hasEnoughBalance: true });
     } else {
@@ -1188,12 +1151,7 @@ class App extends Component {
       await erc20Instance.methods.allowance(accounts[0], bpoolAddress).call()
     );
 
-    console.log(
-      "Approval and from amount",
-      allowance.toString(),
-      fromAmount.toString(),
-      allowance.lte(fromAmount)
-    );
+    
     if (allowance.lte(fromAmount)) {
       this.setState({ isApproveRequired: true });
     } else {
@@ -1201,10 +1159,15 @@ class App extends Component {
     }
   };
 
+  changeSlippage = (slippage) => {
+    console.log('slippage', this.state.slippage);
+    this.setState({slippage: slippage})
+  } 
+
   render() {
     return (
       <div className={`App ${this.props.isContrast ? "dark" : "light"}`}>
-        <PageHeader />
+        <PageHeader slippage={this.state.slippage} changeSlippage={this.changeSlippage}/>
         <Trading
           handleChange={this.handleChange}
           fromAmount={this.state.fromAmount}
