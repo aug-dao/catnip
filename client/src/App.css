@@ -3,7 +3,7 @@
   height: 100vh;
 }
 
-.App.dark {
+.App.dark, .App.dark > * {
   color: #fff !important;
   background-color: black !important;
 }
