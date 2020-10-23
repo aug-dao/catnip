@@ -124,6 +124,24 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiTypography-root': {
       marginRight: 10,      
     }
+  },
+  slippage_input: {
+    padding: '6px 16px',
+    borderRadius: 20,
+    borderRadius: 20,
+    backgroundColor: '#e0e0e0',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'rgba(0, 0, 0, 0.87)',
+
+    '& input': {
+      width: 30,
+      border: 'none',
+      outline: 'none',
+      background: 'transparent',
+      textAlign: 'right',
+    }
   }
 }));
 
@@ -258,14 +276,7 @@ export default function PageHeader(props) {
             </div>            
             {
               showSettings ? 
-                <div className={`${classes.settings_part} ${isContrast ? 'dark' : 'light'}`} ref={ref}>
-                  <FormControlLabel
-                      className={classes.darkmode_toggle}
-                      control={
-                        <IOSSwitch checked={isContrast} onChange={handleChange} />
-                      }
-                      label="Dark Mode"
-                    />
+                <div className={`${classes.settings_part} ${isContrast ? 'dark' : 'light'}`} ref={ref}>                  
                     <div className={classes.display_flex}>
                       <Typography
                         variant="body2"                      
@@ -300,8 +311,17 @@ export default function PageHeader(props) {
                           </Button>                          
                         )}         
                       </div>
-                      <Button variant="contained" className={classes.slippage_btn}>{slippage}%</Button>
+                      <div className={classes.slippage_input}>
+                        <input value={slippage} onChange={(e) => handleChangeSlippage(e.target.value)} type="number"/>%
+                      </div>                      
                     </div>
+                    <FormControlLabel
+                      className={classes.darkmode_toggle}
+                      control={
+                        <IOSSwitch checked={isContrast} onChange={handleChange} />
+                      }
+                      label="Dark Mode"
+                    />
                 </div> : 
                 ''
             }            
