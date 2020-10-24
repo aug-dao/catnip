@@ -82,6 +82,7 @@ const useStyles = makeStyles((theme) => ({
     width: 370,
     textAlign: 'left',
     boxShadow: 'rgba(0, 0, 0, 0.01) 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 4px 8px, rgba(0, 0, 0, 0.04) 0px 16px 24px, rgba(0, 0, 0, 0.01) 0px 24px 32px',
+    zIndex: 1,
 
     '&.light': {
       backgroundColor: 'rgb(247, 248, 250)'
@@ -287,9 +288,7 @@ export default function PageHeader(props) {
                       <Tooltip
                         title={
                           <Typography color="inherit">
-                            The difference between the market price and the
-                            estimated price you'll pay due to trade size. The
-                            larger the trade, the greater the price impact.
+                            Your transaction will revert if the price changes unfavorably by more than this percentage.
                           </Typography>
                         }
                         placement="right"

@@ -589,11 +589,11 @@ export default function Trading(props) {
                   )}
                 </div>
               </div>
-              <div className={`${classes.displayFlex} ${classes.width90}`}>
+              {/* <div className={`${classes.displayFlex} ${classes.width90}`}>
                 <Typography variant="body2" padding="20px">
                   slippage:
                 </Typography>
-                {/* <InputBase
+                <InputBase
                   autoFocus
                   className={classes.margin}
                   name="slippage"
@@ -602,11 +602,11 @@ export default function Trading(props) {
                   min="0"
                   onChange={props.handleChange}
                   inputProps={{ style: { fontSize: 24, paddingRight: 10 } }}
-                /> */}
+                />
                 <Typography variant="body2" padding="20px">
                 {props.slippage}%
                 </Typography>
-              </div>
+              </div> */}
               {props.fromAmount > 0 && (
                 <div className={`${classes.displayFlex} ${classes.width90}`}>
                   <Typography variant="body2" padding="20px">
