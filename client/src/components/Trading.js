@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
     },
 
     "& .MuiTypography-h6": {
-      lineHeight: "23px !important",
+      lineHeight: "26px !important",
       marginBottom: "15px",
     },
 
@@ -174,6 +174,7 @@ const useStyles = makeStyles((theme) => ({
       "&.light": {
         "& .MuiSvgIcon-root": {
           color: "#888",
+          marginTop: "1px",
         },
       },
     },
@@ -589,24 +590,6 @@ export default function Trading(props) {
                   )}
                 </div>
               </div>
-              {/* <div className={`${classes.displayFlex} ${classes.width90}`}>
-                <Typography variant="body2" padding="20px">
-                  slippage:
-                </Typography>
-                <InputBase
-                  autoFocus
-                  className={classes.margin}
-                  name="slippage"
-                  value={props.slippage}
-                  type="number"
-                  min="0"
-                  onChange={props.handleChange}
-                  inputProps={{ style: { fontSize: 24, paddingRight: 10 } }}
-                />
-                <Typography variant="body2" padding="20px">
-                {props.slippage}%
-                </Typography>
-              </div> */}
               {props.fromAmount > 0 && (
                 <div className={`${classes.displayFlex} ${classes.width90}`}>
                   <Typography variant="body2" padding="20px">

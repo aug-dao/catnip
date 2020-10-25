@@ -49,15 +49,15 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative'
   },
   settings: {
-    width: 40,
-    height: 40,
+    width: 36,
+    height: 38,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 15,
     cursor: 'pointer',    
     borderRadius: 5,
-    marginRight: 12,
+    marginRight: 30,
 
     '&.light': {
       backgroundColor: 'rgb(237, 238, 242)',
