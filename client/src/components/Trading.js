@@ -389,7 +389,7 @@ export default function Trading(props) {
               </div>
               <div>
                 <a
-                  href="https://www.predictionexplorer.com/market/0x1EBb89156091EB0d59603C18379C03A5c84D7355"
+                  href="https://predictionexplorer.com/market/0x1EBb89156091EB0d59603C18379C03A5c84D7355"
                   target="_blank"
                 >
                   {/* <img className={classes.info_icon} src={infoIcon} alt="info icon"/> */}
