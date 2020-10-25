@@ -47,18 +47,18 @@ const infuraProvider =
 const provider = new Web3.providers.HttpProvider(infuraProvider);
 
 const mainnetContracts = {
-  yes: "0x3af375d9f77ddd4f16f86a5d51a9386b7b4493fa",
-  no: "0x44ea84a85616f8e9cd719fc843de31d852ad7240",
+  yes: "0x3af375d9f77Ddd4F16F86A5D51a9386b7B4493Fa",
+  no: "0x44Ea84a85616F8e9cD719Fc843DE31D852ad7240",
   dai: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
-  pool: "0x6b74fb4e4b3b177b8e95ba9fa4c3a3121d22fbfb",
+  pool: "0x6B74Fb4E4b3B177b8e95ba9fA4c3a3121d22fbfB",
   multicall: "0xeefBa1e63905eF1D7ACbA5a8513c70307C1cE441",
 };
 
 const kovanContracts = {
-  yes: "0x1dbccf29375304c38bd0d162f636baa8dd6cce44",
+  yes: "0x1dbCcF29375304c38bd0d162f636BAA8Dd6CcE44",
   no: "0xeb69840f09A9235df82d9Ed9D43CafFFea2a1eE9",
-  dai: "0xb6085abd65e21d205aead0b1b9981b8b221fa14e",
-  pool: "0xbc6d6f508657c3c84983cd92f3eda6997e877e90",
+  dai: "0xb6085Abd65E21d205AEaD0b1b9981B8B221fA14E",
+  pool: "0xbC6D6F508657c3C84983cd92F3eDA6997e877e90",
   multicall: "0x2cc8688C5f75E365aaEEb4ea8D6a480405A48D2A",
 };
 
@@ -102,6 +102,8 @@ class App extends Component {
     toBalance: 0,
     shouldUpdateFrom: true,
     pricePerShare: 0,
+    avgYesPricePerShare: 0,
+    avgNoPricePerShare: 0,
     maxProfit: 0,
     priceImpact: 0,
     swapFee: 0,
@@ -185,14 +187,14 @@ class App extends Component {
     e.persist();
     await this.setState({ [e.target.name]: e.target.value });
 
-    console.log('event', e.target.value);
-    console.log('slippage', this.state.slippage);
+    console.log("event", e.target.value);
+    console.log("slippage", this.state.slippage);
 
     if (
       e.target.name === "fromAmountDisplay" &&
       this.state.fromToken &&
       this.state.toToken
-    ) {      
+    ) {
       if (e.target.value <= 0) {
         this.setState({ isSwapDisabled: true });
         this.setState({
@@ -251,12 +253,15 @@ class App extends Component {
     //To Do:If user selects fromToke == toToken convert the other one into DAI
     if (e.target.name === "toToken") {
       if (e.target.value) {
-        if(e.target.value === this.state.fromToken) {
-          if(e.target.value === this.state.yesContractAddress || e.target.value === this.state.noContractAddress) {
-            this.setState({fromToken: this.state.daiContractAddress});
+        if (e.target.value === this.state.fromToken) {
+          if (
+            e.target.value === this.state.yesContractAddress ||
+            e.target.value === this.state.noContractAddress
+          ) {
+            this.setState({ fromToken: this.state.daiContractAddress });
           }
-          if(e.target.value === this.state.daiContractAddress) {
-            this.setState({fromToken: this.state.yesContractAddress});
+          if (e.target.value === this.state.daiContractAddress) {
+            this.setState({ fromToken: this.state.yesContractAddress });
           }
         }
         await this.updateBalances();
@@ -269,12 +274,15 @@ class App extends Component {
     }
     if (e.target.name === "fromToken") {
       if (e.target.value) {
-        if(e.target.value === this.state.toToken) {
-          if(e.target.value === this.state.yesContractAddress || e.target.value === this.state.noContractAddress) {
-            this.setState({toToken: this.state.daiContractAddress});
+        if (e.target.value === this.state.toToken) {
+          if (
+            e.target.value === this.state.yesContractAddress ||
+            e.target.value === this.state.noContractAddress
+          ) {
+            this.setState({ toToken: this.state.daiContractAddress });
           }
-          if(e.target.value === this.state.daiContractAddress) {
-            this.setState({toToken: this.state.yesContractAddress});
+          if (e.target.value === this.state.daiContractAddress) {
+            this.setState({ toToken: this.state.yesContractAddress });
           }
         }
         await this.updateBalances();
@@ -328,6 +336,7 @@ class App extends Component {
       //   .approve(bpoolAddress, "0")
       //   .send({ from: accounts[0], gas: 46000 });
       await this.updateBalances();
+      await this.calcPnL();
     } else {
       this.showModal();
     }
@@ -577,7 +586,111 @@ class App extends Component {
       await this.swapExactAmountOut();
     }
   };
+  calcPnL = async () => {
+    const {
+      web3,
+      accounts,
+      pool,
+      yesContractAddress,
+      noContractAddress,
+      daiContractAddress,
+      tokenSymbols,
+    } = this.state;
+    if (!accounts) return;
 
+    //get past events regarding accounts[0]
+    let events = await pool.getPastEvents("LOG_SWAP", {
+      fromBlock: 0,
+      toBlock: "latest",
+      filter: { caller: accounts[0] },
+      // filter: { caller: "0xCed4f0838C5016B268C29E7659aD6cD360F6a3e1" },
+    });
+
+    //count avg yes price per share bought and count then compare it to current yesPricePerShare
+    //see if one of tokens if yestoken?
+
+    let totalYesPricePerShare = 0;
+    let avgYesPricePerShare = 0;
+    let totalYesTrades = 0;
+
+    let totalNoPricePerShare = 0;
+    let avgNoPricePerShare = 0;
+    let totalNoTrades = 0;
+
+    for (let i = 0; i < events.length; i++) {
+      let returnValues = events[i].returnValues;
+      let tokenIn = returnValues.tokenIn;
+      let tokenOut = returnValues.tokenOut;
+      let tokenAmountIn = this.convertAmountToDisplay(
+        new BN(returnValues.tokenAmountIn),
+        tokenIn
+      );
+      let tokenAmountOut = this.convertAmountToDisplay(
+        new BN(returnValues.tokenAmountOut),
+        tokenOut
+      );
+
+      if (tokenIn === yesContractAddress || tokenOut === yesContractAddress) {
+        {
+          let pricePerYesShare = 0;
+          if (
+            tokenIn === yesContractAddress &&
+            tokenOut === daiContractAddress
+          ) {
+            totalYesTrades++;
+            pricePerYesShare = tokenAmountOut / tokenAmountIn;
+          } else if (
+            tokenOut === yesContractAddress &&
+            tokenIn === daiContractAddress
+          ) {
+            totalYesTrades++;
+            pricePerYesShare = tokenAmountIn / tokenAmountOut;
+          }
+          totalYesPricePerShare += pricePerYesShare;
+        }
+      } else if (
+        tokenIn === noContractAddress ||
+        tokenOut === noContractAddress
+      ) {
+        {
+          let pricePerNoShare = 0;
+          if (
+            tokenIn === noContractAddress &&
+            tokenOut === daiContractAddress
+          ) {
+            totalNoTrades++;
+            pricePerNoShare = tokenAmountOut / tokenAmountIn;
+          } else if (
+            tokenOut === noContractAddress &&
+            tokenIn === daiContractAddress
+          ) {
+            totalNoTrades++;
+            pricePerNoShare = tokenAmountIn / tokenAmountOut;
+          }
+          totalNoPricePerShare += pricePerNoShare;
+        }
+      }
+
+      // console.log(events[i].returnValues.caller);
+    }
+
+    console.log("totalYesTrades", totalYesTrades);
+    if (totalYesTrades > 0) {
+      avgYesPricePerShare = totalYesPricePerShare / totalYesTrades;
+    }
+    console.log("avgYesPricePerShare", avgYesPricePerShare);
+
+    console.log("totalNoTrades", totalNoTrades);
+    if (totalNoTrades > 0) {
+      avgNoPricePerShare = totalNoPricePerShare / totalNoTrades;
+    }
+
+    this.setState({
+      avgYesPricePerShare: avgYesPricePerShare,
+      avgNoPricePerShare: avgNoPricePerShare,
+    });
+    console.log("avgNoPricePerShare", avgNoPricePerShare);
+  };
   // Swap with the number of "from" tokens fixed
   swapExactAmountIn = async () => {
     await this.calcToGivenFrom();
@@ -949,7 +1062,7 @@ class App extends Component {
         } else if (priceImpact > 3) {
           this.setState({ priceImpactColor: "red" });
         }
-        
+
         this.setState({
           pricePerShare: pricePerShare,
           maxProfit: maxProfit,
@@ -965,18 +1078,18 @@ class App extends Component {
           .call();
         spotPrice = web3.utils.fromWei(spotPrice);
         spotPrice = Number(spotPrice);
-        
+
         spotPrice = 1 / spotPrice;
-        
+
         spotPrice = spotPrice * (1 - swapFee);
-        
+
         spotPrice = spotPrice / tokenMultiple;
         pricePerShare = toAmount / fromAmount;
-        
+
         priceImpact = ((spotPrice - pricePerShare) * 100) / spotPrice;
         spotPrice = spotPrice.toFixed(3);
         pricePerShare = pricePerShare.toFixed(3);
-        
+
         if (priceImpact < 1) {
           this.setState({ priceImpactColor: "green" });
         } else if (priceImpact >= 1 && priceImpact <= 3) {
@@ -986,7 +1099,7 @@ class App extends Component {
         }
         pricePerShare = Number(pricePerShare);
         priceImpact = priceImpact.toFixed(2);
-        
+
         pricePerShare = pricePerShare.toFixed(3);
         this.setState({
           pricePerShare: pricePerShare,
@@ -999,11 +1112,11 @@ class App extends Component {
           .getSpotPriceSansFee(fromToken, toToken)
           .call();
         spotPrice = web3.utils.fromWei(spotPrice);
-        
+
         spotPrice = Number(spotPrice);
         spotPrice = spotPrice * (1.0 + swapFee);
         spotPrice = spotPrice.toFixed(6);
-        
+
         pricePerShare = fromAmount / toAmount;
         let impliedOdds;
         impliedOdds = 100 - 100 / (1 + pricePerShare);
@@ -1011,7 +1124,7 @@ class App extends Component {
 
         priceImpact = ((pricePerShare - spotPrice) * 100) / pricePerShare;
         pricePerShare = Number(pricePerShare);
-        
+
         pricePerShare = pricePerShare.toFixed(3);
         priceImpact = priceImpact.toFixed(2);
 
@@ -1095,7 +1208,6 @@ class App extends Component {
           id: Math.round(Math.random() * 100000),
         },
         (err, added) => {
-          
           if (err || "error" in added) {
             notification.error({
               duration: 7,
@@ -1127,7 +1239,6 @@ class App extends Component {
       await erc20Instance.methods.balanceOf(accounts[0]).call()
     );
 
-    
     if (balance.gte(fromAmount)) {
       this.setState({ hasEnoughBalance: true });
     } else {
@@ -1151,7 +1262,6 @@ class App extends Component {
       await erc20Instance.methods.allowance(accounts[0], bpoolAddress).call()
     );
 
-    
     if (allowance.lte(fromAmount)) {
       this.setState({ isApproveRequired: true });
     } else {
@@ -1160,14 +1270,17 @@ class App extends Component {
   };
 
   changeSlippage = (slippage) => {
-    console.log('slippage', this.state.slippage);
-    this.setState({slippage: slippage})
-  } 
+    console.log("slippage", this.state.slippage);
+    this.setState({ slippage: slippage });
+  };
 
   render() {
     return (
       <div className={`App ${this.props.isContrast ? "dark" : "light"}`}>
-        <PageHeader slippage={this.state.slippage} changeSlippage={this.changeSlippage}/>
+        <PageHeader
+          slippage={this.state.slippage}
+          changeSlippage={this.changeSlippage}
+        />
         <Trading
           handleChange={this.handleChange}
           fromAmount={this.state.fromAmount}
