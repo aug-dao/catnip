@@ -265,6 +265,7 @@ export default function PageHeader(props) {
         <Grid item xs={3}></Grid>
         <Grid item xs={4}>
           <Box fontWeight="fontWeightBold" textAlign="right" className={classes.custom_box}>
+            <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" target="_blank" class="twitter-share-button" data-text="The world&#39;s simplest, most liquid prediction market. Built on Augur." data-related="catnip_exchange" data-show-count="false">Tweet</a>
             <a href="https://discord.gg/a4hpuwd" target="_blank">
               <img
                 className={classes.discord_icon}

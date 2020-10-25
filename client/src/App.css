@@ -71,6 +71,10 @@
   margin-right: 12px !important;
 }
 
+.twitter-share-button {
+    margin: 16px 18px 0 0;
+}
+
 /* Hide number input field arrows on Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
