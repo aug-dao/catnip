@@ -119,6 +119,8 @@ class App extends Component {
     isApproveRequired: false,
     tokenSymbols: tokenSymbols,
     isSwapDisabled: false,
+    pnl: 0,
+    percentageDiffrencePnl: 0,
   };
 
   componentDidMount = async () => {
@@ -595,15 +597,22 @@ class App extends Component {
       noContractAddress,
       daiContractAddress,
       tokenSymbols,
+      yesContract,
+      noContract,
+      yesPrice,
+      noPrice,
     } = this.state;
     if (!accounts) return;
+
+    let account = accounts[0];
+    //replace account to test
+    // let account = "0x61fef96e49f352fbac4645b0f5aefc0f40d80695";
 
     //get past events regarding accounts[0]
     let events = await pool.getPastEvents("LOG_SWAP", {
       fromBlock: 0,
       toBlock: "latest",
-      filter: { caller: accounts[0] },
-      // filter: { caller: "0xCed4f0838C5016B268C29E7659aD6cD360F6a3e1" },
+      filter: { caller: account },
     });
 
     //count avg yes price per share bought and count then compare it to current yesPricePerShare
@@ -612,22 +621,25 @@ class App extends Component {
     let totalYesPricePerShare = 0;
     let avgYesPricePerShare = 0;
     let totalYesTrades = 0;
+    let totalDaiTradedWithYes = 0;
 
     let totalNoPricePerShare = 0;
     let avgNoPricePerShare = 0;
     let totalNoTrades = 0;
+    let totalDaiTradedWithNo = 0;
 
     for (let i = 0; i < events.length; i++) {
       let returnValues = events[i].returnValues;
       let tokenIn = returnValues.tokenIn;
       let tokenOut = returnValues.tokenOut;
-      let tokenAmountIn = this.convertAmountToDisplay(
-        new BN(returnValues.tokenAmountIn),
-        tokenIn
+      let tokenAmountIn = Number(
+        this.convertAmountToDisplay(new BN(returnValues.tokenAmountIn), tokenIn)
       );
-      let tokenAmountOut = this.convertAmountToDisplay(
-        new BN(returnValues.tokenAmountOut),
-        tokenOut
+      let tokenAmountOut = Number(
+        this.convertAmountToDisplay(
+          new BN(returnValues.tokenAmountOut),
+          tokenOut
+        )
       );
 
       if (tokenIn === yesContractAddress || tokenOut === yesContractAddress) {
@@ -638,14 +650,18 @@ class App extends Component {
             tokenOut === daiContractAddress
           ) {
             totalYesTrades++;
-            pricePerYesShare = tokenAmountOut / tokenAmountIn;
+            totalDaiTradedWithYes += tokenAmountIn;
+            pricePerYesShare =
+              (tokenAmountOut * tokenAmountOut) / tokenAmountIn;
           } else if (
             tokenOut === yesContractAddress &&
             tokenIn === daiContractAddress
           ) {
             totalYesTrades++;
-            pricePerYesShare = tokenAmountIn / tokenAmountOut;
+            totalDaiTradedWithYes += tokenAmountIn;
+            pricePerYesShare = (tokenAmountIn * tokenAmountIn) / tokenAmountOut;
           }
+          // console.log("priceYesPerShare", pricePerYesShare);
           totalYesPricePerShare += pricePerYesShare;
         }
       } else if (
@@ -659,13 +675,15 @@ class App extends Component {
             tokenOut === daiContractAddress
           ) {
             totalNoTrades++;
-            pricePerNoShare = tokenAmountOut / tokenAmountIn;
+            totalDaiTradedWithNo += tokenAmountOut;
+            pricePerNoShare = (tokenAmountOut * tokenAmountOut) / tokenAmountIn;
           } else if (
             tokenOut === noContractAddress &&
             tokenIn === daiContractAddress
           ) {
             totalNoTrades++;
-            pricePerNoShare = tokenAmountIn / tokenAmountOut;
+            totalDaiTradedWithNo += tokenAmountIn;
+            pricePerNoShare = (tokenAmountIn * tokenAmountIn) / tokenAmountOut;
           }
           totalNoPricePerShare += pricePerNoShare;
         }
@@ -676,13 +694,15 @@ class App extends Component {
 
     console.log("totalYesTrades", totalYesTrades);
     if (totalYesTrades > 0) {
-      avgYesPricePerShare = totalYesPricePerShare / totalYesTrades;
+      avgYesPricePerShare = totalYesPricePerShare / totalDaiTradedWithYes;
     }
     console.log("avgYesPricePerShare", avgYesPricePerShare);
+    console.log("toatalDAiTRadedWithYes", totalDaiTradedWithYes);
+    console.log("toatalDAiTRadedWith No", totalDaiTradedWithNo);
 
     console.log("totalNoTrades", totalNoTrades);
     if (totalNoTrades > 0) {
-      avgNoPricePerShare = totalNoPricePerShare / totalNoTrades;
+      avgNoPricePerShare = totalNoPricePerShare / totalDaiTradedWithNo;
     }
 
     this.setState({
@@ -690,6 +710,92 @@ class App extends Component {
       avgNoPricePerShare: avgNoPricePerShare,
     });
     console.log("avgNoPricePerShare", avgNoPricePerShare);
+
+    console.log("currentYesPrice", yesPrice);
+    console.log("currentNoPrice", noPrice);
+    var yesBalance = new BN(
+      await yesContract.methods.balanceOf(account).call()
+    );
+    var noBalance = new BN(await noContract.methods.balanceOf(account).call());
+    console.log("yesBalanace", yesBalance.toString());
+    console.log("noBalance", noBalance.toString());
+
+    let difference = yesBalance.sub(noBalance);
+
+    console.log("difference", difference.toString());
+    console.log("is difference negative", difference.isNeg());
+
+    yesBalance = this.convertAmountToDisplay(yesBalance);
+    noBalance = this.convertAmountToDisplay(noBalance);
+
+    let priceDifference = 0;
+    let percentageDiffrencePnl = 0;
+    let pnl = 0;
+
+    if (yesBalance == 0 && avgNoPricePerShare != 0) {
+      priceDifference = noPrice - avgNoPricePerShare;
+      console.log("noPriceDifference", priceDifference);
+
+      if (priceDifference < 0) {
+        percentageDiffrencePnl = 100 - (noPrice * 100) / avgNoPricePerShare;
+      } else if (priceDifference > 0) {
+        percentageDiffrencePnl = 100 - (avgNoPricePerShare * 100) / noPrice;
+      }
+      console.log("no pecentage difference", percentageDiffrencePnl);
+      pnl = noBalance * percentageDiffrencePnl;
+      console.log("pnl", pnl);
+    } else if (noBalance == 0 && avgYesPricePerShare != 0) {
+      priceDifference = yesPrice - avgYesPricePerShare;
+      console.log("yesPriceDifference", priceDifference);
+
+      if (priceDifference < 0) {
+        percentageDiffrencePnl = 100 - (yesPrice * 100) / avgYesPricePerShare;
+      } else if (priceDifference > 0) {
+        percentageDiffrencePnl = 100 - (avgYesPricePerShare * 100) / yesPrice;
+      }
+
+      console.log("yes pecentage difference", percentageDiffrencePnl);
+
+      pnl = yesBalance * percentageDiffrencePnl;
+      console.log("pnl", pnl);
+    } else if (
+      !difference.isZero() &&
+      !(avgYesPricePerShare == 0 || avgNoPricePerShare == 0)
+    ) {
+      if (difference.isNeg() && avgNoPricePerShare != 0) {
+        //nTrump postion
+        priceDifference = noPrice - avgNoPricePerShare;
+
+        console.log("noPriceDifference", priceDifference);
+
+        if (priceDifference < 0) {
+          percentageDiffrencePnl = 100 - (noPrice * 100) / avgNoPricePerShare;
+        } else if (priceDifference > 0) {
+          percentageDiffrencePnl = 100 - (avgNoPricePerShare * 100) / noPrice;
+        }
+
+        console.log("No pecentage difference", percentageDiffrencePnl);
+      } else if (avgYesPricePerShare != 0) {
+        priceDifference = yesPrice - avgYesPricePerShare;
+        console.log("yesPriceDifference", priceDifference);
+
+        if (priceDifference < 0) {
+          percentageDiffrencePnl = 100 - (yesPrice * 100) / avgYesPricePerShare;
+        } else if (priceDifference > 0) {
+          percentageDiffrencePnl = 100 - (avgYesPricePerShare * 100) / yesPrice;
+        }
+
+        console.log("yes pecentage difference", percentageDiffrencePnl);
+      }
+      difference = this.convertAmountToDisplay(difference);
+
+      pnl = difference * percentageDiffrencePnl;
+      console.log("pnl", pnl);
+    }
+    this.setState({
+      pnl: pnl,
+      percentageDiffrencePnl: percentageDiffrencePnl,
+    });
   };
   // Swap with the number of "from" tokens fixed
   swapExactAmountIn = async () => {
@@ -768,6 +874,7 @@ class App extends Component {
         });
 
       await this.updateBalances();
+      await this.calcPnL();
     } catch (error) {
       // alert(`Swap with from tokens fixed failed. Check console for details.`);
 
@@ -845,6 +952,7 @@ class App extends Component {
         });
 
       await this.updateBalances();
+      await this.calcPnL();
     } catch (error) {
       // alert(
       //   `Swap with number of from tokens fixed failed. Check console for details.`
@@ -1320,6 +1428,8 @@ class App extends Component {
           tokenSymbols={this.state.tokenSymbols}
           slippage={this.state.slippage}
           isSwapDisabled={this.state.isSwapDisabled}
+          pnl={this.state.pnl}
+          percentageDiffrencePnl={this.state.percentageDiffrencePnl}
         />
       </div>
     );

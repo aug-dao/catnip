@@ -874,6 +874,26 @@ export default function Trading(props) {
                     </Typography>
                   </div>
                 )}
+                {props.pnl != 0 && (
+                  <div className="flex-item">
+                    <Typography
+                      variant="h6"
+                      textAlign="center"
+                      fontWeight="fontWeightBold"
+                      padding="0px"
+                    >
+                      P&L
+                    </Typography>
+
+                    <Typography variant="h6" textAlign="center" padding="20px">
+                      {"$"}
+                      {props.pnl.toFixed(2)}
+                      {"("}
+                      {props.percentageDiffrencePnl.toFixed(2)}
+                      {"%)"}
+                    </Typography>
+                  </div>
+                )}
               </div>
             ) : (
               ""
