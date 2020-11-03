@@ -337,7 +337,6 @@ const CustomExpandMore = withStyles(iconStyles)(
 
 export default function Trading(props) {
   const classes = useStyles();
-
   const isContrast = useSelector((state) => state.settings.isContrast);
 
   const Theme = {
@@ -701,6 +700,31 @@ export default function Trading(props) {
                 className={`main_footer ${isContrast ? "dark" : "light"}`}
               >
                 <Box textAlign="right">
+                  {props.totalSwapVolume > 0 && (
+                    <div
+                      className={`${classes.displayFlex} ${classes.width90}`}
+                    >
+                      <div
+                        className={`${classes.displayFlex} ${classes.info_text}`}
+                      >
+                        <Typography
+                          variant="body2"
+                          color="textPrimary"
+                          padding="20px"
+                        >
+                          Total Trading volume
+                        </Typography>
+                      </div>
+                      <Typography
+                        variant="body2"
+                        color="textPrimary"
+                        padding="20px"
+                        className={classes.no_price_impact}
+                      >
+                        ${props.totalSwapVolume}
+                      </Typography>
+                    </div>
+                  )}
                   <form className={classes.root} noValidate autoComplete="off">
                     {props.fromToken === props.daiContractAddress && (
                       <div

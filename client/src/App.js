@@ -119,6 +119,7 @@ class App extends Component {
     isApproveRequired: false,
     tokenSymbols: tokenSymbols,
     isSwapDisabled: false,
+    totalSwapVolume: 0,
   };
 
   componentDidMount = async () => {
@@ -179,6 +180,41 @@ class App extends Component {
     } catch (error) {
       // Catch any errors for any of the above operations.
       console.error(error);
+    }
+  };
+  getTotalVolumeForThePool = async () => {
+    const URL =
+      "https://api.thegraph.com/subgraphs/name/balancer-labs/balancer";
+    let content = {
+      query: `{
+      pools(where: {id: "0x6b74fb4e4b3b177b8e95ba9fa4c3a3121d22fbfb"}) {
+        id 
+        totalSwapVolume
+        tokens {
+          id
+          address
+          balance
+        }
+      }
+    }`,
+    };
+    let body = JSON.stringify(content);
+    let response = await fetch(URL, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: body,
+    });
+
+    if (response.status == 200) {
+      let poolInfo = await response.json();
+      // console.log(poolInfo.data.pools[0].totalSwapVolume);
+      let totalSwapVolume = poolInfo.data.pools[0].totalSwapVolume;
+      return totalSwapVolume;
+    } else {
+      console.log("error in getting the pool info");
+      return 0;
     }
   };
 
@@ -834,6 +870,8 @@ class App extends Component {
     const { tokenMultiple } = this.state;
     const { pool } = this.state;
 
+    let totalSwapVolume = await this.getTotalVolumeForThePool();
+
     var yesPrice = await pool.methods
       .getSpotPrice(daiContractAddress, yesContractAddress)
       .call();
@@ -853,7 +891,9 @@ class App extends Component {
     this.setState({
       yesPrice: yesPrice,
       noPrice: noPrice,
+      totalSwapVolume: totalSwapVolume,
     });
+    console.log("totalSwapVolume:", totalSwapVolume);
 
     if (!accounts) return;
 
@@ -1215,6 +1255,7 @@ class App extends Component {
           tokenSymbols={this.state.tokenSymbols}
           slippage={this.state.slippage}
           isSwapDisabled={this.state.isSwapDisabled}
+          totalSwapVolume={Number(this.state.totalSwapVolume)}
         />
       </div>
     );
