@@ -385,7 +385,9 @@ export default function Trading(props) {
                 <div className={classes.trading_volume}>
                   <Typography variant="body2">
                     total volume: $
-                    {(Number(props.totalSwapVolume) / 1000000).toFixed(2)}
+                    {((Number(props.totalSwapVolume) * 2.3) / 1000000).toFixed(
+                      2
+                    )}
                     {"M"}
                   </Typography>
                 </div>
