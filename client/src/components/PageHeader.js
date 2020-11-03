@@ -210,7 +210,7 @@ export default function PageHeader(props) {
   const [slippage, setSlippage] = useState(props.slippage);
 
   const handleChange = () => {
-    if (isContrast) {
+    if (!isContrast) {
       dispatch({ type: "CLOSE_CONTRAST" });
     } else {
       dispatch({ type: "OPEN_CONTRAST" });
