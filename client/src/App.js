@@ -190,10 +190,8 @@ class App extends Component {
       pools(where: {id: "0x6b74fb4e4b3b177b8e95ba9fa4c3a3121d22fbfb"}) {
         id 
         totalSwapVolume
-        tokens {
-          id
-          address
-          balance
+        swaps{
+          poolTotalSwapVolume
         }
       }
     }`,

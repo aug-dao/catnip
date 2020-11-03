@@ -317,9 +317,9 @@ const useStyles = makeStyles((theme) => ({
     background: "#a7a8a9",
   },
   trading_volume: {
-    textAlign: 'right',
-    marginBottom: '14px',
-    marginRight: '8px',
+    textAlign: "right",
+    marginBottom: "14px",
+    marginRight: "8px",
   },
 }));
 
@@ -381,15 +381,15 @@ export default function Trading(props) {
               square={true}
               elevation={0}
             >
-
-                  {props.totalSwapVolume > 0 && (
-                    <div className={classes.trading_volume}>
-                      <Typography variant="body2">
-                        total volume: 
-                        ${props.totalSwapVolume}
-                      </Typography>
-                    </div>
-                  )}
+              {props.totalSwapVolume > 0 && (
+                <div className={classes.trading_volume}>
+                  <Typography variant="body2">
+                    total volume: $
+                    {(Number(props.totalSwapVolume) / 1000000).toFixed(2)}
+                    {"M"}
+                  </Typography>
+                </div>
+              )}
               <div className={classes.float_left}>
                 <Typography
                   variant="h6"
@@ -849,11 +849,7 @@ export default function Trading(props) {
                       </Link>
                     </div>
                   </div>
-                  <Typography
-                    variant="body2"
-                    textAlign="center"
-                    padding="20px"
-                  >
+                  <Typography variant="body2" textAlign="center" padding="20px">
                     ${props.yesPrice}
                   </Typography>
                 </div>
