@@ -842,62 +842,58 @@ export default function Trading(props) {
                     Current Price
                   </Typography>
                 </div>
-                {props.yesBalance != 0 && (
+                <div className="flex-item">
                   <div className="flex-item">
-                    <div className="flex-item">
-                      <img src={TImg} display="inline" />
-                      <div>
-                        <Typography>
-                          {props.yesBalance} <span className="yes">y</span>Trump
-                        </Typography>
-                        <Link
-                          className="holding_num"
-                          onClick={props.AddYesTokenToMetamask}
-                          component="button"
-                          variant="body2"
-                        >
-                          {" "}
-                          Show in wallet
-                        </Link>
-                      </div>
+                    <img src={TImg} display="inline" />
+                    <div>
+                      <Typography>
+                        {props.yesBalance} <span className="yes">y</span>Trump
+                      </Typography>
+                      <Link
+                        className="holding_num"
+                        onClick={props.AddYesTokenToMetamask}
+                        component="button"
+                        variant="body2"
+                      >
+                        {" "}
+                        Show in wallet
+                      </Link>
                     </div>
-                    <Typography
-                      variant="body2"
-                      textAlign="center"
-                      padding="20px"
-                    >
-                      ${props.yesPrice}
-                    </Typography>
                   </div>
-                )}
-                {props.noBalance != 0 && (
-                  <div className="flex-item last">
-                    <div className="flex-item">
-                      <img src={NTImg} display="inline" />
-                      <div>
-                        <Typography>
-                          {props.noBalance} <span className="no">n</span>Trump
-                        </Typography>
-                        <Link
-                          className="holding_num"
-                          onClick={props.AddNoTokenToMetamask}
-                          component="button"
-                          variant="body2"
-                        >
-                          {" "}
-                          Show in wallet
-                        </Link>
-                      </div>
+                  <Typography
+                    variant="body2"
+                    textAlign="center"
+                    padding="20px"
+                  >
+                    ${props.yesPrice}
+                  </Typography>
+                </div>
+                <div className="flex-item last">
+                  <div className="flex-item">
+                    <img src={NTImg} display="inline" />
+                    <div>
+                      <Typography>
+                        {props.noBalance} <span className="no">n</span>Trump
+                      </Typography>
+                      <Link
+                        className="holding_num"
+                        onClick={props.AddNoTokenToMetamask}
+                        component="button"
+                        variant="body2"
+                      >
+                        {" "}
+                        Show in wallet
+                      </Link>
                     </div>
-                    <Typography
-                      variant="body2"
-                      textAlign="center"
-                      marginTop="1150px"
-                    >
-                      ${props.noPrice}
-                    </Typography>
                   </div>
-                )}
+                  <Typography
+                    variant="body2"
+                    textAlign="center"
+                    marginTop="1150px"
+                  >
+                    ${props.noPrice}
+                  </Typography>
+                </div>
               </div>
             ) : (
               ""
