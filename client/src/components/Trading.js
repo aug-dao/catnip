@@ -137,7 +137,7 @@ const useStyles = makeStyles((theme) => ({
     },
 
     "& .main_part": {
-      padding: "30px 16px 20px",
+      padding: "18px 16px 20px",
       textAlign: "center",
       marginBottom: "10px",
       borderRadius: "30px",
@@ -316,6 +316,11 @@ const useStyles = makeStyles((theme) => ({
   disabled_button: {
     background: "#a7a8a9",
   },
+  trading_volume: {
+    textAlign: 'right',
+    marginBottom: '14px',
+    marginRight: '8px',
+  },
 }));
 
 const iconStyles = {
@@ -376,6 +381,15 @@ export default function Trading(props) {
               square={true}
               elevation={0}
             >
+
+                  {props.totalSwapVolume > 0 && (
+                    <div className={classes.trading_volume}>
+                      <Typography variant="body2">
+                        total volume: 
+                        ${props.totalSwapVolume}
+                      </Typography>
+                    </div>
+                  )}
               <div className={classes.float_left}>
                 <Typography
                   variant="h6"
@@ -700,31 +714,6 @@ export default function Trading(props) {
                 className={`main_footer ${isContrast ? "dark" : "light"}`}
               >
                 <Box textAlign="right">
-                  {props.totalSwapVolume > 0 && (
-                    <div
-                      className={`${classes.displayFlex} ${classes.width90}`}
-                    >
-                      <div
-                        className={`${classes.displayFlex} ${classes.info_text}`}
-                      >
-                        <Typography
-                          variant="body2"
-                          color="textPrimary"
-                          padding="20px"
-                        >
-                          Total Trading volume
-                        </Typography>
-                      </div>
-                      <Typography
-                        variant="body2"
-                        color="textPrimary"
-                        padding="20px"
-                        className={classes.no_price_impact}
-                      >
-                        ${props.totalSwapVolume}
-                      </Typography>
-                    </div>
-                  )}
                   <form className={classes.root} noValidate autoComplete="off">
                     {props.fromToken === props.daiContractAddress && (
                       <div
