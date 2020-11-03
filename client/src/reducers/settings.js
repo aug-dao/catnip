@@ -1,5 +1,5 @@
 const initialState = {
-    isContrast: false
+    isContrast: true
 }
 
 export default function settings(state = initialState, action) {
@@ -7,12 +7,12 @@ export default function settings(state = initialState, action) {
         case 'OPEN_CONTRAST':
             return {
                 ...state, 
-                isContrast: true
+                isContrast: false
             }
         case 'CLOSE_CONTRAST':
             return {
                 ...state, 
-                isContrast: false
+                isContrast: true
             }
         default: 
             return state;
