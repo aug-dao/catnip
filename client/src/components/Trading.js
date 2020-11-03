@@ -376,6 +376,11 @@ export default function Trading(props) {
             </Paper>
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
+             <Box textAlign="left">
+               <div class="slippage_alert">
+                Caution: trade slippage is expected to be significantly higher during Election Day and until the market outcome is known. For more info see <a href="https://medium.com/catnip-exchange/election-day-trading-on-catnip-exchange-51dd777ee141" target="_blank"> here</a>.
+               </div>
+            </Box>
             <Paper
               className={`main_part ${isContrast ? "dark" : "light"}`}
               square={true}

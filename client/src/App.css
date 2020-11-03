@@ -75,6 +75,13 @@
     margin: 16px 18px 0 0;
 }
 
+.slippage_alert {
+  padding-left: 12px;
+  padding-bottom: 14px;
+  font-size: 108%;
+}
+
+
 /* Hide number input field arrows on Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
