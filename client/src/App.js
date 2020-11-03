@@ -27,7 +27,7 @@ const BN = require("bn.js");
 const MAX_UINT256 = new BN(2).pow(new BN(256)).sub(new BN(1));
 const TEN_THOUSAND_BN = new BN(10000);
 
-const network = "kovan"; // set network as "ganache" or "kovan" or "mainnet"
+const network = "mainnet"; // set network as "ganache" or "kovan" or "mainnet"
 const tokenMultiple = network === "kovan" ? new BN(100) : new BN(1000);
 // if network is ganache, run truffle migrate --develop and disable metamask
 // if network is kovan, enable metamask, set to kovan network and open account with kovan eth
@@ -93,7 +93,7 @@ class App extends Component {
     fromAmountDisplay: 0,
     toAmountDisplay: 0,
     toAmount: new BN(0),
-    slippage: "0.5", //parts per ten thousand * 100 (0.03% )
+    slippage: "1", //parts per ten thousand * 100 (0.03% )
     yesContractAddress: "",
     noContractAddress: "",
     daiContractAddress: "",
@@ -336,7 +336,6 @@ class App extends Component {
       //   .approve(bpoolAddress, "0")
       //   .send({ from: accounts[0], gas: 46000 });
       await this.updateBalances();
-      await this.calcPnL();
     } else {
       this.showModal();
     }
@@ -586,111 +585,7 @@ class App extends Component {
       await this.swapExactAmountOut();
     }
   };
-  calcPnL = async () => {
-    const {
-      web3,
-      accounts,
-      pool,
-      yesContractAddress,
-      noContractAddress,
-      daiContractAddress,
-      tokenSymbols,
-    } = this.state;
-    if (!accounts) return;
 
-    //get past events regarding accounts[0]
-    let events = await pool.getPastEvents("LOG_SWAP", {
-      fromBlock: 0,
-      toBlock: "latest",
-      filter: { caller: accounts[0] },
-      // filter: { caller: "0xCed4f0838C5016B268C29E7659aD6cD360F6a3e1" },
-    });
-
-    //count avg yes price per share bought and count then compare it to current yesPricePerShare
-    //see if one of tokens if yestoken?
-
-    let totalYesPricePerShare = 0;
-    let avgYesPricePerShare = 0;
-    let totalYesTrades = 0;
-
-    let totalNoPricePerShare = 0;
-    let avgNoPricePerShare = 0;
-    let totalNoTrades = 0;
-
-    for (let i = 0; i < events.length; i++) {
-      let returnValues = events[i].returnValues;
-      let tokenIn = returnValues.tokenIn;
-      let tokenOut = returnValues.tokenOut;
-      let tokenAmountIn = this.convertAmountToDisplay(
-        new BN(returnValues.tokenAmountIn),
-        tokenIn
-      );
-      let tokenAmountOut = this.convertAmountToDisplay(
-        new BN(returnValues.tokenAmountOut),
-        tokenOut
-      );
-
-      if (tokenIn === yesContractAddress || tokenOut === yesContractAddress) {
-        {
-          let pricePerYesShare = 0;
-          if (
-            tokenIn === yesContractAddress &&
-            tokenOut === daiContractAddress
-          ) {
-            totalYesTrades++;
-            pricePerYesShare = tokenAmountOut / tokenAmountIn;
-          } else if (
-            tokenOut === yesContractAddress &&
-            tokenIn === daiContractAddress
-          ) {
-            totalYesTrades++;
-            pricePerYesShare = tokenAmountIn / tokenAmountOut;
-          }
-          totalYesPricePerShare += pricePerYesShare;
-        }
-      } else if (
-        tokenIn === noContractAddress ||
-        tokenOut === noContractAddress
-      ) {
-        {
-          let pricePerNoShare = 0;
-          if (
-            tokenIn === noContractAddress &&
-            tokenOut === daiContractAddress
-          ) {
-            totalNoTrades++;
-            pricePerNoShare = tokenAmountOut / tokenAmountIn;
-          } else if (
-            tokenOut === noContractAddress &&
-            tokenIn === daiContractAddress
-          ) {
-            totalNoTrades++;
-            pricePerNoShare = tokenAmountIn / tokenAmountOut;
-          }
-          totalNoPricePerShare += pricePerNoShare;
-        }
-      }
-
-      // console.log(events[i].returnValues.caller);
-    }
-
-    console.log("totalYesTrades", totalYesTrades);
-    if (totalYesTrades > 0) {
-      avgYesPricePerShare = totalYesPricePerShare / totalYesTrades;
-    }
-    console.log("avgYesPricePerShare", avgYesPricePerShare);
-
-    console.log("totalNoTrades", totalNoTrades);
-    if (totalNoTrades > 0) {
-      avgNoPricePerShare = totalNoPricePerShare / totalNoTrades;
-    }
-
-    this.setState({
-      avgYesPricePerShare: avgYesPricePerShare,
-      avgNoPricePerShare: avgNoPricePerShare,
-    });
-    console.log("avgNoPricePerShare", avgNoPricePerShare);
-  };
   // Swap with the number of "from" tokens fixed
   swapExactAmountIn = async () => {
     await this.calcToGivenFrom();
