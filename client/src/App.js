@@ -93,7 +93,7 @@ class App extends Component {
     fromAmountDisplay: 0,
     toAmountDisplay: 0,
     toAmount: new BN(0),
-    slippage: "0.1", //parts per ten thousand * 100 (0.03% )
+    slippage: "0.5", //parts per ten thousand * 100 (0.03% )
     yesContractAddress: "",
     noContractAddress: "",
     daiContractAddress: "",
@@ -205,7 +205,7 @@ class App extends Component {
       body: body,
     });
 
-    if (response.status == 200) {
+    if (response.status === 200) {
       let poolInfo = await response.json();
       // console.log(poolInfo.data.pools[0].totalSwapVolume);
       let totalSwapVolume = poolInfo.data.pools[0].totalSwapVolume;
@@ -295,7 +295,7 @@ class App extends Component {
             this.setState({ fromToken: this.state.daiContractAddress });
           }
           if (e.target.value === this.state.daiContractAddress) {
-            this.setState({ fromToken: this.state.yesContractAddress });
+            this.setState({ fromToken: this.state.noContractAddress });
           }
         }
         await this.updateBalances();
@@ -316,7 +316,7 @@ class App extends Component {
             this.setState({ toToken: this.state.daiContractAddress });
           }
           if (e.target.value === this.state.daiContractAddress) {
-            this.setState({ toToken: this.state.yesContractAddress });
+            this.setState({ toToken: this.state.noContractAddress });
           }
         }
         await this.updateBalances();
