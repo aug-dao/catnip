@@ -50,7 +50,7 @@ const mainnetContracts = {
   yes: "0x3af375d9f77Ddd4F16F86A5D51a9386b7B4493Fa",
   no: "0x44Ea84a85616F8e9cD719Fc843DE31D852ad7240",
   dai: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
-  pool: "0x6B74Fb4E4b3B177b8e95ba9fA4c3a3121d22fbfB",
+  pool: "0xe4a8032a3e579a5b709b5bfe0294890614272437",
   multicall: "0xeefBa1e63905eF1D7ACbA5a8513c70307C1cE441",
 };
 
@@ -58,7 +58,7 @@ const kovanContracts = {
   yes: "0x1dbCcF29375304c38bd0d162f636BAA8Dd6CcE44",
   no: "0xeb69840f09A9235df82d9Ed9D43CafFFea2a1eE9",
   dai: "0xb6085Abd65E21d205AEaD0b1b9981B8B221fA14E",
-  pool: "0xbC6D6F508657c3C84983cd92F3eDA6997e877e90",
+  pool: "0xacb57239c0d0c1c7e11a19c7af0f39a22749f9f0",
   multicall: "0x2cc8688C5f75E365aaEEb4ea8D6a480405A48D2A",
 };
 
@@ -93,7 +93,7 @@ class App extends Component {
     fromAmountDisplay: 0,
     toAmountDisplay: 0,
     toAmount: new BN(0),
-    slippage: "3", //parts per ten thousand * 100 (0.03% )
+    slippage: "0.1", //parts per ten thousand * 100 (0.03% )
     yesContractAddress: "",
     noContractAddress: "",
     daiContractAddress: "",
@@ -165,8 +165,8 @@ class App extends Component {
 
       if (!this.state.fromToken) {
         this.setState({
-          fromToken: this.state.daiContractAddress,
-          toToken: this.state.yesContractAddress,
+          fromToken: this.state.noContractAddress,
+          toToken: this.state.daiContractAddress,
         });
         this.setState({
           fromAmount: this.convertDisplayToAmount(100, this.state.fromToken),
@@ -187,7 +187,7 @@ class App extends Component {
       "https://api.thegraph.com/subgraphs/name/balancer-labs/balancer";
     let content = {
       query: `{
-      pools(where: {id: "0x6b74fb4e4b3b177b8e95ba9fa4c3a3121d22fbfb"}) {
+      pools(where: {id: "0xe4a8032a3e579a5b709b5bfe0294890614272437"}) {
         id 
         totalSwapVolume
         swaps{
@@ -870,13 +870,13 @@ class App extends Component {
 
     let totalSwapVolume = await this.getTotalVolumeForThePool();
 
-    var yesPrice = await pool.methods
-      .getSpotPrice(daiContractAddress, yesContractAddress)
-      .call();
-    yesPrice = web3.utils.fromWei(yesPrice);
-    yesPrice = Number(yesPrice);
-    yesPrice = yesPrice / tokenMultiple;
-    yesPrice = yesPrice.toFixed(2);
+    // var yesPrice = await pool.methods
+    //   .getSpotPrice(daiContractAddress, yesContractAddress)
+    //   .call();
+    // yesPrice = web3.utils.fromWei(yesPrice);
+    // yesPrice = Number(yesPrice);
+    // yesPrice = yesPrice / tokenMultiple;
+    // yesPrice = yesPrice.toFixed(2);
 
     var noPrice = await pool.methods
       .getSpotPrice(daiContractAddress, noContractAddress)
@@ -887,7 +887,7 @@ class App extends Component {
     noPrice = noPrice.toFixed(2);
     //update all the state variables at one for smoother experience
     this.setState({
-      yesPrice: yesPrice,
+      // yesPrice: yesPrice,
       noPrice: noPrice,
       totalSwapVolume: totalSwapVolume,
     });
@@ -963,7 +963,7 @@ class App extends Component {
     if (fromAmount === "" || toAmount === "") {
       this.setState({
         pricePerShare: 0,
-        maxProfit: 0,
+        // maxProfit: 0,
         priceImpact: 0,
         impliedOdds: 0,
       });
@@ -981,11 +981,11 @@ class App extends Component {
         spotPrice = spotPrice * (1.0 + swapFee);
         spotPrice = spotPrice.toFixed(6);
         var pricePerShare = fromAmount / toAmount;
-        var maxProfit = (1 - pricePerShare) * toAmount;
+        // var maxProfit = (1 - pricePerShare) * toAmount;
         var priceImpact = ((pricePerShare - spotPrice) * 100) / pricePerShare;
         pricePerShare = Number(pricePerShare);
         pricePerShare = pricePerShare.toFixed(3);
-        maxProfit = maxProfit.toFixed(2);
+        // maxProfit = maxProfit.toFixed(2);
         priceImpact = priceImpact.toFixed(2);
 
         if (priceImpact < 1) {
@@ -998,7 +998,7 @@ class App extends Component {
 
         this.setState({
           pricePerShare: pricePerShare,
-          maxProfit: maxProfit,
+          // maxProfit: maxProfit,
           priceImpact: priceImpact,
           impliedOdds: 0,
         });
@@ -1036,7 +1036,7 @@ class App extends Component {
         pricePerShare = pricePerShare.toFixed(3);
         this.setState({
           pricePerShare: pricePerShare,
-          maxProfit: 0,
+          // maxProfit: 0,
           priceImpact: priceImpact,
           impliedOdds: 0,
         });
@@ -1070,7 +1070,7 @@ class App extends Component {
         }
         this.setState({
           pricePerShare: pricePerShare,
-          maxProfit: 0,
+          // maxProfit: 0,
           priceImpact: priceImpact,
           impliedOdds: impliedOdds,
         });

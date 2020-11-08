@@ -376,17 +376,27 @@ export default function Trading(props) {
             </Paper>
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
-             <Box textAlign="left">
-               <div class="slippage_alert">
-                Caution: trade slippage is expected to be significantly higher during Election Day and until the market outcome is known. For more info see <a href="https://medium.com/catnip-exchange/election-day-trading-on-catnip-exchange-51dd777ee141" target="_blank"> here</a>.
-               </div>
+            <Box textAlign="left">
+              {/* <div class="slippage_alert">
+                Caution: trade slippage is expected to be significantly higher
+                during Election Day and until the market outcome is known. For
+                more info see{" "}
+                <a
+                  href="https://medium.com/catnip-exchange/election-day-trading-on-catnip-exchange-51dd777ee141"
+                  target="_blank"
+                >
+                  {" "}
+                  here
+                </a>
+                .
+              </div> */}
             </Box>
             <Paper
               className={`main_part ${isContrast ? "dark" : "light"}`}
               square={true}
               elevation={0}
             >
-              {props.totalSwapVolume > 0 && (
+              {/* {props.totalSwapVolume > 0 && (
                 <div className={classes.trading_volume}>
                   <Typography variant="body2">
                     total volume: $
@@ -396,7 +406,7 @@ export default function Trading(props) {
                     {"M"}
                   </Typography>
                 </div>
-              )}
+              )} */}
               <div className={classes.float_left}>
                 <Typography
                   variant="h6"
@@ -463,12 +473,12 @@ export default function Trading(props) {
                         }}
                         IconComponent={CustomExpandMore}
                       >
-                        <MenuItem
+                        {/* <MenuItem
                           value={props.yesContractAddress}
                           className={classes.menu_item}
                         >
                           <img src={TImg} alt="" /> <span>YES</span>
-                        </MenuItem>
+                        </MenuItem> */}
                         <MenuItem
                           value={props.noContractAddress}
                           className={classes.menu_item}
@@ -557,12 +567,12 @@ export default function Trading(props) {
                         }}
                         IconComponent={CustomExpandMore}
                       >
-                        <MenuItem
+                        {/* <MenuItem
                           value={props.yesContractAddress}
                           className={classes.menu_item}
                         >
                           <img src={TImg} alt="" /> <span>YES</span>
-                        </MenuItem>
+                        </MenuItem> */}
                         <MenuItem
                           value={props.noContractAddress}
                           className={classes.menu_item}
