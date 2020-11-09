@@ -50,7 +50,7 @@ const mainnetContracts = {
   yes: "0x3af375d9f77Ddd4F16F86A5D51a9386b7B4493Fa",
   no: "0x44Ea84a85616F8e9cD719Fc843DE31D852ad7240",
   dai: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
-  pool: "0xe4a8032a3e579a5b709b5bfe0294890614272437",
+  pool: "0xed0413d19cdf94759bbe3fe9981c4bd085b430cf",
   multicall: "0xeefBa1e63905eF1D7ACbA5a8513c70307C1cE441",
 };
 
@@ -187,7 +187,7 @@ class App extends Component {
       "https://api.thegraph.com/subgraphs/name/balancer-labs/balancer";
     let content = {
       query: `{
-      pools(where: {id: "0xe4a8032a3e579a5b709b5bfe0294890614272437"}) {
+      pools(where: {id: "0xed0413d19cdf94759bbe3fe9981c4bd085b430cf"}) {
         id 
         totalSwapVolume
         swaps{

@@ -377,19 +377,18 @@ export default function Trading(props) {
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <Box textAlign="left">
-              {/* <div class="slippage_alert">
-                Caution: trade slippage is expected to be significantly higher
-                during Election Day and until the market outcome is known. For
-                more info see{" "}
+              { <div class="slippage_alert">
+                <strong>Market Update, November 9:</strong> <b />We have pointed catnip to a new liquidity pool to facilitate the sale of *presumptive* winning shares (nTrump), traders may still trade yTrump on <a href="https://balancer.exchange/#/swap" target="_blank"> Balancer. </a>
+                For more info see{" "}
                 <a
-                  href="https://medium.com/catnip-exchange/election-day-trading-on-catnip-exchange-51dd777ee141"
+                  href="https://medium.com/catnip-exchange/early-settlement-options-for-the-catnip-election-market-540843a0b1f6"
                   target="_blank"
                 >
                   {" "}
                   here
                 </a>
                 .
-              </div> */}
+              </div> }
             </Box>
             <Paper
               className={`main_part ${isContrast ? "dark" : "light"}`}
