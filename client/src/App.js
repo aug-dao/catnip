@@ -963,7 +963,7 @@ class App extends Component {
     if (fromAmount === "" || toAmount === "") {
       this.setState({
         pricePerShare: 0,
-        // maxProfit: 0,
+        maxProfit: 0,
         priceImpact: 0,
         impliedOdds: 0,
       });
@@ -981,11 +981,11 @@ class App extends Component {
         spotPrice = spotPrice * (1.0 + swapFee);
         spotPrice = spotPrice.toFixed(6);
         var pricePerShare = fromAmount / toAmount;
-        // var maxProfit = (1 - pricePerShare) * toAmount;
+        var maxProfit = (1 - pricePerShare) * toAmount;
         var priceImpact = ((pricePerShare - spotPrice) * 100) / pricePerShare;
         pricePerShare = Number(pricePerShare);
         pricePerShare = pricePerShare.toFixed(3);
-        // maxProfit = maxProfit.toFixed(2);
+        maxProfit = maxProfit.toFixed(2);
         priceImpact = priceImpact.toFixed(2);
 
         if (priceImpact < 1) {
@@ -998,7 +998,7 @@ class App extends Component {
 
         this.setState({
           pricePerShare: pricePerShare,
-          // maxProfit: maxProfit,
+          maxProfit: maxProfit,
           priceImpact: priceImpact,
           impliedOdds: 0,
         });
@@ -1036,7 +1036,7 @@ class App extends Component {
         pricePerShare = pricePerShare.toFixed(3);
         this.setState({
           pricePerShare: pricePerShare,
-          // maxProfit: 0,
+          maxProfit: 0,
           priceImpact: priceImpact,
           impliedOdds: 0,
         });
@@ -1070,7 +1070,7 @@ class App extends Component {
         }
         this.setState({
           pricePerShare: pricePerShare,
-          // maxProfit: 0,
+          maxProfit: 0,
           priceImpact: priceImpact,
           impliedOdds: impliedOdds,
         });
