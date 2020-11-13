@@ -947,135 +947,80 @@ class App extends Component {
   calcPriceProfitSlippage = async () => {
     const { fromToken } = this.state;
     const { toToken } = this.state;
-    var { fromAmount, fromAmountDisplay } = this.state;
-    var { toAmount, toAmountDisplay } = this.state;
-    const { yesContractAddress } = this.state;
-    const { noContractAddress } = this.state;
+    var { fromAmount } = this.state;
+    var { toAmount } = this.state;
     const { daiContractAddress } = this.state;
     const { pool } = this.state;
     const { web3 } = this.state;
-    const { swapFee } = this.state;
     const { tokenMultiple } = this.state;
 
-    fromAmount = fromAmountDisplay;
-    toAmount = toAmountDisplay;
-
-    if (fromAmount === "" || toAmount === "") {
-      this.setState({
-        pricePerShare: 0,
-        maxProfit: 0,
-        priceImpact: 0,
-        impliedOdds: 0,
-      });
-    } else {
-      if (
-        (toToken === yesContractAddress || toToken === noContractAddress) &&
-        fromToken === daiContractAddress
-      ) {
-        var spotPrice = await pool.methods
-          .getSpotPriceSansFee(fromToken, toToken)
-          .call();
-        spotPrice = web3.utils.fromWei(spotPrice);
-        spotPrice = Number(spotPrice);
-        spotPrice = spotPrice / tokenMultiple;
-        spotPrice = spotPrice * (1.0 + swapFee);
-        spotPrice = spotPrice.toFixed(6);
-        var pricePerShare = fromAmount / toAmount;
-        var maxProfit = (1 - pricePerShare) * toAmount;
-        var priceImpact = ((pricePerShare - spotPrice) * 100) / pricePerShare;
-        pricePerShare = Number(pricePerShare);
-        pricePerShare = pricePerShare.toFixed(3);
-        maxProfit = maxProfit.toFixed(2);
-        priceImpact = priceImpact.toFixed(2);
-
-        if (priceImpact < 1) {
-          this.setState({ priceImpactColor: "green" });
-        } else if (priceImpact >= 1 && priceImpact <= 3) {
-          this.setState({ priceImpactColor: "black" });
-        } else if (priceImpact > 3) {
-          this.setState({ priceImpactColor: "red" });
-        }
-
-        this.setState({
-          pricePerShare: pricePerShare,
-          maxProfit: maxProfit,
-          priceImpact: priceImpact,
-          impliedOdds: 0,
-        });
-      } else if (
-        (fromToken === yesContractAddress || fromToken === noContractAddress) &&
-        toToken === daiContractAddress
-      ) {
-        spotPrice = await pool.methods
-          .getSpotPriceSansFee(fromToken, toToken)
-          .call();
-        spotPrice = web3.utils.fromWei(spotPrice);
-        spotPrice = Number(spotPrice);
-
-        spotPrice = 1 / spotPrice;
-
-        spotPrice = spotPrice * (1 - swapFee);
-
-        spotPrice = spotPrice / tokenMultiple;
-        pricePerShare = toAmount / fromAmount;
-
-        priceImpact = ((spotPrice - pricePerShare) * 100) / spotPrice;
-        spotPrice = spotPrice.toFixed(3);
-        pricePerShare = pricePerShare.toFixed(3);
-
-        if (priceImpact < 1) {
-          this.setState({ priceImpactColor: "green" });
-        } else if (priceImpact >= 1 && priceImpact <= 3) {
-          this.setState({ priceImpactColor: "black" });
-        } else if (priceImpact > 3) {
-          this.setState({ priceImpactColor: "red" });
-        }
-        pricePerShare = Number(pricePerShare);
-        priceImpact = priceImpact.toFixed(2);
-
-        pricePerShare = pricePerShare.toFixed(3);
-        this.setState({
-          pricePerShare: pricePerShare,
-          maxProfit: 0,
-          priceImpact: priceImpact,
-          impliedOdds: 0,
-        });
-      } else {
-        spotPrice = await pool.methods
-          .getSpotPriceSansFee(fromToken, toToken)
-          .call();
-        spotPrice = web3.utils.fromWei(spotPrice);
-
-        spotPrice = Number(spotPrice);
-        spotPrice = spotPrice * (1.0 + swapFee);
-        spotPrice = spotPrice.toFixed(6);
-
-        pricePerShare = fromAmount / toAmount;
-        let impliedOdds;
-        impliedOdds = 100 - 100 / (1 + pricePerShare);
-        impliedOdds = Number(impliedOdds).toFixed(2);
-
-        priceImpact = ((pricePerShare - spotPrice) * 100) / pricePerShare;
-        pricePerShare = Number(pricePerShare);
-
-        pricePerShare = pricePerShare.toFixed(3);
-        priceImpact = priceImpact.toFixed(2);
-
-        if (priceImpact < 1) {
-          this.setState({ priceImpactColor: "green" });
-        } else if (priceImpact >= 1 && priceImpact <= 3) {
-          this.setState({ priceImpactColor: "black" });
-        } else if (priceImpact > 3) {
-          this.setState({ priceImpactColor: "red" });
-        }
-        this.setState({
-          pricePerShare: pricePerShare,
-          maxProfit: 0,
-          priceImpact: priceImpact,
-          impliedOdds: impliedOdds,
-        });
-      }
+    if (fromToken !== daiContractAddress) {
+      fromAmount = fromAmount.mul(tokenMultiple);
     }
+    if (toToken !== daiContractAddress) {
+      toAmount = toAmount.mul(tokenMultiple);
+    }
+    let spotPrice = new BN(
+      await pool.methods.getSpotPrice(fromToken, toToken).call()
+    );
+
+    if (fromToken !== daiContractAddress) {
+      spotPrice = spotPrice.mul(tokenMultiple);
+    } else {
+      spotPrice = spotPrice.div(tokenMultiple);
+    }
+    spotPrice = new BigNumber(web3.utils.fromWei(spotPrice));
+
+    // console.log("is spotPrice a bignumber:" + BigNumber.isBigNumber(spotPrice));
+    // console.log("spotPrice: " + spotPrice);
+    fromAmount = new BigNumber(fromAmount);
+    toAmount = new BigNumber(toAmount);
+
+    let pricePerShare = new BigNumber(0);
+
+    if (toToken === daiContractAddress) {
+      pricePerShare = toAmount.div(fromAmount);
+    } else {
+      pricePerShare = fromAmount.div(toAmount);
+    }
+
+    let priceImpact = pricePerShare
+      .minus(spotPrice)
+      .multipliedBy(new BigNumber(100))
+      .dividedBy(pricePerShare);
+
+    // console.log("priceImapct;" + priceImpact.toString());
+    let priceImpactColor = "red";
+    if (priceImpact < 1) {
+      priceImpactColor = "green";
+    } else if (priceImpact >= 1 && priceImpact <= 3) {
+      priceImpactColor = "black";
+    } else if (priceImpact > 3) {
+      priceImpactColor = "red";
+    }
+    let impliedOdds = 0;
+
+    if (fromToken !== daiContractAddress && toToken !== daiContractAddress) {
+      impliedOdds = new BigNumber(100).minus(
+        new BigNumber(100).dividedBy(new BigNumber(1).plus(pricePerShare))
+      );
+    }
+
+    let maxProfit = 0;
+    if (fromToken === daiContractAddress) {
+      maxProfit = new BigNumber(1).minus(pricePerShare).multipliedBy(toAmount);
+      maxProfit = new BigNumber(web3.utils.fromWei(maxProfit.toFixed(0)));
+    }
+
+    // console.log("fromAmount", fromAmount.toString());
+
+    this.setState({
+      pricePerShare: pricePerShare.toFixed(3),
+      maxProfit: maxProfit.toFixed(2),
+      priceImpact: priceImpact.toFixed(2),
+      impliedOdds: impliedOdds.toFixed(2),
+      priceImpactColor: priceImpactColor,
+    });
   };
   showModal = () => {
     this.setState({ show: true });
