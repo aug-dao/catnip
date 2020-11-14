@@ -27,7 +27,7 @@ const BN = require("bn.js");
 const MAX_UINT256 = new BN(2).pow(new BN(256)).sub(new BN(1));
 const TEN_THOUSAND_BN = new BN(10000);
 
-const network = "mainnet"; // set network as "ganache" or "kovan" or "mainnet"
+const network = "kovan"; // set network as "ganache" or "kovan" or "mainnet"
 const tokenMultiple = network === "kovan" ? new BN(100) : new BN(1000);
 // if network is ganache, run truffle migrate --develop and disable metamask
 // if network is kovan, enable metamask, set to kovan network and open account with kovan eth
@@ -61,7 +61,30 @@ const kovanContracts = {
   pool: "0xacb57239c0d0c1c7e11a19c7af0f39a22749f9f0",
   multicall: "0x2cc8688C5f75E365aaEEb4ea8D6a480405A48D2A",
 };
+// const kovanContracts = {
+//   yes: "0xaC9C1c55901c51b4ff78d957e66bbFE35580528B",
+//   no: "0xF7EF92d2a34137dfa2d60A983eb68dbF0ec3db07",
+//   dai: "0xb6085Abd65E21d205AEaD0b1b9981B8B221fA14E",
+//   pool: "0x494f67aa74c47b3e1B3568e74F9F44365a6c1133",
+//   multicall: "0x2cc8688C5f75E365aaEEb4ea8D6a480405A48D2A",
+// };
 
+const markets = [
+  "0x4dea3bedae79da692f2675038c4d9b8c246b4fb6",
+  "0xD3Ba2A2E641F61a5Bcb7a772C49BA6b78E1416e0",
+];
+const marketInfo = {
+  "0x4dea3bedae79da692f2675038c4d9b8c246b4fb6": {
+    yes: "0x1dbCcF29375304c38bd0d162f636BAA8Dd6CcE44",
+    no: "0xeb69840f09A9235df82d9Ed9D43CafFFea2a1eE9",
+    pool: "0xacb57239c0d0c1c7e11a19c7af0f39a22749f9f0",
+  },
+  "0xD3Ba2A2E641F61a5Bcb7a772C49BA6b78E1416e0": {
+    yes: "0xaC9C1c55901c51b4ff78d957e66bbFE35580528B",
+    no: "0xF7EF92d2a34137dfa2d60A983eb68dbF0ec3db07",
+    pool: "0x494f67aa74c47b3e1B3568e74F9F44365a6c1133",
+  },
+};
 const contracts = network === "mainnet" ? mainnetContracts : kovanContracts;
 
 const tokenSymbols = {};
@@ -120,6 +143,7 @@ class App extends Component {
     tokenSymbols: tokenSymbols,
     isSwapDisabled: false,
     totalSwapVolume: 0,
+    market: markets[0],
   };
 
   componentDidMount = async () => {
@@ -130,48 +154,45 @@ class App extends Component {
         web3 = new Web3(provider);
         await web3.eth.net.isListening();
       }
-
-      var yesInstance = new web3.eth.Contract(YesContract.abi, contracts.yes);
-      var noInstance = new web3.eth.Contract(NoContract.abi, contracts.no);
       var daiInstance = new web3.eth.Contract(DaiContract.abi, contracts.dai);
       var erc20Instance = new web3.eth.Contract(DaiContract.abi);
-      var poolInstance = new web3.eth.Contract(
-        BPoolContract.abi,
-        contracts.pool
-      );
+      var poolInstance = new web3.eth.Contract(BPoolContract.abi);
       var multicallContract = new web3.eth.Contract(
         MultiCall.abi,
         contracts.multicall
       );
-      this.setState({
+      await this.setState({
         web3: web3,
         accounts: accounts,
-        yesContract: yesInstance,
-        noContract: noInstance,
         daiContract: daiInstance,
         erc20Instance: erc20Instance,
         pool: poolInstance,
         multicall: multicallContract,
-        yesContractAddress: contracts.yes,
-        noContractAddress: contracts.no,
         daiContractAddress: contracts.dai,
-        bpoolAddress: contracts.pool,
       });
-
-      var swapFee = await this.state.pool.methods.getSwapFee().call();
-      swapFee = web3.utils.fromWei(swapFee);
-      swapFee = Number(swapFee);
-      this.setState({ swapFee: swapFee });
-
+      //set it only the first time around not when wallet gets connected
       if (!this.state.fromToken) {
-        this.setState({
-          fromToken: this.state.noContractAddress,
-          toToken: this.state.daiContractAddress,
+        await this.setState({
+          market: markets[0],
         });
-        this.setState({
+
+        await this.setState({
+          yesContractAddress: marketInfo[this.state.market].yes,
+          noContractAddress: marketInfo[this.state.market].no,
+          bpoolAddress: marketInfo[this.state.market].pool,
           fromAmount: this.convertDisplayToAmount(100, this.state.fromToken),
           fromAmountDisplay: 100,
         });
+
+        await this.setState({
+          fromToken: this.state.noContractAddress,
+          toToken: this.state.daiContractAddress,
+        });
+        this.state.pool.options.address = this.state.bpoolAddress;
+        var swapFee = await this.state.pool.methods.getSwapFee().call();
+        swapFee = web3.utils.fromWei(swapFee);
+        swapFee = Number(swapFee);
+        await this.setState({ swapFee: swapFee });
       }
       await this.updateBalances();
 
@@ -219,16 +240,15 @@ class App extends Component {
   // This function updates state in response to user input
   handleChange = async (e) => {
     e.persist();
-    await this.setState({ [e.target.name]: e.target.value });
 
-    console.log("event", e.target.value);
-    console.log("slippage", this.state.slippage);
+    console.log("set:" + e.target.name + "\nto:" + e.target.value);
 
     if (
       e.target.name === "fromAmountDisplay" &&
       this.state.fromToken &&
       this.state.toToken
     ) {
+      await this.setState({ [e.target.name]: e.target.value });
       if (e.target.value <= 0) {
         this.setState({ isSwapDisabled: true });
         this.setState({
@@ -252,13 +272,12 @@ class App extends Component {
       } else {
         this.setState({ toAmount: new BN(0), toAmountDisplay: 0 });
       }
-    }
-
-    if (
+    } else if (
       e.target.name === "toAmountDisplay" &&
       this.state.fromToken &&
       this.state.toToken
     ) {
+      await this.setState({ [e.target.name]: e.target.value });
       if (e.target.value <= 0) {
         this.setState({ isSwapDisabled: true });
         this.setState({
@@ -285,7 +304,8 @@ class App extends Component {
       }
     }
     //To Do:If user selects fromToke == toToken convert the other one into DAI
-    if (e.target.name === "toToken") {
+    else if (e.target.name === "toToken") {
+      await this.setState({ [e.target.name]: e.target.value });
       if (e.target.value) {
         if (e.target.value === this.state.fromToken) {
           if (
@@ -305,8 +325,8 @@ class App extends Component {
         await this.checkIfIsApproveRequired();
         await this.calcPriceProfitSlippage();
       }
-    }
-    if (e.target.name === "fromToken") {
+    } else if (e.target.name === "fromToken") {
+      await this.setState({ [e.target.name]: e.target.value });
       if (e.target.value) {
         if (e.target.value === this.state.toToken) {
           if (
@@ -326,6 +346,25 @@ class App extends Component {
         await this.checkIfIsApproveRequired();
         await this.calcPriceProfitSlippage();
       }
+    } else if (e.target.name === "market") {
+      console.log("market change", marketInfo[e.target.value]);
+      await this.setState({
+        [e.target.name]: e.target.value,
+        bpoolAddress: marketInfo[e.target.value].pool,
+        yesContractAddress: marketInfo[e.target.value].yes,
+        noContractAddress: marketInfo[e.target.value].no,
+        fromToken: marketInfo[e.target.value].no,
+        toToken: this.state.daiContractAddress,
+      });
+
+      await this.setState({
+        fromAmount: this.convertDisplayToAmount(100, this.state.fromToken),
+        fromAmountDisplay: 100,
+      });
+      await this.updateBalances();
+
+      // // Set starting parameters
+      await this.calcToGivenFrom();
     }
     //add sanity checks for slippage
   };
@@ -437,6 +476,7 @@ class App extends Component {
     const { pool } = this.state;
     const { web3 } = this.state;
     const { multicall } = this.state;
+    pool.options.address = this.state.bpoolAddress;
 
     var fromTokenBalanceCall = {};
     fromTokenBalanceCall.target = pool.options.address;
@@ -503,7 +543,7 @@ class App extends Component {
 
     const { fromToken, fromAmount } = this.state;
     const { toToken } = this.state;
-
+    pool.options.address = this.state.bpoolAddress;
     try {
       //just to make things faster
 
@@ -560,7 +600,7 @@ class App extends Component {
     const { pool } = this.state;
     const { fromToken } = this.state;
     const { toToken, toAmount } = this.state;
-
+    pool.options.address = this.state.bpoolAddress;
     try {
       //using multicall to make things a bit faster
       let poolInfo = await this.getPoolInfo(fromToken, toToken);
@@ -630,7 +670,7 @@ class App extends Component {
     const { toToken } = this.state;
     var { fromAmount } = this.state;
     var { toAmount, slippage } = this.state;
-
+    pool.options.address = this.state.bpoolAddress;
     slippage = Number(slippage);
     slippage = new BN(slippage * 100);
     var minAmountOut = toAmount.sub(
@@ -714,7 +754,7 @@ class App extends Component {
     const { toToken } = this.state;
     var { fromAmount } = this.state;
     var { toAmount, slippage } = this.state;
-
+    pool.options.address = this.state.bpoolAddress;
     slippage = Number(slippage);
     slippage = new BN(slippage * 100);
     var maxAmountIn = fromAmount.add(
@@ -786,17 +826,20 @@ class App extends Component {
     const { web3 } = this.state;
     const { accounts } = this.state;
     const { bpoolAddress } = this.state;
+    const { fromToken } = this.state;
     var { erc20Instance } = this.state;
+
     //approve fromAmount of fromToken for spending by Trader1
     var allowanceLimit = MAX_UINT256;
 
-    var allowance = await erc20Instance.methods
-      .allowance(accounts[0], bpoolAddress)
-      .call();
+    // var allowance = await erc20Instance.methods
+    //   .allowance(accounts[0], bpoolAddress)
+    //   .call();
 
-    allowance = web3.utils.fromWei(allowance);
+    // allowance = web3.utils.fromWei(allowance);
 
     // this.setState({ isSwapDisabled: true });
+    erc20Instance.options.address = fromToken;
     await erc20Instance.methods
       .approve(bpoolAddress, allowanceLimit)
       .send({ from: accounts[0], gas: 46000 })
@@ -836,9 +879,9 @@ class App extends Component {
         }
       });
 
-    allowance = await erc20Instance.methods
-      .allowance(accounts[0], bpoolAddress)
-      .call();
+    // allowance = await erc20Instance.methods
+    //   .allowance(accounts[0], bpoolAddress)
+    //   .call();
     await this.updateBalances();
   };
   getEtherscanLink = (transactionHash) => {
@@ -858,8 +901,6 @@ class App extends Component {
     const { web3 } = this.state;
     const { fromToken } = this.state;
     const { toToken } = this.state;
-    const { noContract } = this.state;
-    const { yesContract } = this.state;
     const { daiContract } = this.state;
     const { noContractAddress } = this.state;
     const { yesContractAddress } = this.state;
@@ -867,6 +908,10 @@ class App extends Component {
     const { accounts } = this.state;
     const { tokenMultiple } = this.state;
     const { pool } = this.state;
+    const { erc20Instance } = this.state;
+    pool.options.address = this.state.bpoolAddress;
+
+    console.log("updating balances state", this.state);
 
     let totalSwapVolume = await this.getTotalVolumeForThePool();
 
@@ -898,7 +943,8 @@ class App extends Component {
     await this.checkIfhasEnoughBalance();
     await this.checkIfIsApproveRequired();
 
-    var yesBalance = await yesContract.methods.balanceOf(accounts[0]).call();
+    erc20Instance.options.address = yesContractAddress;
+    var yesBalance = await erc20Instance.methods.balanceOf(accounts[0]).call();
     yesBalance = web3.utils.fromWei(yesBalance);
     yesBalance = Number(yesBalance);
     yesBalance = tokenMultiple * yesBalance;
@@ -911,7 +957,8 @@ class App extends Component {
       this.setState({ toBalance: yesBalance });
     }
 
-    var noBalance = await noContract.methods.balanceOf(accounts[0]).call();
+    erc20Instance.options.address = noContractAddress;
+    var noBalance = await erc20Instance.methods.balanceOf(accounts[0]).call();
     noBalance = web3.utils.fromWei(noBalance);
     noBalance = Number(noBalance);
     noBalance = tokenMultiple * noBalance;
@@ -1053,18 +1100,18 @@ class App extends Component {
   AddTokenToMetamask = async (tokenAddress) => {
     const { yesContractAddress } = this.state;
     const { noContractAddress } = this.state;
-    const { yesContract } = this.state;
-    const { noContract } = this.state;
+
+    const { erc20Instance } = this.state;
     let tokenSymbol;
     let decimals;
     let tokenImage;
+    erc20Instance.options.address = tokenAddress;
+    tokenSymbol = await erc20Instance.methods.symbol().call();
+    decimals = await erc20Instance.methods.decimals().call();
+
     if (tokenAddress === yesContractAddress) {
-      tokenSymbol = await yesContract.methods.symbol().call();
-      decimals = await yesContract.methods.decimals().call();
       tokenImage = yesIcon;
     } else if (tokenAddress === noContractAddress) {
-      tokenSymbol = await noContract.methods.symbol().call();
-      decimals = await noContract.methods.decimals().call();
       tokenImage = noIcon;
     } else {
       throw new Error("Cannot add this token to Metamask");
@@ -1160,6 +1207,7 @@ class App extends Component {
           changeSlippage={this.changeSlippage}
         />
         <Trading
+          market={this.state.market}
           handleChange={this.handleChange}
           fromAmount={this.state.fromAmount}
           fromToken={this.state.fromToken}
@@ -1170,8 +1218,6 @@ class App extends Component {
           fromAmountDisplay={this.state.fromAmountDisplay}
           toAmountDisplay={this.state.toAmountDisplay}
           convertAmountToDisplay={this.convertAmountToDisplay}
-          yesContractAddress={this.state.yesContractAddress}
-          noContractAddress={this.state.noContractAddress}
           daiContractAddress={this.state.daiContractAddress}
           pricePerShare={this.state.pricePerShare}
           maxProfit={this.state.maxProfit}

@@ -31,6 +31,23 @@ import { Modal, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Link from "@material-ui/core/Link";
 
+const markets = [
+  "0x4dea3bedae79da692f2675038c4d9b8c246b4fb6",
+  "0xD3Ba2A2E641F61a5Bcb7a772C49BA6b78E1416e0",
+];
+const marketInfo = {
+  "0x4dea3bedae79da692f2675038c4d9b8c246b4fb6": {
+    yes: "0x1dbCcF29375304c38bd0d162f636BAA8Dd6CcE44",
+    no: "0xeb69840f09A9235df82d9Ed9D43CafFFea2a1eE9",
+    pool: "0xacb57239c0d0c1c7e11a19c7af0f39a22749f9f0",
+  },
+  "0xD3Ba2A2E641F61a5Bcb7a772C49BA6b78E1416e0": {
+    yes: "0xaC9C1c55901c51b4ff78d957e66bbFE35580528B",
+    no: "0xF7EF92d2a34137dfa2d60A983eb68dbF0ec3db07",
+    pool: "0x494f67aa74c47b3e1B3568e74F9F44365a6c1133",
+  },
+};
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -343,6 +360,7 @@ const CustomExpandMore = withStyles(iconStyles)(
 export default function Trading(props) {
   const classes = useStyles();
   const isContrast = useSelector((state) => state.settings.isContrast);
+  console.log(props);
 
   const Theme = {
     overrides: {
@@ -364,7 +382,8 @@ export default function Trading(props) {
     },
   };
 
-  const theme = createMuiTheme(Theme);
+  let theme = createMuiTheme(Theme);
+  theme = isContrast ? theme : null;
 
   return (
     <div className={classes.root}>
@@ -377,18 +396,27 @@ export default function Trading(props) {
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <Box textAlign="left">
-              { <div class="slippage_alert">
-                <strong>Market Update, November 9:</strong> <b />We have pointed catnip to a new liquidity pool to facilitate the sale of *presumptive* winning shares (nTrump), traders may still access yTrump and the original pool <a href="https://catnip1.netlify.app/" target="_blank"> <strong>here.</strong>  </a>
-                For more info see{" "}
-                <a
-                  href="https://medium.com/catnip-exchange/early-settlement-options-for-the-catnip-election-market-540843a0b1f6"
-                  target="_blank"
-                >
-                  {" "}
-                  this
-                </a>
-                .
-              </div> }
+              {
+                <div class="slippage_alert">
+                  <strong>Market Update, November 9:</strong> <b />
+                  We have pointed catnip to a new liquidity pool to facilitate
+                  the sale of *presumptive* winning shares (nTrump), traders may
+                  still access yTrump and the original pool{" "}
+                  <a href="https://catnip1.netlify.app/" target="_blank">
+                    {" "}
+                    <strong>here.</strong>{" "}
+                  </a>
+                  For more info see{" "}
+                  <a
+                    href="https://medium.com/catnip-exchange/early-settlement-options-for-the-catnip-election-market-540843a0b1f6"
+                    target="_blank"
+                  >
+                    {" "}
+                    this
+                  </a>
+                  .
+                </div>
+              }
             </Box>
             <Paper
               className={`main_part ${isContrast ? "dark" : "light"}`}
@@ -407,14 +435,23 @@ export default function Trading(props) {
                 </div>
               )} */}
               <div className={classes.float_left}>
-                <Typography
-                  variant="h6"
-                  color="textPrimary"
-                  align="left"
-                  fontWeight="fontWeightBold"
-                >
-                  Will Trump win the 2020 U.S. <br /> presidential election?
-                </Typography>
+                <ThemeProvider theme={theme}>
+                  <Select
+                    onChange={props.handleChange}
+                    name="market"
+                    defaultValue={markets[0]}
+                  >
+                    <MenuItem value={markets[0]}>
+                      {" "}
+                      Will Trump win the 2020 U.S. <br /> presidential election?
+                    </MenuItem>
+                    <MenuItem value={markets[1]}>
+                      {" "}
+                      Will Anthony Davis win the 2019-20 <br /> Defensive Player
+                      of the Year award?
+                    </MenuItem>
+                  </Select>
+                </ThemeProvider>
               </div>
               <div>
                 <a
@@ -460,7 +497,7 @@ export default function Trading(props) {
                   >
                     Balance: {props.fromBalance}
                   </Typography>
-                  {isContrast ? (
+                  {props.market === markets[0] ? (
                     <ThemeProvider theme={theme}>
                       <Select
                         disableUnderline
@@ -472,14 +509,16 @@ export default function Trading(props) {
                         }}
                         IconComponent={CustomExpandMore}
                       >
-                        {/* <MenuItem
-                          value={props.yesContractAddress}
+                        <MenuItem
+                          value={marketInfo[props.market].yes}
                           className={classes.menu_item}
+                          disabled
+                          style={{ display: "none" }}
                         >
                           <img src={TImg} alt="" /> <span>YES</span>
-                        </MenuItem> */}
+                        </MenuItem>
                         <MenuItem
-                          value={props.noContractAddress}
+                          value={marketInfo[props.market].no}
                           className={classes.menu_item}
                         >
                           <img src={NTImg} alt="" /> <span>NO</span>
@@ -493,35 +532,39 @@ export default function Trading(props) {
                       </Select>
                     </ThemeProvider>
                   ) : (
-                    <Select
-                      disableUnderline
-                      name="fromToken"
-                      value={props.fromToken}
-                      onChange={props.handleChange}
-                      style={{
-                        fontSize: 24,
-                      }}
-                      IconComponent={CustomExpandMore}
-                    >
-                      <MenuItem
-                        value={props.yesContractAddress}
-                        className={classes.menu_item}
+                    <ThemeProvider theme={theme}>
+                      <Select
+                        disableUnderline
+                        name="fromToken"
+                        value={props.fromToken}
+                        onChange={props.handleChange}
+                        style={{
+                          fontSize: 24,
+                        }}
+                        IconComponent={CustomExpandMore}
                       >
-                        <img src={TImg} alt="" /> <span>YES</span>
-                      </MenuItem>
-                      <MenuItem
-                        value={props.noContractAddress}
-                        className={classes.menu_item}
-                      >
-                        <img src={NTImg} alt="" /> <span>NO</span>
-                      </MenuItem>
-                      <MenuItem
-                        value={props.daiContractAddress}
-                        className={classes.menu_item}
-                      >
-                        <img src={DImg} alt="" /> <span>DAI</span>
-                      </MenuItem>
-                    </Select>
+                        <MenuItem
+                          value={marketInfo[props.market].yes}
+                          className={classes.menu_item}
+                          // disabled
+                          // style={{ display: "none" }}
+                        >
+                          <img src={TImg} alt="" /> <span>YES</span>
+                        </MenuItem>
+                        <MenuItem
+                          value={marketInfo[props.market].no}
+                          className={classes.menu_item}
+                        >
+                          <img src={NTImg} alt="" /> <span>NO</span>
+                        </MenuItem>
+                        <MenuItem
+                          value={props.daiContractAddress}
+                          className={classes.menu_item}
+                        >
+                          <img src={DImg} alt="" /> <span>DAI</span>
+                        </MenuItem>
+                      </Select>
+                    </ThemeProvider>
                   )}
                 </div>
               </div>
@@ -554,7 +597,7 @@ export default function Trading(props) {
                   >
                     Balance: {props.toBalance}
                   </Typography>
-                  {isContrast ? (
+                  {props.market === markets[0] ? (
                     <ThemeProvider theme={theme}>
                       <Select
                         disableUnderline
@@ -566,14 +609,16 @@ export default function Trading(props) {
                         }}
                         IconComponent={CustomExpandMore}
                       >
-                        {/* <MenuItem
-                          value={props.yesContractAddress}
+                        <MenuItem
+                          value={marketInfo[props.market].yes}
                           className={classes.menu_item}
+                          disabled
+                          style={{ display: "none" }}
                         >
                           <img src={TImg} alt="" /> <span>YES</span>
-                        </MenuItem> */}
+                        </MenuItem>
                         <MenuItem
-                          value={props.noContractAddress}
+                          value={marketInfo[props.market].no}
                           className={classes.menu_item}
                         >
                           <img src={NTImg} alt="" /> <span>NO</span>
@@ -587,35 +632,39 @@ export default function Trading(props) {
                       </Select>
                     </ThemeProvider>
                   ) : (
-                    <Select
-                      disableUnderline
-                      name="toToken"
-                      value={props.toToken}
-                      onChange={props.handleChange}
-                      style={{
-                        fontSize: 24,
-                      }}
-                      IconComponent={CustomExpandMore}
-                    >
-                      <MenuItem
-                        value={props.yesContractAddress}
-                        className={classes.menu_item}
+                    <ThemeProvider theme={theme}>
+                      <Select
+                        disableUnderline
+                        name="toToken"
+                        value={props.toToken}
+                        onChange={props.handleChange}
+                        style={{
+                          fontSize: 24,
+                        }}
+                        IconComponent={CustomExpandMore}
                       >
-                        <img src={TImg} alt="" /> <span>YES</span>
-                      </MenuItem>
-                      <MenuItem
-                        value={props.noContractAddress}
-                        className={classes.menu_item}
-                      >
-                        <img src={NTImg} alt="" /> <span>NO</span>
-                      </MenuItem>
-                      <MenuItem
-                        value={props.daiContractAddress}
-                        className={classes.menu_item}
-                      >
-                        <img src={DImg} alt="" /> <span>DAI</span>
-                      </MenuItem>
-                    </Select>
+                        <MenuItem
+                          value={marketInfo[props.market].yes}
+                          className={classes.menu_item}
+                          // disabled
+                          // style={{ display: "none" }}
+                        >
+                          <img src={TImg} alt="" /> <span>YES</span>
+                        </MenuItem>
+                        <MenuItem
+                          value={marketInfo[props.market].no}
+                          className={classes.menu_item}
+                        >
+                          <img src={NTImg} alt="" /> <span>NO</span>
+                        </MenuItem>
+                        <MenuItem
+                          value={props.daiContractAddress}
+                          className={classes.menu_item}
+                        >
+                          <img src={DImg} alt="" /> <span>DAI</span>
+                        </MenuItem>
+                      </Select>
+                    </ThemeProvider>
                   )}
                 </div>
               </div>
@@ -642,7 +691,9 @@ export default function Trading(props) {
                 <div className={`${classes.displayFlex} ${classes.width90}`}>
                   <Typography variant="body2" padding="20px">
                     Implied Odds for{" "}
-                    {props.toToken === props.yesContractAddress ? "YES" : "NO"}
+                    {props.toToken === marketInfo[props.market].yes
+                      ? "YES"
+                      : "NO"}
                     {":"}
                   </Typography>
 
@@ -652,8 +703,8 @@ export default function Trading(props) {
                     padding="20px"
                     className={classes.price_display}
                   >
-                    {props.fromToken === props.yesContractAddress ||
-                      props.fromToken === props.noContractAddress}
+                    {props.fromToken === marketInfo[props.market].yes ||
+                      props.fromToken === marketInfo[props.market].no}
                     {props.impliedOdds}
                     {"%"}
                   </Typography>
@@ -750,7 +801,7 @@ export default function Trading(props) {
                               <Typography>
                                 The estimated amount you will gain in DAI if the
                                 market resolves to{" "}
-                                {props.toToken === props.yesContractAddress
+                                {props.toToken === marketInfo[props.market].yes
                                   ? "YES"
                                   : "NO"}
                                 . Winning shares pay out one DAI each, and
