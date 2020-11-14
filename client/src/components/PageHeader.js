@@ -126,6 +126,9 @@ const useStyles = makeStyles((theme) => ({
       marginRight: 10,      
     }
   },
+  about_icon: {
+    margin: "17px 16px 0 0",
+  },
   slippage_input: {
     padding: '6px 16px',
     borderRadius: 20,
@@ -265,6 +268,14 @@ export default function PageHeader(props) {
         <Grid item xs={3}></Grid>
         <Grid item xs={4}>
           <Box fontWeight="fontWeightBold" textAlign="right" className={classes.custom_box}>
+            <a className={classes.about_icon} href="https://hackmd.io/@vI0VhzpxTLOQ3uSKoTaSmA/BJjSBMjuv#" target="_blank">
+            <HelpOutline
+              color="textPrimary"
+              className={`question_logo ${
+                isContrast ? "dark" : "light"
+              }`}
+            />
+            </a>
             <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" target="_blank" class="twitter-share-button" data-text="The world&#39;s simplest, most liquid prediction market. Built on Augur." data-related="catnip_exchange" data-show-count="false">Tweet</a>
             <a href="https://discord.gg/a4hpuwd" target="_blank">
               <img
