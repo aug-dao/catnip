@@ -16,10 +16,7 @@ import "antd/dist/antd.css";
 import { LoadingOutlined } from "@ant-design/icons";
 
 import configData from "./config.json";
-const yesIcon =
-  "https://cloudflare-ipfs.com/ipfs/QmRWo92JEL6s2ydN1fK2Q3KAX2rzBnTnfqkABFYHmA5EUT";
-const noIcon =
-  "https://cloudflare-ipfs.com/ipfs/QmUVCPwVDCTzM2kBxejB85MS2m3KRjSW7f2w81pSr8ZvTL";
+const addresses = require("./config/addresses.json");
 
 const BigNumber = require("bignumber.js");
 
@@ -27,7 +24,7 @@ const BN = require("bn.js");
 const MAX_UINT256 = new BN(2).pow(new BN(256)).sub(new BN(1));
 const TEN_THOUSAND_BN = new BN(10000);
 
-const network = "kovan"; // set network as "ganache" or "kovan" or "mainnet"
+const network = addresses.network; // set network as "ganache" or "kovan" or "mainnet"
 const tokenMultiple = network === "kovan" ? new BN(100) : new BN(1000);
 // if network is ganache, run truffle migrate --develop and disable metamask
 // if network is kovan, enable metamask, set to kovan network and open account with kovan eth
@@ -46,51 +43,13 @@ const infuraProvider =
 
 const provider = new Web3.providers.HttpProvider(infuraProvider);
 
-const mainnetContracts = {
-  yes: "0x3af375d9f77Ddd4F16F86A5D51a9386b7B4493Fa",
-  no: "0x44Ea84a85616F8e9cD719Fc843DE31D852ad7240",
-  dai: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
-  pool: "0xed0413d19cdf94759bbe3fe9981c4bd085b430cf",
-  multicall: "0xeefBa1e63905eF1D7ACbA5a8513c70307C1cE441",
-};
+const mainnetContracts = addresses.mainnet;
+const kovanContracts = addresses.kovan;
 
-const kovanContracts = {
-  yes: "0x1dbCcF29375304c38bd0d162f636BAA8Dd6CcE44",
-  no: "0xeb69840f09A9235df82d9Ed9D43CafFFea2a1eE9",
-  dai: "0xb6085Abd65E21d205AEaD0b1b9981B8B221fA14E",
-  pool: "0xacb57239c0d0c1c7e11a19c7af0f39a22749f9f0",
-  multicall: "0x2cc8688C5f75E365aaEEb4ea8D6a480405A48D2A",
-};
-// const kovanContracts = {
-//   yes: "0xaC9C1c55901c51b4ff78d957e66bbFE35580528B",
-//   no: "0xF7EF92d2a34137dfa2d60A983eb68dbF0ec3db07",
-//   dai: "0xb6085Abd65E21d205AEaD0b1b9981B8B221fA14E",
-//   pool: "0x494f67aa74c47b3e1B3568e74F9F44365a6c1133",
-//   multicall: "0x2cc8688C5f75E365aaEEb4ea8D6a480405A48D2A",
-// };
-
-const markets = [
-  "0x4dea3bedae79da692f2675038c4d9b8c246b4fb6",
-  "0xD3Ba2A2E641F61a5Bcb7a772C49BA6b78E1416e0",
-];
-const marketInfo = {
-  "0x4dea3bedae79da692f2675038c4d9b8c246b4fb6": {
-    yes: "0x1dbCcF29375304c38bd0d162f636BAA8Dd6CcE44",
-    no: "0xeb69840f09A9235df82d9Ed9D43CafFFea2a1eE9",
-    pool: "0xacb57239c0d0c1c7e11a19c7af0f39a22749f9f0",
-  },
-  "0xD3Ba2A2E641F61a5Bcb7a772C49BA6b78E1416e0": {
-    yes: "0xaC9C1c55901c51b4ff78d957e66bbFE35580528B",
-    no: "0xF7EF92d2a34137dfa2d60A983eb68dbF0ec3db07",
-    pool: "0x494f67aa74c47b3e1B3568e74F9F44365a6c1133",
-  },
-};
 const contracts = network === "mainnet" ? mainnetContracts : kovanContracts;
 
-const tokenSymbols = {};
-tokenSymbols[contracts.yes] = "YES";
-tokenSymbols[contracts.no] = "NO";
-tokenSymbols[contracts.dai] = "DAI";
+const markets = addresses[network].markets;
+const marketInfo = addresses[network].marketInfo;
 
 //App controls the user interface
 class App extends Component {
@@ -140,7 +99,6 @@ class App extends Component {
     impliedOdds: 0,
     hasEnoughBalance: false,
     isApproveRequired: false,
-    tokenSymbols: tokenSymbols,
     isSwapDisabled: false,
     totalSwapVolume: 0,
     market: markets[0],
@@ -204,11 +162,12 @@ class App extends Component {
     }
   };
   getTotalVolumeForThePool = async () => {
+    let { market } = this.state;
     const URL =
       "https://api.thegraph.com/subgraphs/name/balancer-labs/balancer";
     let content = {
       query: `{
-      pools(where: {id: "0xed0413d19cdf94759bbe3fe9981c4bd085b430cf"}) {
+      pools(where: {id: "${marketInfo[market].pool}"}) {
         id 
         totalSwapVolume
         swaps{
@@ -348,15 +307,26 @@ class App extends Component {
       }
     } else if (e.target.name === "market") {
       console.log("market change", marketInfo[e.target.value]);
-      await this.setState({
-        [e.target.name]: e.target.value,
-        bpoolAddress: marketInfo[e.target.value].pool,
-        yesContractAddress: marketInfo[e.target.value].yes,
-        noContractAddress: marketInfo[e.target.value].no,
-        fromToken: marketInfo[e.target.value].no,
-        toToken: this.state.daiContractAddress,
-      });
-
+      if (e.target.value === markets[0]) {
+        //if the trump markets then default is no->DAI
+        await this.setState({
+          [e.target.name]: e.target.value,
+          bpoolAddress: marketInfo[e.target.value].pool,
+          yesContractAddress: marketInfo[e.target.value].yes,
+          noContractAddress: marketInfo[e.target.value].no,
+          fromToken: marketInfo[e.target.value].no,
+          toToken: this.state.daiContractAddress,
+        });
+      } else {
+        await this.setState({
+          [e.target.name]: e.target.value,
+          bpoolAddress: marketInfo[e.target.value].pool,
+          yesContractAddress: marketInfo[e.target.value].yes,
+          noContractAddress: marketInfo[e.target.value].no,
+          fromToken: this.state.daiContractAddress,
+          toToken: marketInfo[e.target.value].yes,
+        });
+      }
       await this.setState({
         fromAmount: this.convertDisplayToAmount(100, this.state.fromToken),
         fromAmountDisplay: 100,
@@ -909,19 +879,22 @@ class App extends Component {
     const { tokenMultiple } = this.state;
     const { pool } = this.state;
     const { erc20Instance } = this.state;
+    const { market } = this.state;
     pool.options.address = this.state.bpoolAddress;
 
     console.log("updating balances state", this.state);
 
     let totalSwapVolume = await this.getTotalVolumeForThePool();
-
-    // var yesPrice = await pool.methods
-    //   .getSpotPrice(daiContractAddress, yesContractAddress)
-    //   .call();
-    // yesPrice = web3.utils.fromWei(yesPrice);
-    // yesPrice = Number(yesPrice);
-    // yesPrice = yesPrice / tokenMultiple;
-    // yesPrice = yesPrice.toFixed(2);
+    var yesPrice = 0;
+    if (market !== markets[0]) {
+      yesPrice = await pool.methods
+        .getSpotPrice(daiContractAddress, yesContractAddress)
+        .call();
+      yesPrice = web3.utils.fromWei(yesPrice);
+      yesPrice = Number(yesPrice);
+      yesPrice = yesPrice / tokenMultiple;
+      yesPrice = yesPrice.toFixed(2);
+    }
 
     var noPrice = await pool.methods
       .getSpotPrice(daiContractAddress, noContractAddress)
@@ -932,7 +905,7 @@ class App extends Component {
     noPrice = noPrice.toFixed(2);
     //update all the state variables at one for smoother experience
     this.setState({
-      // yesPrice: yesPrice,
+      yesPrice: yesPrice,
       noPrice: noPrice,
       totalSwapVolume: totalSwapVolume,
     });
@@ -1110,9 +1083,9 @@ class App extends Component {
     decimals = await erc20Instance.methods.decimals().call();
 
     if (tokenAddress === yesContractAddress) {
-      tokenImage = yesIcon;
+      tokenImage = marketInfo[this.state.market].yesIcon;
     } else if (tokenAddress === noContractAddress) {
-      tokenImage = noIcon;
+      tokenImage = marketInfo[this.state.market].noIcon;
     } else {
       throw new Error("Cannot add this token to Metamask");
     }
@@ -1236,12 +1209,10 @@ class App extends Component {
           noBalance={this.state.noBalance}
           yesPrice={this.state.yesPrice}
           noPrice={this.state.noPrice}
-          AddYesTokenToMetamask={this.AddYesTokenToMetamask}
-          AddNoTokenToMetamask={this.AddNoTokenToMetamask}
+          AddTokenToMetamask={this.AddTokenToMetamask}
           hasEnoughBalance={this.state.hasEnoughBalance}
           isApproveRequired={this.state.isApproveRequired}
           approve={this.approve}
-          tokenSymbols={this.state.tokenSymbols}
           slippage={this.state.slippage}
           isSwapDisabled={this.state.isSwapDisabled}
           totalSwapVolume={Number(this.state.totalSwapVolume)}

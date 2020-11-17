@@ -31,22 +31,11 @@ import { Modal, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Link from "@material-ui/core/Link";
 
-const markets = [
-  "0x4dea3bedae79da692f2675038c4d9b8c246b4fb6",
-  "0xD3Ba2A2E641F61a5Bcb7a772C49BA6b78E1416e0",
-];
-const marketInfo = {
-  "0x4dea3bedae79da692f2675038c4d9b8c246b4fb6": {
-    yes: "0x1dbCcF29375304c38bd0d162f636BAA8Dd6CcE44",
-    no: "0xeb69840f09A9235df82d9Ed9D43CafFFea2a1eE9",
-    pool: "0xacb57239c0d0c1c7e11a19c7af0f39a22749f9f0",
-  },
-  "0xD3Ba2A2E641F61a5Bcb7a772C49BA6b78E1416e0": {
-    yes: "0xaC9C1c55901c51b4ff78d957e66bbFE35580528B",
-    no: "0xF7EF92d2a34137dfa2d60A983eb68dbF0ec3db07",
-    pool: "0x494f67aa74c47b3e1B3568e74F9F44365a6c1133",
-  },
-};
+const addresses = require("../config/addresses.json");
+const network = addresses.network;
+
+const markets = addresses[network].markets;
+const marketInfo = addresses[network].marketInfo;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -360,7 +349,7 @@ const CustomExpandMore = withStyles(iconStyles)(
 export default function Trading(props) {
   const classes = useStyles();
   const isContrast = useSelector((state) => state.settings.isContrast);
-  console.log(props);
+  // console.log(props);
 
   const Theme = {
     overrides: {
@@ -455,7 +444,7 @@ export default function Trading(props) {
               </div>
               <div>
                 <a
-                  href="https://predictionexplorer.com/market/0x1EBb89156091EB0d59603C18379C03A5c84D7355"
+                  href={"https://predictionexplorer.com/market/" + props.market}
                   target="_blank"
                 >
                   {/* <img className={classes.info_icon} src={infoIcon} alt="info icon"/> */}
@@ -515,13 +504,15 @@ export default function Trading(props) {
                           disabled
                           style={{ display: "none" }}
                         >
-                          <img src={TImg} alt="" /> <span>YES</span>
+                          <img src={marketInfo[props.market].yesIcon} alt="" />{" "}
+                          <span>YES</span>
                         </MenuItem>
                         <MenuItem
                           value={marketInfo[props.market].no}
                           className={classes.menu_item}
                         >
-                          <img src={NTImg} alt="" /> <span>NO</span>
+                          <img src={marketInfo[props.market].noIcon} alt="" />{" "}
+                          <span>NO</span>
                         </MenuItem>
                         <MenuItem
                           value={props.daiContractAddress}
@@ -549,13 +540,15 @@ export default function Trading(props) {
                           // disabled
                           // style={{ display: "none" }}
                         >
-                          <img src={TImg} alt="" /> <span>YES</span>
+                          <img src={marketInfo[props.market].yesIcon} alt="" />{" "}
+                          <span>YES</span>
                         </MenuItem>
                         <MenuItem
                           value={marketInfo[props.market].no}
                           className={classes.menu_item}
                         >
-                          <img src={NTImg} alt="" /> <span>NO</span>
+                          <img src={marketInfo[props.market].noIcon} alt="" />{" "}
+                          <span>NO</span>
                         </MenuItem>
                         <MenuItem
                           value={props.daiContractAddress}
@@ -615,13 +608,15 @@ export default function Trading(props) {
                           disabled
                           style={{ display: "none" }}
                         >
-                          <img src={TImg} alt="" /> <span>YES</span>
+                          <img src={marketInfo[props.market].yesIcon} alt="" />{" "}
+                          <span>YES</span>
                         </MenuItem>
                         <MenuItem
                           value={marketInfo[props.market].no}
                           className={classes.menu_item}
                         >
-                          <img src={NTImg} alt="" /> <span>NO</span>
+                          <img src={marketInfo[props.market].noIcon} alt="" />{" "}
+                          <span>NO</span>
                         </MenuItem>
                         <MenuItem
                           value={props.daiContractAddress}
@@ -649,13 +644,15 @@ export default function Trading(props) {
                           // disabled
                           // style={{ display: "none" }}
                         >
-                          <img src={TImg} alt="" /> <span>YES</span>
+                          <img src={marketInfo[props.market].yesIcon} alt="" />{" "}
+                          <span>YES</span>
                         </MenuItem>
                         <MenuItem
                           value={marketInfo[props.market].no}
                           className={classes.menu_item}
                         >
-                          <img src={NTImg} alt="" /> <span>NO</span>
+                          <img src={marketInfo[props.market].noIcon} alt="" />{" "}
+                          <span>NO</span>
                         </MenuItem>
                         <MenuItem
                           value={props.daiContractAddress}
@@ -900,14 +897,20 @@ export default function Trading(props) {
                 </div>
                 <div className="flex-item">
                   <div className="flex-item">
-                    <img src={TImg} display="inline" />
+                    <img
+                      src={marketInfo[props.market].yesIcon}
+                      display="inline"
+                    />
                     <div>
                       <Typography>
-                        {props.yesBalance} <span className="yes">y</span>Trump
+                        {props.yesBalance} <span className="yes">y</span>{" "}
+                        {marketInfo[props.market].symbolPostfix}
                       </Typography>
                       <Link
                         className="holding_num"
-                        onClick={props.AddYesTokenToMetamask}
+                        onClick={() =>
+                          props.AddTokenToMetamask(marketInfo[props.market].yes)
+                        }
                         component="button"
                         variant="body2"
                       >
@@ -922,14 +925,20 @@ export default function Trading(props) {
                 </div>
                 <div className="flex-item last">
                   <div className="flex-item">
-                    <img src={NTImg} display="inline" />
+                    <img
+                      src={marketInfo[props.market].noIcon}
+                      display="inline"
+                    />
                     <div>
                       <Typography>
-                        {props.noBalance} <span className="no">n</span>Trump
+                        {props.noBalance} <span className="no">n</span>{" "}
+                        {marketInfo[props.market].symbolPostfix}
                       </Typography>
                       <Link
                         className="holding_num"
-                        onClick={props.AddNoTokenToMetamask}
+                        onClick={() =>
+                          props.AddTokenToMetamask(marketInfo[props.market].no)
+                        }
                         component="button"
                         variant="body2"
                       >
