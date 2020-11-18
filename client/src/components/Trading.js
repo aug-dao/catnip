@@ -713,7 +713,10 @@ export default function Trading(props) {
                         onClick={props.approve}
                         disabled={props.isSwapDisabled}
                       >
-                        Approve
+                        {props.fromToken === props.daiContractAddress ? 
+                          "Approve DAI for this market" :
+                          "Approve Before Swapping"
+                        }
                       </StyledButton>
                       <StyledButton variant="contained" disabled>
                         Swap
