@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 import Box from "@material-ui/core/Box";
@@ -11,10 +11,10 @@ import DarkLogo from "../assets/images/dark_logo.png";
 import discordIcon from "../assets/images/discordIcon.png";
 import TImg from "../assets/images/t.png";
 import NTImg from "../assets/images/nt.png";
-import SettingsIcon from '@material-ui/icons/Settings';
+import SettingsIcon from "@material-ui/icons/Settings";
 import { HelpOutline } from "@material-ui/icons";
 import Tooltip from "@material-ui/core/Tooltip";
-import Button from '@material-ui/core/Button';
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,110 +43,111 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "17px",
   },
   custom_box: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    position: 'relative'
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    position: "relative",
   },
   settings: {
     width: 36,
     height: 38,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 15,
-    cursor: 'pointer',    
+    cursor: "pointer",
     borderRadius: 5,
     marginRight: 30,
 
-    '&.light': {
-      backgroundColor: 'rgb(237, 238, 242)',
-      '&:hover': {
-        backgroundColor: 'rgb(206, 208, 217)'
-      }
+    "&.light": {
+      backgroundColor: "rgb(237, 238, 242)",
+      "&:hover": {
+        backgroundColor: "rgb(206, 208, 217)",
+      },
     },
 
-    '&.dark': {
-      backgroundColor: 'rgb(64, 68, 79)',
-      '&:hover': {
-        backgroundColor: 'rgb(86, 90, 105)'
-      }
-    },    
+    "&.dark": {
+      backgroundColor: "rgb(64, 68, 79)",
+      "&:hover": {
+        backgroundColor: "rgb(86, 90, 105)",
+      },
+    },
   },
   settings_part: {
-    position: 'absolute',
+    position: "absolute",
     top: 70,
     right: 20,
     padding: 15,
     borderRadius: 5,
     width: 370,
-    textAlign: 'left',
-    boxShadow: 'rgba(0, 0, 0, 0.01) 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 4px 8px, rgba(0, 0, 0, 0.04) 0px 16px 24px, rgba(0, 0, 0, 0.01) 0px 24px 32px',
+    textAlign: "left",
+    boxShadow:
+      "rgba(0, 0, 0, 0.01) 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 4px 8px, rgba(0, 0, 0, 0.04) 0px 16px 24px, rgba(0, 0, 0, 0.01) 0px 24px 32px",
     zIndex: 1,
 
-    '&.light': {
-      backgroundColor: 'rgb(247, 248, 250)'
+    "&.light": {
+      backgroundColor: "rgb(247, 248, 250)",
     },
 
-    '&.dark': {
-      backgroundColor: 'rgb(44, 47, 54)'
-    }
+    "&.dark": {
+      backgroundColor: "rgb(44, 47, 54)",
+    },
   },
   btn_groups: {
-    display: 'flex',
-    alignItems: 'center',
-    
-    '& button': {
-      marginRight: 15,
-      borderRadius: 20,      
-      outline: 'none',
-      boxShadow: 'none',
+    display: "flex",
+    alignItems: "center",
 
-      '&.selected': {
-        backgroundColor: 'rgb(33, 114, 229)',
-        color: 'white'
-      }
-    }
+    "& button": {
+      marginRight: 15,
+      borderRadius: 20,
+      outline: "none",
+      boxShadow: "none",
+
+      "&.selected": {
+        backgroundColor: "rgb(33, 114, 229)",
+        color: "white",
+      },
+    },
   },
   flex_item: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between'
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   slippage_btn: {
     borderRadius: 20,
     minWidth: 100,
-    outline: 'none !important',
-    boxShadow: 'none'
+    outline: "none !important",
+    boxShadow: "none",
   },
   display_flex: {
-    display: 'flex',
+    display: "flex",
     marginBottom: 10,
-    '& .MuiTypography-root': {
-      marginRight: 10,      
-    }
+    "& .MuiTypography-root": {
+      marginRight: 10,
+    },
   },
   about_icon: {
-    margin: "17px 16px 0 0",
+    margin: "17px 14px 0 0",
   },
   slippage_input: {
-    padding: '6px 16px',
+    padding: "6px 16px",
     borderRadius: 20,
     borderRadius: 20,
-    backgroundColor: '#e0e0e0',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: 'rgba(0, 0, 0, 0.87)',
+    backgroundColor: "#e0e0e0",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "rgba(0, 0, 0, 0.87)",
 
-    '& input': {
+    "& input": {
       width: 30,
-      border: 'none',
-      outline: 'none',
-      background: 'transparent',
-      textAlign: 'right',
-    }
-  }
+      border: "none",
+      outline: "none",
+      background: "transparent",
+      textAlign: "right",
+    },
+  },
 }));
 
 const IOSSwitch = withStyles((theme) => ({
@@ -202,7 +203,7 @@ const IOSSwitch = withStyles((theme) => ({
   );
 });
 
-const slippage_list = [0.1, 0.5, 1]
+const slippage_list = [0.1, 0.5, 1];
 
 export default function PageHeader(props) {
   const classes = useStyles();
@@ -222,13 +223,12 @@ export default function PageHeader(props) {
 
   const handleChangeSlippage = (slippage) => {
     setSlippage(slippage);
-    props.changeSlippage(slippage)
-  }
+    props.changeSlippage(slippage);
+  };
 
   const ref = useRef();
 
-
-  const handleClick = e => {
+  const handleClick = (e) => {
     if (ref.current && !ref.current.contains(e.target)) {
       setShowSettings(false);
     }
@@ -267,16 +267,31 @@ export default function PageHeader(props) {
         </Grid>
         <Grid item xs={3}></Grid>
         <Grid item xs={4}>
-          <Box fontWeight="fontWeightBold" textAlign="right" className={classes.custom_box}>
-            <a className={classes.about_icon} href="https://hackmd.io/@vI0VhzpxTLOQ3uSKoTaSmA/BJjSBMjuv#" target="_blank">
-            <HelpOutline
-              color="textPrimary"
-              className={`question_logo ${
-                isContrast ? "dark" : "light"
-              }`}
-            />
+          <Box
+            fontWeight="fontWeightBold"
+            textAlign="right"
+            className={classes.custom_box}
+          >
+            <a
+              className={classes.about_icon}
+              href="https://hackmd.io/@vI0VhzpxTLOQ3uSKoTaSmA/BJjSBMjuv#"
+              target="_blank"
+            >
+              <HelpOutline
+                color="textPrimary"
+                className={`question_logo ${isContrast ? "dark" : "light"}`}
+              />
             </a>
-            <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" target="_blank" class="twitter-share-button" data-text="The world&#39;s simplest, most liquid prediction market. Built on Augur." data-related="catnip_exchange" data-show-count="false">Tweet</a>
+            <a
+              href="https://twitter.com/share?ref_src=twsrc%5Etfw"
+              target="_blank"
+              class="twitter-share-button"
+              data-text="The world&#39;s simplest, most liquid prediction market. Built on Augur."
+              data-related="catnip_exchange"
+              data-show-count="false"
+            >
+              Tweet
+            </a>
             <a href="https://discord.gg/a4hpuwd" target="_blank">
               <img
                 className={classes.discord_icon}
@@ -284,65 +299,80 @@ export default function PageHeader(props) {
                 width="34"
               />
             </a>
-            <div className={`${classes.settings} ${isContrast ? 'dark' : 'light'}`}>
-              <SettingsIcon onClick={() => setShowSettings(!showSettings)}/>
-            </div>            
-            {
-              showSettings ? 
-                <div className={`${classes.settings_part} ${isContrast ? 'dark' : 'light'}`} ref={ref}>                  
-                    <div className={classes.display_flex}>
-                      <Typography
-                        variant="body2"                      
-                        padding="20px"                        
-                      >
-                        Slippage tolerance
+            <div
+              className={`${classes.settings} ${isContrast ? "dark" : "light"}`}
+            >
+              <SettingsIcon onClick={() => setShowSettings(!showSettings)} />
+            </div>
+            {showSettings ? (
+              <div
+                className={`${classes.settings_part} ${
+                  isContrast ? "dark" : "light"
+                }`}
+                ref={ref}
+              >
+                <div className={classes.display_flex}>
+                  <Typography variant="body2" padding="20px">
+                    Slippage tolerance
+                  </Typography>
+                  <Tooltip
+                    title={
+                      <Typography color="inherit">
+                        Your transaction will revert if the price changes
+                        unfavorably by more than this percentage.
                       </Typography>
-                      <Tooltip
-                        title={
-                          <Typography color="inherit">
-                            Your transaction will revert if the price changes unfavorably by more than this percentage.
-                          </Typography>
-                        }
-                        placement="right"
-                        className={classes.tooltip}
-                      >
-                        <HelpOutline
-                          color="textPrimary"
-                          className={`question_logo ${
-                            isContrast ? "dark" : "light"
-                          }`}
-                        />
-                      </Tooltip>
-                    </div>
-                    <div className={classes.flex_item}>
-                      <div className={classes.btn_groups}>
-                        {slippage_list.map((item) =>
-                          <Button variant="contained" onClick={() => handleChangeSlippage(item)} className={`${item == slippage ? 'selected' : ''} ${isContrast ? 'dark' : 'light'}` }>
-                            {item}%
-                          </Button>                          
-                        )}         
-                      </div>
-                      <div className={classes.slippage_input}>
-                        <input value={slippage} onChange={(e) => handleChangeSlippage(e.target.value)} type="number"/>%
-                      </div>                      
-                    </div>
-                    <FormControlLabel
-                      className={classes.darkmode_toggle}
-                      control={
-                        <IOSSwitch checked={isContrast} onChange={handleChange} />
-                      }
-                      label="Dark Mode"
+                    }
+                    placement="right"
+                    className={classes.tooltip}
+                  >
+                    <HelpOutline
+                      color="textPrimary"
+                      className={`question_logo ${
+                        isContrast ? "dark" : "light"
+                      }`}
                     />
-                </div> : 
-                ''
-            }            
+                  </Tooltip>
+                </div>
+                <div className={classes.flex_item}>
+                  <div className={classes.btn_groups}>
+                    {slippage_list.map((item) => (
+                      <Button
+                        variant="contained"
+                        onClick={() => handleChangeSlippage(item)}
+                        className={`${item == slippage ? "selected" : ""} ${
+                          isContrast ? "dark" : "light"
+                        }`}
+                      >
+                        {item}%
+                      </Button>
+                    ))}
+                  </div>
+                  <div className={classes.slippage_input}>
+                    <input
+                      value={slippage}
+                      onChange={(e) => handleChangeSlippage(e.target.value)}
+                      type="number"
+                    />
+                    %
+                  </div>
+                </div>
+                <FormControlLabel
+                  className={classes.darkmode_toggle}
+                  control={
+                    <IOSSwitch checked={isContrast} onChange={handleChange} />
+                  }
+                  label="Dark Mode"
+                />
+              </div>
+            ) : (
+              ""
+            )}
           </Box>
         </Grid>
       </Grid>
       <Grid container spacing={0}>
         <Grid item xs={8}></Grid>
-        <Grid item xs={3}>
-        </Grid>
+        <Grid item xs={3}></Grid>
         <Grid item xs={1}></Grid>
       </Grid>
     </div>

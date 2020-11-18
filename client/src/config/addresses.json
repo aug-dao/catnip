@@ -14,7 +14,8 @@
         "pool": "0xacb57239c0d0c1c7e11a19c7af0f39a22749f9f0",
         "symbolPostfix": "Trump",
         "yesIcon": "https://cloudflare-ipfs.com/ipfs/QmRWo92JEL6s2ydN1fK2Q3KAX2rzBnTnfqkABFYHmA5EUT",
-        "noIcon": "https://cloudflare-ipfs.com/ipfs/QmUVCPwVDCTzM2kBxejB85MS2m3KRjSW7f2w81pSr8ZvTL"
+        "noIcon": "https://cloudflare-ipfs.com/ipfs/QmUVCPwVDCTzM2kBxejB85MS2m3KRjSW7f2w81pSr8ZvTL",
+        "marketQuestion": "Will Trump Win the 2020 U.S. Presidential Election?"
       },
       "0xD3Ba2A2E641F61a5Bcb7a772C49BA6b78E1416e0": {
         "yes": "0xaC9C1c55901c51b4ff78d957e66bbFE35580528B",
@@ -22,7 +23,8 @@
         "pool": "0x494f67aa74c47b3e1B3568e74F9F44365a6c1133",
         "symbolPostfix": "Anthony",
         "yesIcon": "https://cloudflare-ipfs.com/ipfs/QmUA2ExuPSRPHepiRqe3VH4oZKHkw6URoNtFB7UqHN8Vgh",
-        "noIcon": "https://cloudflare-ipfs.com/ipfs/QmZfAjSUevTSJe5Lqg22vx4zAPGrkafDKz33LJG2GWoAqG"
+        "noIcon": "https://cloudflare-ipfs.com/ipfs/QmZfAjSUevTSJe5Lqg22vx4zAPGrkafDKz33LJG2GWoAqG",
+        "marketQuestion": "Will the Democrats Win the Presidency, the Senate, and the House?"
       }
     }
   },
@@ -40,7 +42,8 @@
         "pool": "0xed0413d19cdf94759bbe3fe9981c4bd085b430cf",
         "symbolPostfix": "Trump",
         "yesIcon": "https://cloudflare-ipfs.com/ipfs/QmRWo92JEL6s2ydN1fK2Q3KAX2rzBnTnfqkABFYHmA5EUT",
-        "noIcon": "https://cloudflare-ipfs.com/ipfs/QmUVCPwVDCTzM2kBxejB85MS2m3KRjSW7f2w81pSr8ZvTL"
+        "noIcon": "https://cloudflare-ipfs.com/ipfs/QmUVCPwVDCTzM2kBxejB85MS2m3KRjSW7f2w81pSr8ZvTL",
+        "marketQuestion": "Will Trump Win the 2020 U.S. Presidential Election?"
       },
       "0x6e6ffb10179febf29b0223d22793d1c1d8a8f541": {
         "yes": "0xf732ee9ccbf0df22f53fbdd9ec88d62df298fbf8",
@@ -48,7 +51,8 @@
         "pool": "0x68c74e157f35a3e40f1b02bba3e6e3827d534059",
         "symbolPostfix": "Blue",
         "yesIcon": "https://cloudflare-ipfs.com/ipfs/QmUA2ExuPSRPHepiRqe3VH4oZKHkw6URoNtFB7UqHN8Vgh",
-        "noIcon": "https://cloudflare-ipfs.com/ipfs/QmZfAjSUevTSJe5Lqg22vx4zAPGrkafDKz33LJG2GWoAqG"
+        "noIcon": "https://cloudflare-ipfs.com/ipfs/QmZfAjSUevTSJe5Lqg22vx4zAPGrkafDKz33LJG2GWoAqG",
+        "marketQuestion": "Will the Democrats Win the Presidency, the Senate, and the House?"
       }
     }
   }

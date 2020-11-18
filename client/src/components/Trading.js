@@ -121,6 +121,7 @@ const useStyles = makeStyles((theme) => ({
       display: "flex",
       alignItems: "center",
       paddingRight: "50",
+      lineHeight: "1.3",
 
       "&:focus": {
         backgroundColor: "transparent",
@@ -327,6 +328,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "14px",
     marginRight: "8px",
   },
+  market_name: {},
 }));
 
 const iconStyles = {
@@ -385,17 +387,14 @@ export default function Trading(props) {
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <Box textAlign="left">
-              {
+              {props.market === markets[0] && (
                 <div class="slippage_alert">
-                  <strong>Market Update, November 9:</strong> <b />
-                  We have pointed catnip to a new liquidity pool to facilitate
-                  the sale of *presumptive* winning shares (nTrump), traders may
-                  still access yTrump and the original pool{" "}
+                  You may trade yTrump and access the original election pool
                   <a href="https://catnip1.netlify.app/" target="_blank">
                     {" "}
-                    <strong>here.</strong>{" "}
+                    here.{" "}
                   </a>
-                  For more info see{" "}
+                  For more info on market settlement see{" "}
                   <a
                     href="https://medium.com/catnip-exchange/early-settlement-options-for-the-catnip-election-market-540843a0b1f6"
                     target="_blank"
@@ -405,7 +404,7 @@ export default function Trading(props) {
                   </a>
                   .
                 </div>
-              }
+              )}
             </Box>
             <Paper
               className={`main_part ${isContrast ? "dark" : "light"}`}
@@ -428,16 +427,14 @@ export default function Trading(props) {
                   <Select
                     onChange={props.handleChange}
                     name="market"
-                    defaultValue={markets[0]}
+                    defaultValue={markets[1]}
+                    style={{ maxWidth: "250px", textAlign: "left" }}
                   >
-                    <MenuItem value={markets[0]}>
-                      {" "}
-                      Will Trump win the 2020 U.S. <br /> presidential election?
-                    </MenuItem>
                     <MenuItem value={markets[1]}>
-                      {" "}
-                      Will Anthony Davis win the 2019-20 <br /> Defensive Player
-                      of the Year award?
+                      {marketInfo[markets[1]].marketQuestion}
+                    </MenuItem>
+                    <MenuItem value={markets[0]}>
+                      {marketInfo[markets[0]].marketQuestion}
                     </MenuItem>
                   </Select>
                 </ThemeProvider>

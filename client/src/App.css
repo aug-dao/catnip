@@ -3,7 +3,8 @@
   height: 100vh;
 }
 
-.App.dark, .App.dark > * {
+.App.dark,
+.App.dark > * {
   color: #fff !important;
   background-color: black !important;
 }
@@ -72,7 +73,7 @@
 }
 
 .twitter-share-button {
-    margin: 16px 18px 0 0;
+  margin: 16px 18px 0 0;
 }
 
 .slippage_alert {
@@ -80,7 +81,9 @@
   padding-bottom: 14px;
   font-size: 108%;
 }
-
+.MuiSelect-selectMenu {
+  white-space: inherit !important;
+}
 
 /* Hide number input field arrows on Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,

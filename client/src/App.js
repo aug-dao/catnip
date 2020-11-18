@@ -131,20 +131,23 @@ class App extends Component {
       //set it only the first time around not when wallet gets connected
       if (!this.state.fromToken) {
         await this.setState({
-          market: markets[0],
+          market: markets[1],
         });
 
         await this.setState({
           yesContractAddress: marketInfo[this.state.market].yes,
           noContractAddress: marketInfo[this.state.market].no,
           bpoolAddress: marketInfo[this.state.market].pool,
-          fromAmount: this.convertDisplayToAmount(100, this.state.fromToken),
+          fromAmount: this.convertDisplayToAmount(
+            100,
+            this.state.daiContractAddress
+          ), //18 decimals because of the frmToken == DAI
           fromAmountDisplay: 100,
         });
 
         await this.setState({
-          fromToken: this.state.noContractAddress,
-          toToken: this.state.daiContractAddress,
+          fromToken: this.state.daiContractAddress,
+          toToken: this.state.yesContractAddress,
         });
         this.state.pool.options.address = this.state.bpoolAddress;
         var swapFee = await this.state.pool.methods.getSwapFee().call();
