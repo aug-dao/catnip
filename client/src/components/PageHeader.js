@@ -139,6 +139,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
     color: "rgba(0, 0, 0, 0.87)",
+    width: 300,
 
     "& input": {
       width: 30,

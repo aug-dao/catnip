@@ -332,6 +332,17 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'left',
     fontSize: '118%',
   },
+  btn_control_groups: {
+    display: 'flex',
+    '& > div': {
+      width: '45%',
+      marginLeft: '2.5%',
+      marginRight: '2.5%'
+    }
+  },
+  tooltip_item: {
+    marginBottom: 10
+  }
 }));
 
 const iconStyles = {
@@ -451,9 +462,56 @@ export default function Trading(props) {
                   target="_blank"
                 >
                   {/* <img className={classes.info_icon} src={infoIcon} alt="info icon"/> */}
-                  <div className={`info_logo ${isContrast ? "dark" : "light"}`}>
+                  {/* <div className={`info_logo ${isContrast ? "dark" : "light"}`}>
                     <InfoOutlined />
-                  </div>
+                  </div> */}
+                  <Tooltip
+                    title={
+                      props.market === markets[1] ? 
+                        <>
+                          <div className={classes.tooltip_item}>
+                            <Typography color="inherit" variant="h5">Terms:</Typography>
+                            <Typography color="inherit">{marketInfo[markets[1]].marketQuestion}</Typography>
+                          </div>
+                          <div className={classes.tooltip_item}>
+                            <Typography color="inherit" variant="h5">Expiration date:</Typography>
+                            <Typography color="inherit">{marketInfo[markets[1]].endTime}</Typography>
+                          </div>
+                          <div className={classes.tooltip_item}>
+                            <Typography color="inherit" variant="h5">Market ID:</Typography>
+                            <Typography color="inherit">{markets[1]}</Typography>
+                          </div>
+                          <div className={classes.tooltip_item}>
+                            <Typography color="inherit" variant="h5">Balancer pool:</Typography>
+                            <Typography color="inherit">{marketInfo[markets[1]].pool}</Typography>
+                          </div>                          
+                        </> :
+                        <>
+                          <div className={classes.tooltip_item}>
+                            <Typography color="inherit" variant="h5">Terms:</Typography>
+                            <Typography color="inherit">{marketInfo[markets[0]].marketQuestion}</Typography>
+                          </div>
+                          <div className={classes.tooltip_item}>
+                            <Typography color="inherit" variant="h5">Expiration date:</Typography>
+                            <Typography color="inherit">{marketInfo[markets[0]].endTime}</Typography>
+                          </div>
+                          <div className={classes.tooltip_item}>
+                            <Typography color="inherit" variant="h5">Market ID:</Typography>
+                            <Typography color="inherit">{markets[0]}</Typography>
+                          </div>
+                          <div className={classes.tooltip_item}>
+                            <Typography color="inherit" variant="h5">Balancer pool:</Typography>
+                            <Typography color="inherit">{marketInfo[markets[0]].pool}</Typography>
+                          </div>
+                        </>                      
+                    }
+                    placement="right"
+                    className={classes.tooltip}
+                  >                    
+                    <div className={`info_logo ${isContrast ? "dark" : "light"}`}>
+                      <InfoOutlined />
+                    </div>
+                  </Tooltip>                  
                 </a>
               </div>
               <div
@@ -713,7 +771,7 @@ export default function Trading(props) {
               {props.accounts ? (
                 props.hasEnoughBalance ? (
                   props.isApproveRequired ? (
-                    <div>
+                    <div className={classes.btn_control_groups}>
                       <StyledButton
                         variant="contained"
                         onClick={props.approve}
