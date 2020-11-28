@@ -30,6 +30,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { Modal, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Link from "@material-ui/core/Link";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const addresses = require("../config/addresses.json");
 const network = addresses.network;
@@ -390,6 +391,17 @@ export default function Trading(props) {
   let theme = createMuiTheme(Theme);
   theme = isContrast ? theme : null;
 
+  const parseDate = (params) => {
+    let unix_timestamp = parseInt(params);
+    let a = new Date(unix_timestamp * 1000);
+    let months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    let year = a.getFullYear();
+    let month = months[a.getMonth()];
+    let date = a.getDate();
+    let time = date + ' ' + month + ' ' + year;
+    return time;
+  }
+
   return (
     <div className={classes.root}>
       <Container>
@@ -469,39 +481,37 @@ export default function Trading(props) {
                     title={
                       props.market === markets[1] ? 
                         <>
+                          <div className={classes.tooltip_item}>                            
+                            <Typography color="inherit" variant="h5">{marketInfo[markets[1]].extraInfo.description}</Typography>
+                          </div>
                           <div className={classes.tooltip_item}>
                             <Typography color="inherit" variant="h5">Terms:</Typography>
-                            <Typography color="inherit">{marketInfo[markets[1]].marketQuestion}</Typography>
+                            <Typography color="inherit">{marketInfo[markets[1]].extraInfo.longDescription}</Typography>
                           </div>
                           <div className={classes.tooltip_item}>
                             <Typography color="inherit" variant="h5">Expiration date:</Typography>
-                            <Typography color="inherit">{marketInfo[markets[1]].endTime}</Typography>
+                            <Typography color="inherit">{parseDate(marketInfo[markets[1]].endTime)}</Typography>
                           </div>
                           <div className={classes.tooltip_item}>
                             <Typography color="inherit" variant="h5">Market ID:</Typography>
                             <Typography color="inherit">{markets[1]}</Typography>
-                          </div>
-                          <div className={classes.tooltip_item}>
-                            <Typography color="inherit" variant="h5">Balancer pool:</Typography>
-                            <Typography color="inherit">{marketInfo[markets[1]].pool}</Typography>
-                          </div>                          
+                          </div>                                                    
                         </> :
                         <>
                           <div className={classes.tooltip_item}>
+                            <Typography color="inherit" variant="h5">{marketInfo[markets[0]].extraInfo.description}</Typography>
+                          </div>
+                          <div className={classes.tooltip_item}>
                             <Typography color="inherit" variant="h5">Terms:</Typography>
-                            <Typography color="inherit">{marketInfo[markets[0]].marketQuestion}</Typography>
+                            <Typography color="inherit">{marketInfo[markets[0]].extraInfo.longDescription}</Typography>
                           </div>
                           <div className={classes.tooltip_item}>
                             <Typography color="inherit" variant="h5">Expiration date:</Typography>
-                            <Typography color="inherit">{marketInfo[markets[0]].endTime}</Typography>
+                            <Typography color="inherit">{parseDate(marketInfo[markets[1]].endTime)}</Typography>
                           </div>
                           <div className={classes.tooltip_item}>
                             <Typography color="inherit" variant="h5">Market ID:</Typography>
                             <Typography color="inherit">{markets[0]}</Typography>
-                          </div>
-                          <div className={classes.tooltip_item}>
-                            <Typography color="inherit" variant="h5">Balancer pool:</Typography>
-                            <Typography color="inherit">{marketInfo[markets[0]].pool}</Typography>
                           </div>
                         </>                      
                     }
@@ -777,23 +787,29 @@ export default function Trading(props) {
                         onClick={props.approve}
                         disabled={props.isSwapDisabled}
                       >
-                        {props.fromToken === props.daiContractAddress ? 
-                          "Approve DAI for this market" :
-                          "Approve Before Swapping"
-                        }
+                        Approve {props.showApproveLoading && <LoadingOutlined />}
                       </StyledButton>
                       <StyledButton variant="contained" disabled>
                         Swap
                       </StyledButton>
                     </div>
                   ) : (
-                    <StyledButton
-                      variant="contained"
-                      onClick={props.swapBranch}
-                      disabled={props.isSwapDisabled}
-                    >
-                      Swap
-                    </StyledButton>
+                    <div className={classes.btn_control_groups}>
+                      <StyledButton
+                        variant="contained"
+                        disabled
+                      >
+                        Approve
+                      </StyledButton>
+                      <StyledButton
+                        variant="contained"
+                        onClick={props.swapBranch}
+                        disabled={props.isSwapDisabled}
+                      >
+                        Swap
+                      </StyledButton>
+                    </div>
+                   
                   )
                 ) : (
                   <StyledButton variant="contained" disabled>
