@@ -967,6 +967,7 @@ class App extends Component {
   };
 
   // This function calculates miscellaneous numbers after quote
+
   calcPriceProfitSlippage = async () => {
     const { fromToken } = this.state;
     const { toToken } = this.state;
@@ -977,15 +978,35 @@ class App extends Component {
     const { web3 } = this.state;
     const { tokenMultiple } = this.state;
 
+    let spotPrice = new BN(
+      await pool.methods.getSpotPrice(fromToken, toToken).call()
+    );
+    //"real" because we are changing the price per share to always be in terms of DAI when DAI is one of the token
+    let realSpotPrice = new BigNumber(web3.utils.fromWei(spotPrice.toString()));
+
+    let realFromAmount = new BigNumber(fromAmount);
+    let realToAmount = new BigNumber(toAmount);
+
+    let realPricePerShare = realFromAmount.div(realToAmount);
+
+    // console.log("realPricePerShare", realPricePerShare.toString());
+    // console.log("realSpotPrice", realSpotPrice.toString());
+
+    let realSpotPercentage = realSpotPrice.div(realPricePerShare).times(100);
+
+    // console.log("realspotPercentage", realSpotPercentage.toString());
+
+    let realPriceImpact = new BigNumber(100).minus(realSpotPercentage);
+
     if (fromToken !== daiContractAddress) {
       fromAmount = fromAmount.mul(tokenMultiple);
     }
     if (toToken !== daiContractAddress) {
       toAmount = toAmount.mul(tokenMultiple);
     }
-    let spotPrice = new BN(
-      await pool.methods.getSpotPrice(fromToken, toToken).call()
-    );
+    // let spotPrice = new BN(
+    //   await pool.methods.getSpotPrice(fromToken, toToken).call()
+    // );
 
     if (fromToken !== daiContractAddress) {
       spotPrice = spotPrice.mul(tokenMultiple);
@@ -1007,18 +1028,13 @@ class App extends Component {
       pricePerShare = fromAmount.div(toAmount);
     }
 
-    let priceImpact = pricePerShare
-      .minus(spotPrice)
-      .multipliedBy(new BigNumber(100))
-      .dividedBy(pricePerShare);
-
     // console.log("priceImapct;" + priceImpact.toString());
     let priceImpactColor = "red";
-    if (priceImpact < 1) {
+    if (realPriceImpact < 1) {
       priceImpactColor = "green";
-    } else if (priceImpact >= 1 && priceImpact <= 3) {
+    } else if (realPriceImpact >= 1 && realPriceImpact <= 3) {
       priceImpactColor = "black";
-    } else if (priceImpact > 3) {
+    } else if (realPriceImpact > 3) {
       priceImpactColor = "red";
     }
     let impliedOdds = 0;
@@ -1040,7 +1056,7 @@ class App extends Component {
     this.setState({
       pricePerShare: pricePerShare.toFixed(3),
       maxProfit: maxProfit.toFixed(2),
-      priceImpact: priceImpact.toFixed(2),
+      priceImpact: realPriceImpact.toFixed(2),
       impliedOdds: impliedOdds.toFixed(2),
       priceImpactColor: priceImpactColor,
     });
