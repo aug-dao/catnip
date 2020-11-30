@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   makeStyles,
   ThemeProvider,
@@ -275,8 +275,13 @@ const useStyles = makeStyles((theme) => ({
       borderRadius: "20px",
     },
   },
-  float_left: {
-    float: "left",
+  // float_left: {
+  //   float: "left",
+  // },
+  flex_Part: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between"
   },
   info_icon: {
     width: "20px",
@@ -342,7 +347,28 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   tooltip_item: {
-    marginBottom: 10
+    marginBottom: 10,
+
+    '& p': {
+      lineBreak: "anywhere"
+    }
+  },
+  custom_Tooltip: {
+    position: "absolute",
+    top: -15,
+    left: 40,
+    background: '#6e6f70',
+    minWidth: 370,
+    textAlign: "left",
+    padding: 15,
+    border: "1px solid white",
+    color: "white",
+    borderRadius: 8,
+    zIndex: 200
+  },
+  marketInfo_link: {
+    position: "relative",
+    padding: 10
   }
 }));
 
@@ -391,16 +417,30 @@ export default function Trading(props) {
   let theme = createMuiTheme(Theme);
   theme = isContrast ? theme : null;
 
-  const parseDate = (params) => {
-    let unix_timestamp = parseInt(params);
-    let a = new Date(unix_timestamp * 1000);
-    let months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    let year = a.getFullYear();
-    let month = months[a.getMonth()];
-    let date = a.getDate();
-    let time = date + ' ' + month + ' ' + year;
+  // const parseDate = (params) => {
+  //   let unix_timestamp = parseInt(params);
+  //   let a = new Date(unix_timestamp * 1000);
+  //   let months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  //   let year = a.getFullYear();
+  //   let month = months[a.getMonth()];
+  //   let date = a.getDate();
+  //   let time = date + ' ' + month + ' ' + year;
+  //   return time;
+  // }
+
+  const timeConverter = (UNIX_timestamp) => {
+    var a = new Date(UNIX_timestamp * 1000);
+    var time = a.toLocaleString("en-US", { timeZoneName: "short" });
     return time;
   }
+
+  const [selectedMarket, setSelectedMarket] = useState("");
+  
+  useEffect(() => {
+    setSelectedMarket(marketInfo[props.market]);
+  }, [props.market])
+
+  const [showMarketInfoTooltip, setShowMarketInfoTooltip] = useState(false);
 
   return (
     <div className={classes.root}>
@@ -451,78 +491,58 @@ export default function Trading(props) {
                   </Typography>
                 </div>
               )} */}
-              <div className={classes.float_left}>
-                <ThemeProvider theme={theme}>
-                  <Select
-                    onChange={props.handleChange}
-                    name="market"
-                    defaultValue={markets[1]}
-                    style={{ maxWidth: "250px", textAlign: "left" }}
-                  >
-                    <MenuItem value={markets[1]}>
-                      {marketInfo[markets[1]].marketQuestion}
-                    </MenuItem>
-                    <MenuItem value={markets[0]}>
-                      {marketInfo[markets[0]].marketQuestion}
-                    </MenuItem>
-                  </Select>
-                </ThemeProvider>
-              </div>
-              <div>
-                <a
-                  href={"https://predictionexplorer.com/market/" + props.market}
-                  target="_blank"
+              <div className={classes.flex_Part}>
+                <div className={classes.float_left}>
+                  <ThemeProvider theme={theme}>
+                    <Select
+                      onChange={props.handleChange}
+                      name="market"
+                      defaultValue={markets[1]}
+                      style={{ maxWidth: "310px", textAlign: "left" }}
+                    >
+                      <MenuItem value={markets[1]}>
+                        {marketInfo[markets[1]].marketQuestion}
+                      </MenuItem>
+                      <MenuItem value={markets[0]}>
+                        {marketInfo[markets[0]].marketQuestion}
+                      </MenuItem>
+                    </Select>
+                  </ThemeProvider>
+                </div>
+                <div 
+                  onMouseEnter={() => setShowMarketInfoTooltip(true)}
+                  onMouseLeave={() => setShowMarketInfoTooltip(false)}
+                  className={classes.marketInfo_link}
                 >
-                  {/* <img className={classes.info_icon} src={infoIcon} alt="info icon"/> */}
-                  {/* <div className={`info_logo ${isContrast ? "dark" : "light"}`}>
-                    <InfoOutlined />
-                  </div> */}
-                  <Tooltip
-                    title={
-                      props.market === markets[1] ? 
-                        <>
-                          <div className={classes.tooltip_item}>                            
-                            <Typography color="inherit" variant="h5">{marketInfo[markets[1]].extraInfo.description}</Typography>
-                          </div>
-                          <div className={classes.tooltip_item}>
-                            <Typography color="inherit" variant="h5">Terms:</Typography>
-                            <Typography color="inherit">{marketInfo[markets[1]].extraInfo.longDescription}</Typography>
-                          </div>
-                          <div className={classes.tooltip_item}>
-                            <Typography color="inherit" variant="h5">Expiration date:</Typography>
-                            <Typography color="inherit">{parseDate(marketInfo[markets[1]].endTime)}</Typography>
-                          </div>
-                          <div className={classes.tooltip_item}>
-                            <Typography color="inherit" variant="h5">Market ID:</Typography>
-                            <Typography color="inherit">{markets[1]}</Typography>
-                          </div>                                                    
-                        </> :
-                        <>
-                          <div className={classes.tooltip_item}>
-                            <Typography color="inherit" variant="h5">{marketInfo[markets[0]].extraInfo.description}</Typography>
-                          </div>
-                          <div className={classes.tooltip_item}>
-                            <Typography color="inherit" variant="h5">Terms:</Typography>
-                            <Typography color="inherit">{marketInfo[markets[0]].extraInfo.longDescription}</Typography>
-                          </div>
-                          <div className={classes.tooltip_item}>
-                            <Typography color="inherit" variant="h5">Expiration date:</Typography>
-                            <Typography color="inherit">{parseDate(marketInfo[markets[1]].endTime)}</Typography>
-                          </div>
-                          <div className={classes.tooltip_item}>
-                            <Typography color="inherit" variant="h5">Market ID:</Typography>
-                            <Typography color="inherit">{markets[0]}</Typography>
-                          </div>
-                        </>                      
-                    }
-                    placement="right"
-                    className={classes.tooltip}
+                  <a
+                    href={"https://predictionexplorer.com/market/" + props.market}
+                    target="_blank"                                     
                   >                    
-                    <div className={`info_logo ${isContrast ? "dark" : "light"}`}>
+                    <div>
                       <InfoOutlined />
-                    </div>
-                  </Tooltip>                  
-                </a>
+                    </div>                    
+                  </a>
+                  {
+                      selectedMarket && showMarketInfoTooltip &&
+                      <div className={classes.custom_Tooltip}>
+                        <div className={classes.tooltip_item}>                            
+                          <Typography color="inherit" variant="h5">{selectedMarket.extraInfo.description}</Typography>
+                        </div>
+                        <div className={classes.tooltip_item}>
+                          <Typography color="inherit" variant="h5">Terms:</Typography>
+                          <Typography color="inherit">{selectedMarket.extraInfo.longDescription}</Typography>
+                        </div>
+                        <div className={classes.tooltip_item}>
+                          <Typography color="inherit" variant="h5">Expiration date:</Typography>
+                          <Typography color="inherit">{timeConverter(selectedMarket.endTime)}</Typography>
+                        </div>
+                        <div className={classes.tooltip_item}>
+                          <Typography color="inherit" variant="h5">Market ID:</Typography>
+                          <Typography color="inherit">{props.market}</Typography>
+                        </div>                                                    
+                      </div> 
+                    }
+                </div>
               </div>
               <div
                 className={isContrast ? "input-item dark" : "input-item light"}
