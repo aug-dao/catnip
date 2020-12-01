@@ -355,7 +355,7 @@ const useStyles = makeStyles((theme) => ({
   },
   custom_Tooltip: {
     position: "absolute",
-    top: -15,
+    top: -100,
     left: 40,
     background: '#6e6f70',
     minWidth: 370,
@@ -430,7 +430,7 @@ export default function Trading(props) {
 
   const timeConverter = (UNIX_timestamp) => {
     var a = new Date(UNIX_timestamp * 1000);
-    var time = a.toLocaleString("en-US", { timeZoneName: "short" });
+    var time = a.toLocaleString("en-US", {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: "short"});
     return time;
   }
 
@@ -814,22 +814,13 @@ export default function Trading(props) {
                       </StyledButton>
                     </div>
                   ) : (
-                    <div className={classes.btn_control_groups}>
-                      <StyledButton
-                        variant="contained"
-                        disabled
-                      >
-                        Approve
-                      </StyledButton>
-                      <StyledButton
-                        variant="contained"
-                        onClick={props.swapBranch}
-                        disabled={props.isSwapDisabled}
-                      >
-                        Swap
-                      </StyledButton>
-                    </div>
-                   
+                    <StyledButton
+                      variant="contained"
+                      onClick={props.swapBranch}
+                      disabled={props.isSwapDisabled}
+                    >
+                      Swap
+                    </StyledButton>
                   )
                 ) : (
                   <StyledButton variant="contained" disabled>
