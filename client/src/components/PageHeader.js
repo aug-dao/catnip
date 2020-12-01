@@ -139,6 +139,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
     color: "rgba(0, 0, 0, 0.87)",
+    width: 300,
 
     "& input": {
       width: 30,
@@ -285,7 +286,7 @@ export default function PageHeader(props) {
             <a
               href="https://twitter.com/share?ref_src=twsrc%5Etfw"
               target="_blank"
-              class="twitter-share-button"
+              className="twitter-share-button"
               data-text="The world&#39;s simplest, most liquid prediction market. Built on Augur."
               data-related="catnip_exchange"
               data-show-count="false"

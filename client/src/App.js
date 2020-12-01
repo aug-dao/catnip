@@ -102,6 +102,7 @@ class App extends Component {
     isSwapDisabled: false,
     totalSwapVolume: 0,
     market: markets[0],
+    showApproveLoading: false,
   };
 
   componentDidMount = async () => {
@@ -191,8 +192,8 @@ class App extends Component {
     if (response.status === 200) {
       let poolInfo = await response.json();
       // console.log(poolInfo.data.pools[0].totalSwapVolume);
-      let totalSwapVolume = poolInfo.data.pools[0].totalSwapVolume;
-      return totalSwapVolume;
+      //let totalSwapVolume = poolInfo.data.pools[0].totalSwapVolume;
+      //return totalSwapVolume;
     } else {
       console.log("error in getting the pool info");
       return 0;
@@ -827,6 +828,7 @@ class App extends Component {
           ),
           icon: <LoadingOutlined />,
         });
+        this.setState({showApproveLoading: true});
       })
       .on("receipt", function (receipt) {
         notification.destroy();
@@ -834,9 +836,11 @@ class App extends Component {
           duration: 7,
           message: "Approve Done",
         });
+        this.setState({showApproveLoading: false});
       })
       .on("error", function (error) {
         notification.destroy();
+        this.setState({showApproveLoading: false});
         if (error.message.includes("User denied transaction signature")) {
           notification.error({
             duration: 7,
@@ -1159,7 +1163,7 @@ class App extends Component {
     if (balance.gte(fromAmount)) {
       this.setState({ hasEnoughBalance: true });
     } else {
-      this.setState({ hasEnoughBalance: false });
+      //this.setState({ hasEnoughBalance: false });
     }
   };
 
@@ -1235,6 +1239,7 @@ class App extends Component {
           slippage={this.state.slippage}
           isSwapDisabled={this.state.isSwapDisabled}
           totalSwapVolume={Number(this.state.totalSwapVolume)}
+          showApproveLoading={this.state.showApproveLoading}
         />
       </div>
     );
