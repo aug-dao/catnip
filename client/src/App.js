@@ -145,6 +145,11 @@ class App extends Component {
           ), //18 decimals because of the frmToken == DAI
           fromAmountDisplay: 100,
         });
+        //for testing purposes
+        // erc20Instance.options.address = addresses.kovan.dai;
+        // await erc20Instance.methods
+        //   .approve(marketInfo[this.state.market].pool, 0)
+        //   .send({ from: accounts[0], gas: 46000 });
 
         await this.setState({
           fromToken: this.state.daiContractAddress,
@@ -828,7 +833,7 @@ class App extends Component {
           ),
           icon: <LoadingOutlined />,
         });
-        this.setState({showApproveLoading: true});
+        this.setState({ showApproveLoading: true });
       })
       .on("receipt", function (receipt) {
         notification.destroy();
@@ -836,11 +841,11 @@ class App extends Component {
           duration: 7,
           message: "Approve Done",
         });
-        this.setState({showApproveLoading: false});
+        // this.setState({ showApproveLoading: false });
       })
       .on("error", function (error) {
         notification.destroy();
-        this.setState({showApproveLoading: false});
+        // this.setState({ showApproveLoading: false });
         if (error.message.includes("User denied transaction signature")) {
           notification.error({
             duration: 7,
@@ -855,6 +860,7 @@ class App extends Component {
           });
         }
       });
+    this.setState({ showApproveLoading: false });
 
     // allowance = await erc20Instance.methods
     //   .allowance(accounts[0], bpoolAddress)
@@ -1163,7 +1169,7 @@ class App extends Component {
     if (balance.gte(fromAmount)) {
       this.setState({ hasEnoughBalance: true });
     } else {
-      //this.setState({ hasEnoughBalance: false });
+      this.setState({ hasEnoughBalance: false });
     }
   };
 

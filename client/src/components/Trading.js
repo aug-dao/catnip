@@ -281,7 +281,7 @@ const useStyles = makeStyles((theme) => ({
   flex_Part: {
     display: "flex",
     alignItems: "center",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   info_icon: {
     width: "20px",
@@ -335,41 +335,41 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "8px",
   },
   new_market: {
-    textAlign: 'left',
-    fontSize: '118%',
+    textAlign: "left",
+    fontSize: "118%",
   },
   btn_control_groups: {
-    display: 'flex',
-    '& > div': {
-      width: '45%',
-      marginLeft: '2.5%',
-      marginRight: '2.5%'
-    }
+    display: "flex",
+    "& > div": {
+      width: "45%",
+      marginLeft: "2.5%",
+      marginRight: "2.5%",
+    },
   },
   tooltip_item: {
     marginBottom: 10,
 
-    '& p': {
-      lineBreak: "anywhere"
-    }
+    "& p": {
+      lineBreak: "anywhere",
+    },
   },
   custom_Tooltip: {
     position: "absolute",
     top: -15,
     left: 40,
-    background: '#6e6f70',
+    background: "#6e6f70",
     minWidth: 370,
     textAlign: "left",
     padding: 15,
     border: "1px solid white",
     color: "white",
     borderRadius: 8,
-    zIndex: 200
+    zIndex: 200,
   },
   marketInfo_link: {
     position: "relative",
-    padding: 10
-  }
+    padding: 10,
+  },
 }));
 
 const iconStyles = {
@@ -432,13 +432,13 @@ export default function Trading(props) {
     var a = new Date(UNIX_timestamp * 1000);
     var time = a.toLocaleString("en-US", { timeZoneName: "short" });
     return time;
-  }
+  };
 
   const [selectedMarket, setSelectedMarket] = useState("");
-  
+
   useEffect(() => {
     setSelectedMarket(marketInfo[props.market]);
-  }, [props.market])
+  }, [props.market]);
 
   const [showMarketInfoTooltip, setShowMarketInfoTooltip] = useState(false);
 
@@ -478,8 +478,10 @@ export default function Trading(props) {
               elevation={0}
             >
               {props.market === markets[1] && (
-                   <div className={classes.new_market}>&#128293; <strong> NEW MARKET </strong></div>
-                )}
+                <div className={classes.new_market}>
+                  &#128293; <strong> NEW MARKET </strong>
+                </div>
+              )}
               {/* {props.totalSwapVolume > 0 && (
                 <div className={classes.trading_volume}>
                   <Typography variant="body2">
@@ -509,39 +511,52 @@ export default function Trading(props) {
                     </Select>
                   </ThemeProvider>
                 </div>
-                <div 
+                <div
                   onMouseEnter={() => setShowMarketInfoTooltip(true)}
                   onMouseLeave={() => setShowMarketInfoTooltip(false)}
                   className={classes.marketInfo_link}
                 >
                   <a
-                    href={"https://predictionexplorer.com/market/" + props.market}
-                    target="_blank"                                     
-                  >                    
+                    href={
+                      "https://predictionexplorer.com/market/" + props.market
+                    }
+                    target="_blank"
+                  >
                     <div>
                       <InfoOutlined />
-                    </div>                    
+                    </div>
                   </a>
-                  {
-                      selectedMarket && showMarketInfoTooltip &&
-                      <div className={classes.custom_Tooltip}>
-                        <div className={classes.tooltip_item}>                            
-                          <Typography color="inherit" variant="h5">{selectedMarket.extraInfo.description}</Typography>
-                        </div>
-                        <div className={classes.tooltip_item}>
-                          <Typography color="inherit" variant="h5">Terms:</Typography>
-                          <Typography color="inherit">{selectedMarket.extraInfo.longDescription}</Typography>
-                        </div>
-                        <div className={classes.tooltip_item}>
-                          <Typography color="inherit" variant="h5">Expiration date:</Typography>
-                          <Typography color="inherit">{timeConverter(selectedMarket.endTime)}</Typography>
-                        </div>
-                        <div className={classes.tooltip_item}>
-                          <Typography color="inherit" variant="h5">Market ID:</Typography>
-                          <Typography color="inherit">{props.market}</Typography>
-                        </div>                                                    
-                      </div> 
-                    }
+                  {selectedMarket && showMarketInfoTooltip && (
+                    <div className={classes.custom_Tooltip}>
+                      <div className={classes.tooltip_item}>
+                        <Typography color="inherit" variant="h5">
+                          {selectedMarket.extraInfo.description}
+                        </Typography>
+                      </div>
+                      <div className={classes.tooltip_item}>
+                        <Typography color="inherit" variant="h5">
+                          Terms:
+                        </Typography>
+                        <Typography color="inherit">
+                          {selectedMarket.extraInfo.longDescription}
+                        </Typography>
+                      </div>
+                      <div className={classes.tooltip_item}>
+                        <Typography color="inherit" variant="h5">
+                          Expiration date:
+                        </Typography>
+                        <Typography color="inherit">
+                          {timeConverter(selectedMarket.endTime)}
+                        </Typography>
+                      </div>
+                      <div className={classes.tooltip_item}>
+                        <Typography color="inherit" variant="h5">
+                          Market ID:
+                        </Typography>
+                        <Typography color="inherit">{props.market}</Typography>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
               <div
@@ -802,12 +817,9 @@ export default function Trading(props) {
                 props.hasEnoughBalance ? (
                   props.isApproveRequired ? (
                     <div className={classes.btn_control_groups}>
-                      <StyledButton
-                        variant="contained"
-                        onClick={props.approve}
-                        disabled={props.isSwapDisabled}
-                      >
-                        Approve {props.showApproveLoading && <LoadingOutlined />}
+                      <StyledButton variant="contained" onClick={props.approve}>
+                        Approve{" "}
+                        {props.showApproveLoading && <LoadingOutlined />}
                       </StyledButton>
                       <StyledButton variant="contained" disabled>
                         Swap
@@ -815,10 +827,7 @@ export default function Trading(props) {
                     </div>
                   ) : (
                     <div className={classes.btn_control_groups}>
-                      <StyledButton
-                        variant="contained"
-                        disabled
-                      >
+                      <StyledButton variant="contained" disabled>
                         Approve
                       </StyledButton>
                       <StyledButton
@@ -829,7 +838,15 @@ export default function Trading(props) {
                         Swap
                       </StyledButton>
                     </div>
-                   
+                    // <div>
+                    //   <StyledButton
+                    //     variant="contained"
+                    //     onClick={props.swapBranch}
+                    //     disabled={props.isSwapDisabled}
+                    //   >
+                    //     Swap
+                    //   </StyledButton>
+                    // </div>
                   )
                 ) : (
                   <StyledButton variant="contained" disabled>
