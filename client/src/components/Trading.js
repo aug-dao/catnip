@@ -348,10 +348,6 @@ const useStyles = makeStyles((theme) => ({
   },
   tooltip_item: {
     marginBottom: 10,
-
-    "& p": {
-      lineBreak: "anywhere",
-    },
   },
   custom_Tooltip: {
     position: "absolute",
