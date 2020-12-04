@@ -1,5 +1,5 @@
 {
-  "network": "kovan",
+  "network": "mainnet",
   "kovan": {
     "dai": "0xb6085Abd65E21d205AEaD0b1b9981B8B221fA14E",
     "multicall": "0x2cc8688C5f75E365aaEEb4ea8D6a480405A48D2A",
