@@ -5,6 +5,7 @@
     "multicall": "0x2cc8688C5f75E365aaEEb4ea8D6a480405A48D2A",
     "markets": [
       "0x4dea3bedae79da692f2675038c4d9b8c246b4fb6",
+      "0xD3Ba2A2E641F61a5Bcb7a772C49BA6b78E1416e0",
       "0xD3Ba2A2E641F61a5Bcb7a772C49BA6b78E1416e0"
     ],
     "marketInfo": {
@@ -45,7 +46,8 @@
     "multicall": "0xeefBa1e63905eF1D7ACbA5a8513c70307C1cE441",
     "markets": [
       "0x1ebb89156091eb0d59603c18379c03a5c84d7355",
-      "0x6e6ffb10179febf29b0223d22793d1c1d8a8f541"
+      "0x6e6ffb10179febf29b0223d22793d1c1d8a8f541",
+      "0x0946A3Eab3d638c606459b0A9F1E76EB5324985F"
     ],
     "marketInfo": {
       "0x1ebb89156091eb0d59603c18379c03a5c84d7355": {
@@ -77,6 +79,24 @@
           "longDescription": "This market shall resolve as YES if and only if all three of the following conditions are true at 00:00 UTC on February 1st, 2021:\n\n1. The last inaugurated president of the U.S. is affiliated with the U.S. Democratic Party.\n2. The Senate Majority Leader is affiliated with the U.S. Democratic Party. \n3. The majority of voting members of the House of Representatives are affiliated with the U.S. Democratic Party"
         },
         "endTime": "1612137600"
+      },
+      "0x0946A3Eab3d638c606459b0A9F1E76EB5324985F": {
+        "yes": "0x934E03e671E09528A52cb3373dc7Bb7CA475b924",
+        "no": "0x55b2969a6D832c6091Ba1AF4ed6d0E6E7c2C0d90",
+        "pool": "0x91ffe46e57d7c3f5f6e4f0856f2a674d0d820f93",
+        "symbolPostfix": "INAUG",
+        "yesIcon": "https://cloudflare-ipfs.com/ipfs/Qmc14RQHBa9zezBYERJqMDAknkfmC14VN8coPz9KYiMKMU",
+        "noIcon": "https://cloudflare-ipfs.com/ipfs/QmPPHjD2wYJzs46kfYrGFsELLj2a2NQjiKWtoHTs1yVvfF",
+        "marketQuestion": "Will 45th U.S. president Donald Trump physically attend the 59th U.S. presidential inauguration?",
+        "extraInfo": {
+          "categories": ["Politics", "US Elections", "Misc"],
+          "description": "Will 45th U.S. president Donald Trump physically attend the 59th U.S. presidential inauguration?",
+          "longDescription": "This market shall resolve as YES if and only if Donald Trump, the 45th U.S. president, physically attends the 59th U.S. presidential inauguration ceremony, scheduled for January 20th, 2021 at market creation time. The resolution of this market shall be based on general knowledge, as the ceremony has historically been widely covered by a number of media outlets, including video records.",
+          "_scalarDenomination": "",
+          "offsetName": null,
+          "template": null
+        },
+        "endTime": "1611273600"
       }
     }
   }

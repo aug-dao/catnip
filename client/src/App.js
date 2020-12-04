@@ -132,7 +132,7 @@ class App extends Component {
       //set it only the first time around not when wallet gets connected
       if (!this.state.fromToken) {
         await this.setState({
-          market: markets[1],
+          market: markets[2],
         });
 
         await this.setState({

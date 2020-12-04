@@ -37,7 +37,8 @@ const network = addresses.network;
 
 const markets = addresses[network].markets;
 const marketInfo = addresses[network].marketInfo;
-
+console.log(markets);
+console.log(marketInfo);
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -495,9 +496,12 @@ export default function Trading(props) {
                     <Select
                       onChange={props.handleChange}
                       name="market"
-                      defaultValue={markets[1]}
+                      defaultValue={markets[2]}
                       style={{ maxWidth: "310px", textAlign: "left" }}
                     >
+                      <MenuItem value={markets[2]}>
+                        {marketInfo[markets[2]].marketQuestion}
+                      </MenuItem>
                       <MenuItem value={markets[1]}>
                         {marketInfo[markets[1]].marketQuestion}
                       </MenuItem>
