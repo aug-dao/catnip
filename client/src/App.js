@@ -323,8 +323,8 @@ class App extends Component {
           bpoolAddress: marketInfo[e.target.value].pool,
           yesContractAddress: marketInfo[e.target.value].yes,
           noContractAddress: marketInfo[e.target.value].no,
-          fromToken: marketInfo[e.target.value].no,
-          toToken: this.state.daiContractAddress,
+          fromToken: this.state.daiContractAddress,
+          toToken: marketInfo[e.target.value].no,
         });
       } else {
         await this.setState({
