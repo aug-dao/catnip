@@ -474,7 +474,7 @@ export default function Trading(props) {
               square={true}
               elevation={0}
             >
-              {props.market === markets[1] && (
+              {props.market === markets[2] && (
                 <div className={classes.new_market}>
                   &#128293; <strong> NEW MARKET </strong>
                 </div>
@@ -1020,7 +1020,7 @@ export default function Trading(props) {
                     />
                     <div>
                       <Typography>
-                        {props.yesBalance} <span className="yes">y</span>{" "}
+                        {props.yesBalance} {" "}<span className="yes">y</span>
                         {marketInfo[props.market].symbolPostfix}
                       </Typography>
                       <Link
@@ -1048,7 +1048,7 @@ export default function Trading(props) {
                     />
                     <div>
                       <Typography>
-                        {props.noBalance} <span className="no">n</span>{" "}
+                        {props.noBalance} {" "}<span className="no">n</span>
                         {marketInfo[props.market].symbolPostfix}
                       </Typography>
                       <Link
