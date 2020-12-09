@@ -51,6 +51,8 @@ const contracts = network === "mainnet" ? mainnetContracts : kovanContracts;
 const markets = addresses[network].markets;
 const marketInfo = addresses[network].marketInfo;
 
+const ls = window.localStorage;
+
 //App controls the user interface
 class App extends Component {
   constructor(props) {
@@ -107,6 +109,7 @@ class App extends Component {
 
   componentDidMount = async () => {
     try {
+      console.log("market is ", this.state.market);
       var { web3, accounts } = this.state;
       if (!accounts) {
         accounts = null;
@@ -131,9 +134,13 @@ class App extends Component {
       });
       //set it only the first time around not when wallet gets connected
       if (!this.state.fromToken) {
+        const ls = window.localStorage;
         await this.setState({
-          market: markets[2],
+          market: ls.getItem("market") || markets[2],
         });
+        // await this.setState({
+        //   market: markets[2],
+        // });
 
         await this.setState({
           yesContractAddress: marketInfo[this.state.market].yes,
@@ -151,20 +158,41 @@ class App extends Component {
         //   .approve(marketInfo[this.state.market].pool, 0)
         //   .send({ from: accounts[0], gas: 46000 });
 
+        // await this.setState({
+        //   fromToken: ls.getItem("fromToken") || this.state.daiContractAddress,
+        //   toToken: ls.getItem("toToken") || this.state.yesContractAddress,
+
+        // });
+        let from = ls.getItem("from");
+        let to = ls.getItem("to");
+        let fromToken =
+          from === "dai"
+            ? this.state.daiContractAddress
+            : marketInfo[this.state.market][from];
+        let toToken =
+          to === "dai"
+            ? this.state.daiContractAddress
+            : marketInfo[this.state.market][to];
         await this.setState({
-          fromToken: this.state.daiContractAddress,
-          toToken: this.state.yesContractAddress,
+          fromToken: fromToken || this.state.daiContractAddress,
+          toToken: toToken || this.state.yesContractAddress,
         });
+
+        console.log("market", this.state.market);
+        console.log("from", this.state.fromToken);
+        console.log("to", this.state.toToken);
         this.state.pool.options.address = this.state.bpoolAddress;
         var swapFee = await this.state.pool.methods.getSwapFee().call();
         swapFee = web3.utils.fromWei(swapFee);
         swapFee = Number(swapFee);
         await this.setState({ swapFee: swapFee });
       }
+      console.log("marketAddress", this.state.market);
       await this.updateBalances();
 
       // Set starting parameters
       await this.calcToGivenFrom();
+      this.setlocalStorage();
     } catch (error) {
       // Catch any errors for any of the above operations.
       console.error(error);
@@ -208,7 +236,6 @@ class App extends Component {
   // This function updates state in response to user input
   handleChange = async (e) => {
     e.persist();
-
     console.log("set:" + e.target.name + "\nto:" + e.target.value);
 
     if (
@@ -274,6 +301,7 @@ class App extends Component {
     //To Do:If user selects fromToke == toToken convert the other one into DAI
     else if (e.target.name === "toToken") {
       await this.setState({ [e.target.name]: e.target.value });
+
       if (e.target.value) {
         if (e.target.value === this.state.fromToken) {
           if (
@@ -295,6 +323,7 @@ class App extends Component {
       }
     } else if (e.target.name === "fromToken") {
       await this.setState({ [e.target.name]: e.target.value });
+
       if (e.target.value) {
         if (e.target.value === this.state.toToken) {
           if (
@@ -316,6 +345,7 @@ class App extends Component {
       }
     } else if (e.target.name === "market") {
       console.log("market change", marketInfo[e.target.value]);
+
       if (e.target.value === markets[0]) {
         //if the trump markets then default is no->DAI
         await this.setState({
@@ -345,6 +375,7 @@ class App extends Component {
       // // Set starting parameters
       await this.calcToGivenFrom();
     }
+    this.setlocalStorage();
     //add sanity checks for slippage
   };
   convertAmountToDisplay = (amount, token) => {
@@ -414,6 +445,20 @@ class App extends Component {
     await this.checkIfhasEnoughBalance();
     await this.calcPriceProfitSlippage();
   };
+  setlocalStorage = () => {
+    const { fromToken, toToken, market } = this.state;
+    ls.setItem("market", market);
+    if (fromToken != this.state.daiContractAddress) {
+      ls.setItem("from", marketInfo[this.state.market][fromToken]);
+    } else {
+      ls.setItem("from", "dai");
+    }
+    if (toToken != this.state.daiContractAddress) {
+      ls.setItem("to", marketInfo[this.state.market][toToken]);
+    } else {
+      ls.setItem("to", "dai");
+    }
+  };
   reversePair = async () => {
     const {
       fromAmount,
@@ -435,6 +480,7 @@ class App extends Component {
       await this.calcFromGivenTo();
       await this.calcPriceProfitSlippage();
       await this.updateBalances();
+      this.setlocalStorage();
     } else {
       await this.setState({
         fromAmount: toAmount,

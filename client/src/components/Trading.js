@@ -390,6 +390,11 @@ export default function Trading(props) {
   const classes = useStyles();
   const isContrast = useSelector((state) => state.settings.isContrast);
   // console.log(props);
+  // const [PreSavedData, setPreSavedData] = useState({
+  //   market: window.localStorage.getItem("market"),
+  //   fromToken: window.localStorage.getItem("fromToken"),
+  //   toToken: window.localStorage.getItem("toToken"),
+  // });
 
   const Theme = {
     overrides: {
@@ -432,8 +437,13 @@ export default function Trading(props) {
   };
 
   const [selectedMarket, setSelectedMarket] = useState("");
-
   useEffect(() => {
+    // const ls = window.localStorage;
+    // setPreSavedData({
+    //   market: ls.getItem("market"),
+    //   fromToken: ls.getItem("fromToken"),
+    //   toToken: ls.getItem("toToken")
+    // });
     setSelectedMarket(marketInfo[props.market]);
   }, [props.market]);
 
@@ -496,7 +506,10 @@ export default function Trading(props) {
                     <Select
                       onChange={props.handleChange}
                       name="market"
-                      defaultValue={markets[2]}
+                      // defaultValue={PreSavedData.market || markets[2]}
+                      defaultValue={
+                        window.localStorage.getItem("market") || markets[2]
+                      }
                       style={{ maxWidth: "310px", textAlign: "left" }}
                     >
                       <MenuItem value={markets[2]}>
@@ -597,6 +610,7 @@ export default function Trading(props) {
                       <Select
                         disableUnderline
                         name="fromToken"
+                        // value={PreSavedData.fromToken || props.fromToken}
                         value={props.fromToken}
                         onChange={props.handleChange}
                         style={{
@@ -633,6 +647,7 @@ export default function Trading(props) {
                       <Select
                         disableUnderline
                         name="fromToken"
+                        // value={PreSavedData.fromToken || props.fromToken}
                         value={props.fromToken}
                         onChange={props.handleChange}
                         style={{
@@ -701,6 +716,7 @@ export default function Trading(props) {
                       <Select
                         disableUnderline
                         name="toToken"
+                        // value={PreSavedData.toToken || props.toToken}
                         value={props.toToken}
                         onChange={props.handleChange}
                         style={{
@@ -737,6 +753,7 @@ export default function Trading(props) {
                       <Select
                         disableUnderline
                         name="toToken"
+                        // value={PreSavedData.toToken || props.toToken}
                         value={props.toToken}
                         onChange={props.handleChange}
                         style={{
@@ -1020,7 +1037,7 @@ export default function Trading(props) {
                     />
                     <div>
                       <Typography>
-                        {props.yesBalance} {" "}<span className="yes">y</span>
+                        {props.yesBalance} <span className="yes">y</span>
                         {marketInfo[props.market].symbolPostfix}
                       </Typography>
                       <Link
@@ -1048,7 +1065,7 @@ export default function Trading(props) {
                     />
                     <div>
                       <Typography>
-                        {props.noBalance} {" "}<span className="no">n</span>
+                        {props.noBalance} <span className="no">n</span>
                         {marketInfo[props.market].symbolPostfix}
                       </Typography>
                       <Link
