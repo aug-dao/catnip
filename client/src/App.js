@@ -111,10 +111,25 @@ class App extends Component {
     try {
       console.log("market is ", this.state.market);
       var { web3, accounts } = this.state;
+      //here it connects if metamask is already connected and if not then it relies on the infura
+      //provider to get the data
       if (!accounts) {
-        accounts = null;
-        web3 = new Web3(provider);
-        await web3.eth.net.isListening();
+        if (window.ethereum) {
+          web3 = new Web3(window.ethereum);
+          accounts = await web3.eth.getAccounts();
+        }
+        let isAddress = false;
+        if (accounts) {
+          isAddress = web3.utils.isAddress(accounts[0]);
+        }
+        if (!isAddress) {
+          //making accounts to null because web3.eth.accouts returns an array of 0 length
+          //when metamask is not connected and in other parts of code assumption is made that
+          //accounts is null is metamask is not connected (an array of 0 length is not null)
+          accounts = null;
+          web3 = new Web3(provider);
+          await web3.eth.net.isListening();
+        }
       }
       var daiInstance = new web3.eth.Contract(DaiContract.abi, contracts.dai);
       var erc20Instance = new web3.eth.Contract(DaiContract.abi);
