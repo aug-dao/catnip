@@ -418,6 +418,7 @@ export default function Trading(props) {
 
   let theme = createMuiTheme(Theme);
   theme = isContrast ? theme : null;
+  
 
   // const parseDate = (params) => {
   //   let unix_timestamp = parseInt(params);
