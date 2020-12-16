@@ -229,7 +229,7 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: "20px",
       padding: "15px",
       borderRadius: "20px",
-      float: "left",
+      // float: "left",
 
       "&.dark": {
         border: "1px solid #5f5f5f",
@@ -276,13 +276,24 @@ const useStyles = makeStyles((theme) => ({
       borderRadius: "20px",
     },
   },
-  // float_left: {
-  //   float: "left",
-  // },
   flex_Part: {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
+
+    '& .select_part': {
+      margin: '10px 0 20px',
+      padding: 10,      
+      borderRadius: 10,
+
+      '&.dark': {
+        border: '1px solid #5f5f5f'
+      },
+
+      '&.light': {
+        border: '1px solid rgb(247, 248, 250)'
+      },
+    }
   },
   info_icon: {
     width: "20px",
@@ -501,16 +512,18 @@ export default function Trading(props) {
                 </div>
               )} */}
               <div className={classes.flex_Part}>
-                <div className={classes.float_left}>
+                <div className={`select_part ${isContrast ? "dark" : "light"}`}>
                   <ThemeProvider theme={theme}>
                     <Select
                       onChange={props.handleChange}
                       name="market"
+                      disableUnderline
                       // defaultValue={PreSavedData.market || markets[2]}
                       defaultValue={
                         window.localStorage.getItem("market") || markets[2]
                       }
                       style={{ maxWidth: "310px", textAlign: "left" }}
+                      IconComponent={CustomExpandMore}
                     >
                       <MenuItem value={markets[2]}>
                         {marketInfo[markets[2]].marketQuestion}
