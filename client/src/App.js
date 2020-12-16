@@ -19,7 +19,7 @@ import configData from "./config.json";
 const addresses = require("./config/addresses.json");
 
 const BigNumber = require("bignumber.js");
-
+BigNumber.config({ROUNDING_MODE: BigNumber.ROUND_DOWN})
 const BN = require("bn.js");
 const MAX_UINT256 = new BN(2).pow(new BN(256)).sub(new BN(1));
 const TEN_THOUSAND_BN = new BN(10000);
