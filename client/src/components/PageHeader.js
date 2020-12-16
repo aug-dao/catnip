@@ -287,7 +287,7 @@ export default function PageHeader(props) {
               href="https://twitter.com/share?ref_src=twsrc%5Etfw"
               target="_blank"
               className="twitter-share-button"
-              data-text="The world&#39;s simplest, most liquid prediction market. Built on Augur."
+              data-text="Trade real world outcomes on Catnip Exchange"
               data-related="catnip_exchange"
               data-show-count="false"
             >
