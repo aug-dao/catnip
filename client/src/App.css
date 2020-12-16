@@ -85,6 +85,10 @@
   white-space: inherit !important;
 }
 
+.select_part .MuiSelect-icon {
+  right: -5px !important;
+}
+
 /* Hide number input field arrows on Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
