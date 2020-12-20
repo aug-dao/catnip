@@ -1024,89 +1024,85 @@ export default function Trading(props) {
             )}
           </Grid>
           <Grid item xs={12} sm={6} md={4} style={{ margin: "0 auto" }}>
-            {props.yesBalance != 0 || props.noBalance != 0 ? (
-              <div
-                className={`holding-status ${
-                  isContrast ? "box-dark" : "box-light"
-                }`}
-              >
-                <div className="flex-item">
-                  <Typography
-                    variant="h6"
-                    textAlign="center"
-                    fontWeight="fontWeightBold"
-                    padding="0px"
-                  >
-                    Holdings
-                  </Typography>
-                  <Typography variant="h6" textAlign="center" padding="20px">
-                    Current Price
-                  </Typography>
-                </div>
-                <div className="flex-item">
-                  <div className="flex-item">
-                    <img
-                      src={marketInfo[props.market].yesIcon}
-                      display="inline"
-                    />
-                    <div>
-                      <Typography>
-                        {props.yesBalance} <span className="yes">y</span>
-                        {marketInfo[props.market].symbolPostfix}
-                      </Typography>
-                      <Link
-                        className="holding_num"
-                        onClick={() =>
-                          props.AddTokenToMetamask(marketInfo[props.market].yes)
-                        }
-                        component="button"
-                        variant="body2"
-                      >
-                        {" "}
-                        Show in wallet
-                      </Link>
-                    </div>
-                  </div>
-                  <Typography variant="body2" textAlign="center" padding="20px">
-                    ${props.yesPrice}
-                  </Typography>
-                </div>
-                <div className="flex-item last">
-                  <div className="flex-item">
-                    <img
-                      src={marketInfo[props.market].noIcon}
-                      display="inline"
-                    />
-                    <div>
-                      <Typography>
-                        {props.noBalance} <span className="no">n</span>
-                        {marketInfo[props.market].symbolPostfix}
-                      </Typography>
-                      <Link
-                        className="holding_num"
-                        onClick={() =>
-                          props.AddTokenToMetamask(marketInfo[props.market].no)
-                        }
-                        component="button"
-                        variant="body2"
-                      >
-                        {" "}
-                        Show in wallet
-                      </Link>
-                    </div>
-                  </div>
-                  <Typography
-                    variant="body2"
-                    textAlign="center"
-                    marginTop="1150px"
-                  >
-                    ${props.noPrice}
-                  </Typography>
-                </div>
+            <div
+              className={`holding-status ${
+                isContrast ? "box-dark" : "box-light"
+              }`}
+            >
+              <div className="flex-item">
+                <Typography
+                  variant="h6"
+                  textAlign="center"
+                  fontWeight="fontWeightBold"
+                  padding="0px"
+                >
+                  Holdings
+                </Typography>
+                <Typography variant="h6" textAlign="center" padding="20px">
+                  Current Price
+                </Typography>
               </div>
-            ) : (
-              ""
-            )}
+              <div className="flex-item">
+                <div className="flex-item">
+                  <img
+                    src={marketInfo[props.market].yesIcon}
+                    display="inline"
+                  />
+                  <div>
+                    <Typography>
+                      {props.yesBalance} <span className="yes">y</span>
+                      {marketInfo[props.market].symbolPostfix}
+                    </Typography>
+                    <Link
+                      className="holding_num"
+                      onClick={() =>
+                        props.AddTokenToMetamask(marketInfo[props.market].yes)
+                      }
+                      component="button"
+                      variant="body2"
+                    >
+                      {" "}
+                      Show in wallet
+                    </Link>
+                  </div>
+                </div>
+                <Typography variant="body2" textAlign="center" padding="20px">
+                  ${props.yesPrice}
+                </Typography>
+              </div>
+              <div className="flex-item last">
+                <div className="flex-item">
+                  <img
+                    src={marketInfo[props.market].noIcon}
+                    display="inline"
+                  />
+                  <div>
+                    <Typography>
+                      {props.noBalance} <span className="no">n</span>
+                      {marketInfo[props.market].symbolPostfix}
+                    </Typography>
+                    <Link
+                      className="holding_num"
+                      onClick={() =>
+                        props.AddTokenToMetamask(marketInfo[props.market].no)
+                      }
+                      component="button"
+                      variant="body2"
+                    >
+                      {" "}
+                      Show in wallet
+                    </Link>
+                  </div>
+                </div>
+                <Typography
+                  variant="body2"
+                  textAlign="center"
+                  marginTop="1150px"
+                >
+                  ${props.noPrice}
+                </Typography>
+              </div>
+            </div>
           </Grid>
         </Grid>
       </Container>
