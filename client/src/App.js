@@ -597,39 +597,32 @@ class App extends Component {
         )
         return info
     }
-    fetchJSON = async (url, params) => {
-        url = new URL(url)
-        Object.keys(params).forEach((key) =>
-            url.searchParams.append(key, params[key])
-        )
-        console.log(url)
-        let res = await fetch(url)
-        return await res.json()
-    }
     // Calculates number of "to" tokens received for a given number of "from" tokens
-    calcToGivenFrom = async (isQuote) => {
-        const { pool } = this.state
+    calcToGivenFrom = async () => {
+        const { pool, market } = this.state
 
         const { fromToken, fromAmount } = this.state
         const { toToken } = this.state
         pool.options.address = this.state.bpoolAddress
         try {
-            let params = {
-                sellToken: fromToken,
-                buyToken: toToken,
-                sellAmount: fromAmount.toString(),
-            }
-            let toAmount = new BN(0)
-            // let url = isQuote ? ZRX_QUOTE_URL : ZRX_PRICE_URL
-            let url = isQuote ? ZRX_QUOTE_URL : ZRX_QUOTE_URL
-
-            let pricing = await this.fetchJSON(url, params)
-            if (pricing.code && pricing.code !== 200) {
-                console.log(pricing)
-                console.log('error occurred')
+            //if the market is election market then use 0x API
+            if (market === '0x1ebb89156091eb0d59603c18379c03a5c84d7355') {
+                this.calcToGivenFrom0xAPI()
             } else {
-                console.log(pricing)
-                toAmount = new BN(pricing.buyAmount)
+                let poolInfo = await this.getPoolInfo(fromToken, toToken)
+                var toAmount = await pool.methods
+                    .calcOutGivenIn(
+                        poolInfo.fromTokenBalance,
+                        poolInfo.fromTokenDenormlizedWeight,
+                        poolInfo.toTokenBalance,
+                        poolInfo.toTokenDenormlizedWeight,
+                        fromAmount.toString(),
+                        poolInfo.swapFees
+                    )
+                    .call()
+
+                toAmount = new BN(toAmount)
+
                 this.setState({
                     toAmount: toAmount,
                     fromExact: true,
@@ -637,11 +630,10 @@ class App extends Component {
                         toAmount,
                         toToken
                     ),
-                    allowanceTarget: pricing.allowanceTarget,
                 })
                 await this.calcPriceProfitSlippage()
 
-                return pricing
+                return toAmount
             }
         } catch (error) {
             alert(
@@ -650,9 +642,7 @@ class App extends Component {
             console.error(error)
         }
     }
-
-    // Calculates number of "from" tokens spent for a given number of "to" tokens
-    calcFromGivenTo = async (isQuote) => {
+    calcToGivenFrom0xAPI = async (isQuote) => {
         const { pool } = this.state
         const { fromToken } = this.state
         const { toToken, toAmount } = this.state
@@ -693,6 +683,51 @@ class App extends Component {
         }
     }
 
+    // Calculates number of "from" tokens spent for a given number of "to" tokens
+    calcFromGivenTo = async () => {
+        const { pool } = this.state
+        const { fromToken } = this.state
+        const { toToken, toAmount, market } = this.state
+        pool.options.address = this.state.bpoolAddress
+        try {
+            if (market === '0x1ebb89156091eb0d59603c18379c03a5c84d7355') {
+                this.calcToGivenFrom0xAPI()
+            } else {
+                let poolInfo = await this.getPoolInfo(fromToken, toToken)
+
+                var fromAmount = await pool.methods
+                    .calcInGivenOut(
+                        poolInfo.fromTokenBalance,
+                        poolInfo.fromTokenDenormlizedWeight,
+                        poolInfo.toTokenBalance,
+                        poolInfo.toTokenDenormlizedWeight,
+                        toAmount.toString(),
+                        poolInfo.swapFees
+                    )
+                    .call()
+
+                fromAmount = new BN(fromAmount)
+
+                this.setState({
+                    fromAmount: fromAmount,
+                    fromExact: false,
+                    fromAmountDisplay: this.convertAmountToDisplay(
+                        fromAmount,
+                        fromToken
+                    ),
+                })
+                await this.calcPriceProfitSlippage()
+
+                return fromAmount
+            }
+        } catch (error) {
+            alert(
+                `Calculate number of from tokens paid failed. Check console for details.`
+            )
+            console.error(error)
+        }
+    }
+
     // This function determines whether to swapExactAmountIn or swapExactAmountOut
     swapBranch = async () => {
         if (this.state.fromExact) {
@@ -704,7 +739,103 @@ class App extends Component {
 
     // Swap with the number of "from" tokens fixed
     swapExactAmountIn = async () => {
-        let quote = await this.calcToGivenFrom(true)
+        const { market } = this.state
+        if (market === '0x1ebb89156091eb0d59603c18379c03a5c84d7355') {
+            this.swapExactAmountIn0xAPI()
+        } else {
+            await this.calcToGivenFrom()
+
+            const { accounts } = this.state
+            const { pool } = this.state
+            const { fromToken } = this.state
+            const { toToken } = this.state
+            var { fromAmount } = this.state
+            var { toAmount, slippage } = this.state
+            pool.options.address = this.state.bpoolAddress
+            slippage = Number(slippage)
+            slippage = new BN(slippage * 100)
+            var minAmountOut = toAmount.sub(
+                toAmount.mul(slippage).div(TEN_THOUSAND_BN)
+            )
+
+            var maxPrice = MAX_UINT256
+
+            try {
+                await pool.methods
+                    .swapExactAmountIn(
+                        fromToken,
+                        fromAmount,
+                        toToken,
+                        minAmountOut,
+                        maxPrice
+                    )
+                    .send({ from: accounts[0], gas: 150000 })
+                    .on('transactionHash', (transactionHash) => {
+                        notification.info({
+                            message: 'Transaction Pending',
+                            description: (
+                                <div>
+                                    <p>This can take a moment...</p>
+                                    {this.getEtherscanLink(transactionHash)}
+                                </div>
+                            ),
+                            icon: <LoadingOutlined />,
+                        })
+                    })
+                    .on('receipt', function (receipt) {
+                        notification.destroy()
+                        // console.log("receipt", receipt);
+                        notification.success({
+                            duration: 7,
+                            message: 'swap done',
+                            //maybe I am missing something but using this.getEtherscanLink(receipt.transactionHash) is not working
+                            description: (
+                                <a
+                                    href={
+                                        etherscanPrefix +
+                                        receipt.transactionHash
+                                    }
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    See on Etherscan
+                                </a>
+                            ),
+                        })
+                    })
+                    .on('error', function (error) {
+                        notification.destroy()
+                        if (
+                            error.message.includes(
+                                'User denied transaction signature'
+                            )
+                        ) {
+                            notification.error({
+                                duration: 7,
+                                message: 'Transaction Rejected',
+                                // description: "",
+                            })
+                        } else {
+                            notification.error({
+                                duration: 7,
+                                message:
+                                    'There was an error in executing the transaction',
+                                // description: "",
+                            })
+                        }
+                    })
+
+                await this.updateBalances()
+            } catch (error) {
+                // alert(`Swap with from tokens fixed failed. Check console for details.`);
+
+                console.error(error)
+            }
+        }
+    }
+    // Swap with the number of "from" tokens fixed
+    swapExactAmountIn0xAPI = async () => {
+        let quote = await this.calcToGivenFrom0xAPI(true)
 
         const { accounts, web3 } = this.state
         const { pool } = this.state
@@ -791,7 +922,104 @@ class App extends Component {
 
     // Swap with the number of "to"" tokens fixed
     swapExactAmountOut = async () => {
-        let quote = await this.calcFromGivenTo(true)
+        const { market } = this.state
+        if (market === '0x1ebb89156091eb0d59603c18379c03a5c84d7355') {
+            this.swapExactAmountIn0xAPI()
+        } else {
+            await this.calcFromGivenTo()
+
+            const { accounts } = this.state
+            const { pool } = this.state
+            const { fromToken } = this.state
+            const { toToken } = this.state
+            var { fromAmount } = this.state
+            var { toAmount, slippage } = this.state
+            pool.options.address = this.state.bpoolAddress
+            slippage = Number(slippage)
+            slippage = new BN(slippage * 100)
+            var maxAmountIn = fromAmount.add(
+                fromAmount.mul(slippage).div(TEN_THOUSAND_BN)
+            )
+            var maxPrice = MAX_UINT256
+
+            try {
+                await pool.methods
+                    .swapExactAmountOut(
+                        fromToken,
+                        maxAmountIn,
+                        toToken,
+                        toAmount,
+                        maxPrice
+                    )
+                    .send({ from: accounts[0], gas: 150000 })
+                    .on('transactionHash', (transactionHash) => {
+                        notification.info({
+                            message: 'Transaction Pending',
+                            description: (
+                                <div>
+                                    <p>This can take a moment...</p>
+                                    {this.getEtherscanLink(transactionHash)}
+                                </div>
+                            ),
+                            icon: <LoadingOutlined />,
+                        })
+                    })
+                    .on('receipt', function (receipt) {
+                        notification.destroy()
+                        // console.log("receipt", receipt);
+                        notification.success({
+                            duration: 7,
+                            message: 'swap done',
+                            //maybe I am missing something but using this.getEtherscanLink(receipt.transactionHash) is not working
+                            description: (
+                                <a
+                                    href={
+                                        etherscanPrefix +
+                                        receipt.transactionHash
+                                    }
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    See on Etherscan
+                                </a>
+                            ),
+                        })
+                    })
+                    .on('error', function (error) {
+                        notification.destroy()
+                        if (
+                            error.message.includes(
+                                'User denied transaction signature'
+                            )
+                        ) {
+                            notification.error({
+                                duration: 7,
+                                message: 'Transaction Rejected',
+                                // description: "",
+                            })
+                        } else {
+                            notification.error({
+                                duration: 7,
+                                message:
+                                    'There was an error in executing the transaction',
+                                // description: "",
+                            })
+                        }
+                    })
+
+                await this.updateBalances()
+            } catch (error) {
+                // alert(
+                //   `Swap with number of from tokens fixed failed. Check console for details.`
+                // );
+
+                console.error(error)
+            }
+        }
+    }
+    // Swap with the number of "to"" tokens fixed
+    swapExactAmountOut0xAPI = async () => {
+        let quote = await this.calcFromGivenTo0xAPI(true)
 
         const { accounts } = this.state
         const { pool } = this.state
@@ -883,10 +1111,16 @@ class App extends Component {
         const { accounts } = this.state
         const { bpoolAddress } = this.state
         const { fromToken } = this.state
-        var { erc20Instance, allowanceTarget } = this.state
+        var { erc20Instance, allowanceTarget, market } = this.state
 
         //approve fromAmount of fromToken for spending by Trader1
         var allowanceLimit = MAX_UINT256
+        let spender
+        if (market === '0x1ebb89156091eb0d59603c18379c03a5c84d7355') {
+            spender = allowanceTarget
+        } else {
+            spender = bpoolAddress
+        }
 
         // var allowance = await erc20Instance.methods
         //   .allowance(accounts[0], bpoolAddress)
@@ -897,7 +1131,7 @@ class App extends Component {
         // this.setState({ isSwapDisabled: true });
         erc20Instance.options.address = fromToken
         await erc20Instance.methods
-            .approve(allowanceTarget, allowanceLimit)
+            .approve(spender, allowanceLimit)
             .send({ from: accounts[0], gas: 46000 })
             .on('transactionHash', (transactionHash) => {
                 notification.info({
@@ -1275,16 +1509,23 @@ class App extends Component {
             fromToken,
             fromAmount,
             erc20Instance,
+            bpoolAddress,
             allowanceTarget,
+            market,
         } = this.state
 
         if (!accounts) return
+        let spender
+        if (market === '0x1ebb89156091eb0d59603c18379c03a5c84d7355') {
+            spender = allowanceTarget
+        } else {
+            spender = bpoolAddress
+        }
+
         erc20Instance.options.address = fromToken
 
         let allowance = new BN(
-            await erc20Instance.methods
-                .allowance(accounts[0], allowanceTarget)
-                .call()
+            await erc20Instance.methods.allowance(accounts[0], spender).call()
         )
 
         if (allowance.lte(fromAmount)) {
@@ -1297,6 +1538,17 @@ class App extends Component {
     changeSlippage = (slippage) => {
         console.log('slippage', this.state.slippage)
         this.setState({ slippage: slippage })
+    }
+    fetchJSON = async (url, params) => {
+        url = new URL(url)
+        // params.excludedSources =
+        //     'Uniswap,Uniswap_V2,Kyber,Curve,LiquidityProvider,MultiBridge,CREAM,Bancor,mStable,Mooniswap,MultiHop,Shell,Swerve,SnowSwap,SushiSwap,DODO'
+        Object.keys(params).forEach((key) =>
+            url.searchParams.append(key, params[key])
+        )
+        console.log(url)
+        let res = await fetch(url)
+        return await res.json()
     }
 
     render() {
