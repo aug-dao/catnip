@@ -642,7 +642,97 @@ class App extends Component {
             console.error(error)
         }
     }
+    // Calculates number of "to" tokens received for a given number of "from" tokens
     calcToGivenFrom0xAPI = async (isQuote) => {
+        const { pool } = this.state
+
+        const { fromToken, fromAmount } = this.state
+        const { toToken } = this.state
+        pool.options.address = this.state.bpoolAddress
+        try {
+            let params = {
+                sellToken: fromToken,
+                buyToken: toToken,
+                sellAmount: fromAmount.toString(),
+            }
+            let toAmount = new BN(0)
+            // let url = isQuote ? ZRX_QUOTE_URL : ZRX_PRICE_URL
+            let url = isQuote ? ZRX_QUOTE_URL : ZRX_QUOTE_URL
+
+            let pricing = await this.fetchJSON(url, params)
+            if (pricing.code && pricing.code !== 200) {
+                console.log(pricing)
+                console.log('error occurred')
+            } else {
+                console.log(pricing)
+                toAmount = new BN(pricing.buyAmount)
+                this.setState({
+                    toAmount: toAmount,
+                    fromExact: true,
+                    toAmountDisplay: this.convertAmountToDisplay(
+                        toAmount,
+                        toToken
+                    ),
+                    allowanceTarget: pricing.allowanceTarget,
+                })
+                await this.calcPriceProfitSlippage()
+
+                return pricing
+            }
+        } catch (error) {
+            alert(
+                `Calculate number of to tokens received failed. Check console for details.`
+            )
+            console.error(error)
+        }
+    }
+
+    // Calculates number of "from" tokens spent for a given number of "to" tokens
+    calcFromGivenTo = async () => {
+        const { pool } = this.state
+        const { fromToken } = this.state
+        const { toToken, toAmount, market } = this.state
+        pool.options.address = this.state.bpoolAddress
+        try {
+            if (market === '0x1ebb89156091eb0d59603c18379c03a5c84d7355') {
+                this.calcFromGivenTo0xAPI()
+            } else {
+                let poolInfo = await this.getPoolInfo(fromToken, toToken)
+
+                var fromAmount = await pool.methods
+                    .calcInGivenOut(
+                        poolInfo.fromTokenBalance,
+                        poolInfo.fromTokenDenormlizedWeight,
+                        poolInfo.toTokenBalance,
+                        poolInfo.toTokenDenormlizedWeight,
+                        toAmount.toString(),
+                        poolInfo.swapFees
+                    )
+                    .call()
+
+                fromAmount = new BN(fromAmount)
+
+                this.setState({
+                    fromAmount: fromAmount,
+                    fromExact: false,
+                    fromAmountDisplay: this.convertAmountToDisplay(
+                        fromAmount,
+                        fromToken
+                    ),
+                })
+                await this.calcPriceProfitSlippage()
+
+                return fromAmount
+            }
+        } catch (error) {
+            alert(
+                `Calculate number of from tokens paid failed. Check console for details.`
+            )
+            console.error(error)
+        }
+    }
+    // Calculates number of "from" tokens spent for a given number of "to" tokens
+    calcFromGivenTo0xAPI = async (isQuote) => {
         const { pool } = this.state
         const { fromToken } = this.state
         const { toToken, toAmount } = this.state
@@ -675,51 +765,6 @@ class App extends Component {
             await this.calcPriceProfitSlippage()
 
             return fromAmount
-        } catch (error) {
-            alert(
-                `Calculate number of from tokens paid failed. Check console for details.`
-            )
-            console.error(error)
-        }
-    }
-
-    // Calculates number of "from" tokens spent for a given number of "to" tokens
-    calcFromGivenTo = async () => {
-        const { pool } = this.state
-        const { fromToken } = this.state
-        const { toToken, toAmount, market } = this.state
-        pool.options.address = this.state.bpoolAddress
-        try {
-            if (market === '0x1ebb89156091eb0d59603c18379c03a5c84d7355') {
-                this.calcToGivenFrom0xAPI()
-            } else {
-                let poolInfo = await this.getPoolInfo(fromToken, toToken)
-
-                var fromAmount = await pool.methods
-                    .calcInGivenOut(
-                        poolInfo.fromTokenBalance,
-                        poolInfo.fromTokenDenormlizedWeight,
-                        poolInfo.toTokenBalance,
-                        poolInfo.toTokenDenormlizedWeight,
-                        toAmount.toString(),
-                        poolInfo.swapFees
-                    )
-                    .call()
-
-                fromAmount = new BN(fromAmount)
-
-                this.setState({
-                    fromAmount: fromAmount,
-                    fromExact: false,
-                    fromAmountDisplay: this.convertAmountToDisplay(
-                        fromAmount,
-                        fromToken
-                    ),
-                })
-                await this.calcPriceProfitSlippage()
-
-                return fromAmount
-            }
         } catch (error) {
             alert(
                 `Calculate number of from tokens paid failed. Check console for details.`
@@ -858,7 +903,7 @@ class App extends Component {
                     from: accounts[0],
                     to: quote.to,
                     data: quote.data,
-                    gas: quote.gas,
+                    // gas: quote.gas,
                 })
                 .on('transactionHash', (transactionHash) => {
                     notification.info({
@@ -924,7 +969,7 @@ class App extends Component {
     swapExactAmountOut = async () => {
         const { market } = this.state
         if (market === '0x1ebb89156091eb0d59603c18379c03a5c84d7355') {
-            this.swapExactAmountIn0xAPI()
+            this.swapExactAmountOut0xAPI()
         } else {
             await this.calcFromGivenTo()
 
@@ -1021,7 +1066,7 @@ class App extends Component {
     swapExactAmountOut0xAPI = async () => {
         let quote = await this.calcFromGivenTo0xAPI(true)
 
-        const { accounts } = this.state
+        const { accounts, web3 } = this.state
         const { pool } = this.state
         const { fromToken } = this.state
         const { toToken } = this.state
@@ -1036,15 +1081,13 @@ class App extends Component {
         var maxPrice = MAX_UINT256
 
         try {
-            await pool.methods
-                .swapExactAmountOut(
-                    fromToken,
-                    maxAmountIn,
-                    toToken,
-                    toAmount,
-                    maxPrice
-                )
-                .send({ from: accounts[0], gas: 150000 })
+            await web3.eth
+                .sendTransaction({
+                    from: accounts[0],
+                    to: quote.to,
+                    data: quote.data,
+                    // gas: quote.gas,
+                })
                 .on('transactionHash', (transactionHash) => {
                     notification.info({
                         message: 'Transaction Pending',
@@ -1543,6 +1586,7 @@ class App extends Component {
         url = new URL(url)
         // params.excludedSources =
         //     'Uniswap,Uniswap_V2,Kyber,Curve,LiquidityProvider,MultiBridge,CREAM,Bancor,mStable,Mooniswap,MultiHop,Shell,Swerve,SnowSwap,SushiSwap,DODO'
+        params.excludedSources = 'MultiHop'
         Object.keys(params).forEach((key) =>
             url.searchParams.append(key, params[key])
         )
