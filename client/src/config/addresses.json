@@ -12,8 +12,10 @@
       "0x4dea3bedae79da692f2675038c4d9b8c246b4fb6": {
         "yes": "0x1dbCcF29375304c38bd0d162f636BAA8Dd6CcE44",
         "no": "0xeb69840f09A9235df82d9Ed9D43CafFFea2a1eE9",
+        "Invalid":"0x0d0Bd297350b49Ee96d5D4E15a12001928fDdB1e",
         "0x1dbCcF29375304c38bd0d162f636BAA8Dd6CcE44": "yes",
         "0xeb69840f09A9235df82d9Ed9D43CafFFea2a1eE9": "no",
+        "0x0d0Bd297350b49Ee96d5D4E15a12001928fDdB1e":"Invalid",
         "pool": "0xacb57239c0d0c1c7e11a19c7af0f39a22749f9f0",
         "symbolPostfix": "Trump",
         "yesIcon": "https://cloudflare-ipfs.com/ipfs/QmRWo92JEL6s2ydN1fK2Q3KAX2rzBnTnfqkABFYHmA5EUT",

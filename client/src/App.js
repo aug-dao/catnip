@@ -666,7 +666,7 @@ class App extends Component {
             } else {
                 console.log(pricing)
                 toAmount = new BN(pricing.buyAmount)
-                this.setState({
+                await this.setState({
                     toAmount: toAmount,
                     fromExact: true,
                     toAmountDisplay: this.convertAmountToDisplay(
@@ -674,8 +674,9 @@ class App extends Component {
                         toToken
                     ),
                     allowanceTarget: pricing.allowanceTarget,
+                    spotPrice: pricing.price,
                 })
-                await this.calcPriceProfitSlippage()
+                await this.calcPriceProfitSlippage0xAPI()
 
                 return pricing
             }
@@ -754,7 +755,7 @@ class App extends Component {
                 fromAmount = new BN(pricing.sellAmount)
             }
 
-            this.setState({
+            await this.setState({
                 fromAmount: fromAmount,
                 fromExact: false,
                 fromAmountDisplay: this.convertAmountToDisplay(
@@ -762,7 +763,7 @@ class App extends Component {
                     fromToken
                 ),
             })
-            await this.calcPriceProfitSlippage()
+            await this.calcPriceProfitSlippage0xAPI()
 
             return fromAmount
         } catch (error) {
@@ -1439,6 +1440,110 @@ class App extends Component {
             priceImpact: realPriceImpact.toFixed(2),
             impliedOdds: impliedOdds.toFixed(2),
             priceImpactColor: priceImpactColor,
+        })
+    }
+
+    calcPriceProfitSlippage0xAPI = async () => {
+        const { fromToken } = this.state
+        const { toToken } = this.state
+        var { fromAmount } = this.state
+        var { toAmount } = this.state
+        const { daiContractAddress } = this.state
+        const { pool } = this.state
+        const { web3 } = this.state
+        const { tokenMultiple } = this.state
+        let { spotPrice } = this.state
+
+        // console.log(spotPrice)
+
+        // spotPrice = new BigNumber(spotPrice)
+        // //"real" because we are changing the price per share to always be in terms of DAI when DAI is one of the token
+        // let realSpotPrice = new BigNumber(
+        //     web3.utils.fromWei(spotPrice.toString())
+        // )
+
+        // let realFromAmount = new BigNumber(fromAmount)
+        // let realToAmount = new BigNumber(toAmount)
+
+        // let realPricePerShare = realFromAmount.div(realToAmount)
+
+        // // console.log("realPricePerShare", realPricePerShare.toString());
+        // // console.log("realSpotPrice", realSpotPrice.toString());
+
+        // let realSpotPercentage = realSpotPrice.div(realPricePerShare).times(100)
+
+        // // console.log("realspotPercentage", realSpotPercentage.toString());
+
+        // let realPriceImpact = new BigNumber(100).minus(realSpotPercentage)
+
+        if (fromToken !== daiContractAddress) {
+            fromAmount = fromAmount.mul(tokenMultiple)
+        }
+        if (toToken !== daiContractAddress) {
+            toAmount = toAmount.mul(tokenMultiple)
+        }
+        // // let spotPrice = new BN(
+        // //   await pool.methods.getSpotPrice(fromToken, toToken).call()
+        // // );
+
+        // if (fromToken !== daiContractAddress) {
+        //     spotPrice = spotPrice.multipliedBy(new BigNumber(tokenMultiple.toString()))
+        // } else {
+        //     spotPrice = spotPrice.dividedBy(new BigNumber(tokenMultiple.toString()))
+        // }
+        // spotPrice = new BigNumber(web3.utils.fromWei(spotPrice))
+
+        // console.log("is spotPrice a bignumber:" + BigNumber.isBigNumber(spotPrice));
+        // console.log("spotPrice: " + spotPrice);
+        fromAmount = new BigNumber(fromAmount)
+        toAmount = new BigNumber(toAmount)
+
+        let pricePerShare = new BigNumber(0)
+
+        if (toToken === daiContractAddress) {
+            pricePerShare = toAmount.div(fromAmount)
+        } else {
+            pricePerShare = fromAmount.div(toAmount)
+        }
+
+        // // console.log("priceImapct;" + priceImpact.toString());
+        // let priceImpactColor = 'red'
+        // if (realPriceImpact < 1) {
+        //     priceImpactColor = 'green'
+        // } else if (realPriceImpact >= 1 && realPriceImpact <= 3) {
+        //     priceImpactColor = 'black'
+        // } else if (realPriceImpact > 3) {
+        //     priceImpactColor = 'red'
+        // }
+        let impliedOdds = 0
+
+        if (
+            fromToken !== daiContractAddress &&
+            toToken !== daiContractAddress
+        ) {
+            impliedOdds = new BigNumber(100).minus(
+                new BigNumber(100).dividedBy(
+                    new BigNumber(1).plus(pricePerShare)
+                )
+            )
+        }
+
+        let maxProfit = 0
+        if (fromToken === daiContractAddress) {
+            maxProfit = new BigNumber(1)
+                .minus(pricePerShare)
+                .multipliedBy(toAmount)
+            maxProfit = new BigNumber(web3.utils.fromWei(maxProfit.toFixed(0)))
+        }
+
+        // console.log("fromAmount", fromAmount.toString());
+
+        this.setState({
+            pricePerShare: pricePerShare.toFixed(3),
+            maxProfit: maxProfit.toFixed(2),
+            priceImpact: 0,
+            impliedOdds: impliedOdds.toFixed(2),
+            // priceImpactColor: priceImpactColor,
         })
     }
     showModal = () => {
