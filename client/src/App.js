@@ -674,7 +674,7 @@ class App extends Component {
                         toToken
                     ),
                     allowanceTarget: pricing.allowanceTarget,
-                    spotPrice: pricing.price,
+                    pricing: pricing,
                 })
                 await this.calcPriceProfitSlippage0xAPI()
 
@@ -762,6 +762,7 @@ class App extends Component {
                     fromAmount,
                     fromToken
                 ),
+                pricing: pricing,
             })
             await this.calcPriceProfitSlippage0xAPI()
 
@@ -1452,7 +1453,7 @@ class App extends Component {
         const { pool } = this.state
         const { web3 } = this.state
         const { tokenMultiple } = this.state
-        let { spotPrice } = this.state
+        let { pricing } = this.state
 
         // console.log(spotPrice)
 
@@ -1536,6 +1537,27 @@ class App extends Component {
             maxProfit = new BigNumber(web3.utils.fromWei(maxProfit.toFixed(0)))
         }
 
+        let minAmountReceivedBN = new BigNumber(0)
+        let price = new BigNumber(pricing.price)
+        let guaranteedPrice = new BigNumber(pricing.guaranteedPrice)
+        let buyAmount = new BigNumber(pricing.buyAmount)
+
+        if (price.gte(guaranteedPrice)) {
+            minAmountReceivedBN = guaranteedPrice
+                .multipliedBy(buyAmount)
+                .dividedBy(price)
+        } else {
+            minAmountReceivedBN = price
+                .multipliedBy(buyAmount)
+                .dividedBy(guaranteedPrice)
+        }
+
+        let minAmountReceived = this.convertAmountToDisplay(
+            new BN(minAmountReceivedBN.toFixed(0)),
+            pricing.buyTokenAddress
+        )
+        console.log('minAmountReceived', minAmountReceived)
+
         // console.log("fromAmount", fromAmount.toString());
 
         this.setState({
@@ -1544,6 +1566,7 @@ class App extends Component {
             priceImpact: 0,
             impliedOdds: impliedOdds.toFixed(2),
             // priceImpactColor: priceImpactColor,
+            minAmountReceived: minAmountReceived,
         })
     }
     showModal = () => {
@@ -1745,6 +1768,7 @@ class App extends Component {
                     isSwapDisabled={this.state.isSwapDisabled}
                     totalSwapVolume={Number(this.state.totalSwapVolume)}
                     showApproveLoading={this.state.showApproveLoading}
+                    minAmountReceived={this.state.minAmountReceived}
                 />
             </div>
         )

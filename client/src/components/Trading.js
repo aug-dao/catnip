@@ -1295,6 +1295,63 @@ export default function Trading(props) {
                                                 </Typography>
                                             </div>
                                         )}
+                                        {props.market === markets[0] && (
+                                            <div
+                                                className={`${classes.displayFlex} ${classes.width90}`}
+                                            >
+                                                <div
+                                                    className={`${classes.displayFlex} ${classes.info_text}`}
+                                                >
+                                                    <Typography
+                                                        variant="body2"
+                                                        color="textPrimary"
+                                                        padding="20px"
+                                                    >
+                                                        Min Amount Received
+                                                    </Typography>
+                                                    <Tooltip
+                                                        title={
+                                                            <Typography color="inherit">
+                                                                The difference
+                                                                between the
+                                                                market price and
+                                                                the estimated
+                                                                price you'll pay
+                                                                due to trade
+                                                                size. The larger
+                                                                the trade, the
+                                                                greater the
+                                                                price impact.
+                                                            </Typography>
+                                                        }
+                                                        placement="right"
+                                                        className={
+                                                            classes.tooltip
+                                                        }
+                                                    >
+                                                        <HelpOutline
+                                                            color="textPrimary"
+                                                            className={`question_logo ${
+                                                                isContrast
+                                                                    ? 'dark'
+                                                                    : 'light'
+                                                            }`}
+                                                        />
+                                                    </Tooltip>
+                                                </div>
+                                                <Typography
+                                                    variant="body2"
+                                                    color="textPrimary"
+                                                    padding="20px"
+                                                    className={[
+                                                        props.priceImpactColor,
+                                                        'bold',
+                                                    ].join(' ')}
+                                                >
+                                                    {props.minAmountReceived}
+                                                </Typography>
+                                            </div>
+                                        )}
                                     </form>
                                     <hr
                                         className={
