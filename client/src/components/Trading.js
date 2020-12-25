@@ -226,7 +226,7 @@ const useStyles = makeStyles((theme) => ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginBottom: '20px',
+            marginBottom: '8px',
             padding: '15px',
             borderRadius: '20px',
             // float: "left",
@@ -282,7 +282,7 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'space-between',
 
         '& .select_part': {
-            margin: '10px 0 20px',
+            margin: '8px 0 18px',
             padding: 10,
             borderRadius: 10,
 
@@ -302,7 +302,7 @@ const useStyles = makeStyles((theme) => ({
     },
     flip: {
         clear: 'both',
-        marginBottom: '12px',
+        marginBottom: '8px',
         cursor: 'pointer',
     },
     balance_display: {
@@ -359,11 +359,11 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     tooltip_item: {
-        marginBottom: 10,
+        marginBottom: 20,
     },
     custom_Tooltip: {
         position: 'absolute',
-        top: -15,
+        top: -47,
         left: 40,
         background: '#6e6f70',
         minWidth: 370,
@@ -476,24 +476,7 @@ export default function Trading(props) {
                         <Box textAlign="left">
                             {props.market === markets[0] && (
                                 <div class="slippage_alert">
-                                    You may trade yTrump and access the original
-                                    election pool
-                                    <a
-                                        href="https://catnip1.netlify.app/"
-                                        target="_blank"
-                                    >
-                                        {' '}
-                                        here.{' '}
-                                    </a>
-                                    For more info on market settlement see{' '}
-                                    <a
-                                        href="https://medium.com/catnip-exchange/early-settlement-options-for-the-catnip-election-market-540843a0b1f6"
-                                        target="_blank"
-                                    >
-                                        {' '}
-                                        this
-                                    </a>
-                                    .
+                                    <strong>&#128293; Update Dec. 25th</strong>: Catnip now finds you the best price among multiple exchanges, using the 0x API.
                                 </div>
                             )}
                         </Box>
@@ -1312,16 +1295,8 @@ export default function Trading(props) {
                                                     <Tooltip
                                                         title={
                                                             <Typography color="inherit">
-                                                                The difference
-                                                                between the
-                                                                market price and
-                                                                the estimated
-                                                                price you'll pay
-                                                                due to trade
-                                                                size. The larger
-                                                                the trade, the
-                                                                greater the
-                                                                price impact.
+                                                                If the price changes unfavorably after your transaction is submitted but before
+                                                                it is processed, then your transaction will be reverted.
                                                             </Typography>
                                                         }
                                                         placement="right"
@@ -1344,7 +1319,6 @@ export default function Trading(props) {
                                                     color="textPrimary"
                                                     padding="20px"
                                                     className={[
-                                                        props.priceImpactColor,
                                                         'bold',
                                                     ].join(' ')}
                                                 >

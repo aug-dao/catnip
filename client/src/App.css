@@ -78,8 +78,8 @@
 
 .slippage_alert {
   padding-left: 12px;
-  padding-bottom: 14px;
-  font-size: 108%;
+  padding-bottom: 8px;
+  font-size: 110%;
 }
 .MuiSelect-selectMenu {
   white-space: inherit !important;
