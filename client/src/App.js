@@ -1257,17 +1257,13 @@ class App extends Component {
         console.log('updating balances state', this.state)
 
         let totalSwapVolume = await this.getTotalVolumeForThePool()
-        var yesPrice = 0
-        if (market !== markets[0]) {
-            yesPrice = await pool.methods
+        var yesPrice = await pool.methods
                 .getSpotPrice(daiContractAddress, yesContractAddress)
                 .call()
             yesPrice = web3.utils.fromWei(yesPrice)
             yesPrice = Number(yesPrice)
             yesPrice = yesPrice / tokenMultiple
             yesPrice = yesPrice.toFixed(2)
-        }
-
         var noPrice = await pool.methods
             .getSpotPrice(daiContractAddress, noContractAddress)
             .call()
