@@ -162,16 +162,30 @@ class App extends Component {
                 // await this.setState({
                 //   market: markets[2],
                 // });
+                let from = ls.getItem('from')
+                let to = ls.getItem('to')
+                let fromToken =
+                    from === 'dai'
+                        ? this.state.daiContractAddress
+                        : marketInfo[this.state.market][from]
+                let toToken =
+                    to === 'dai'
+                        ? this.state.daiContractAddress
+                        : marketInfo[this.state.market][to]
 
+                let bPoolAddress = marketInfo[this.state.market].pool
+                let fromAmount = this.convertDisplayToAmount(100, fromToken)
+                let fromAmountDisplay = 100
+                fromToken = fromToken || this.state.daiContractAddress
+                toToken = toToken || this.state.yesContractAddress
                 await this.setState({
                     yesContractAddress: marketInfo[this.state.market].yes,
                     noContractAddress: marketInfo[this.state.market].no,
-                    bpoolAddress: marketInfo[this.state.market].pool,
-                    fromAmount: this.convertDisplayToAmount(
-                        100,
-                        this.state.daiContractAddress
-                    ), //18 decimals because of the frmToken == DAI
-                    fromAmountDisplay: 100,
+                    bpoolAddress: bPoolAddress,
+                    fromAmount: fromAmount,
+                    fromAmountDisplay: fromAmountDisplay,
+                    fromToken: fromToken,
+                    toToken: toToken,
                 })
                 //for testing purposes
                 // erc20Instance.options.address = addresses.kovan.dai;
@@ -184,20 +198,6 @@ class App extends Component {
                 //   toToken: ls.getItem("toToken") || this.state.yesContractAddress,
 
                 // });
-                let from = ls.getItem('from')
-                let to = ls.getItem('to')
-                let fromToken =
-                    from === 'dai'
-                        ? this.state.daiContractAddress
-                        : marketInfo[this.state.market][from]
-                let toToken =
-                    to === 'dai'
-                        ? this.state.daiContractAddress
-                        : marketInfo[this.state.market][to]
-                await this.setState({
-                    fromToken: fromToken || this.state.daiContractAddress,
-                    toToken: toToken || this.state.yesContractAddress,
-                })
 
                 console.log('market', this.state.market)
                 console.log('from', this.state.fromToken)
@@ -258,6 +258,12 @@ class App extends Component {
     handleChange = async (e) => {
         e.persist()
         console.log('set:' + e.target.name + '\nto:' + e.target.value)
+        // this.setState({ isSwapDisabled: true })
+        // this.setState({
+        //     toAmountDisplay: 0,
+        //     toAmount: new BN(0),
+        //     fromAmount: new BN(0),
+        // })
 
         if (
             e.target.name === 'fromAmountDisplay' &&
@@ -266,27 +272,46 @@ class App extends Component {
         ) {
             await this.setState({ [e.target.name]: e.target.value })
             if (e.target.value <= 0) {
-                this.setState({ isSwapDisabled: true })
-                this.setState({
+                await this.setState({ isSwapDisabled: true })
+                await this.setState({
                     toAmountDisplay: 0,
                     toAmount: new BN(0),
                     fromAmount: new BN(0),
                 })
             }
             if (e.target.value > 0) {
-                this.setState({ isSwapDisabled: false })
-                this.setState({
+                await this.setState({ isSwapDisabled: false })
+                await this.setState({
                     fromAmount: this.convertDisplayToAmount(
                         e.target.value,
                         this.state.fromToken
                     ),
                 })
-                await this.calcToGivenFrom()
-                await this.checkIfhasEnoughBalance()
+                let changedToAmount = await this.calcToGivenFrom(
+                    this.convertDisplayToAmount(
+                        e.target.value,
+                        this.state.fromToken
+                    )
+                )
+                await this.checkIfhasEnoughBalance(
+                    undefined,
+                    this.convertDisplayToAmount(
+                        e.target.value,
+                        this.state.fromToken
+                    )
+                )
                 await this.checkIfIsApproveRequired()
-                await this.calcPriceProfitSlippage()
+                // await this.calcPriceProfitSlippage(
+                //     undefined,
+                //     undefined,
+                //     this.convertDisplayToAmount(
+                //         e.target.value,
+                //         this.state.fromToken
+                //     ),
+                //     changedToAmount.toAmount
+                // )
             } else {
-                this.setState({ toAmount: new BN(0), toAmountDisplay: 0 })
+                await this.setState({ toAmount: new BN(0), toAmountDisplay: 0 })
             }
         } else if (
             e.target.name === 'toAmountDisplay' &&
@@ -295,16 +320,16 @@ class App extends Component {
         ) {
             await this.setState({ [e.target.name]: e.target.value })
             if (e.target.value <= 0) {
-                this.setState({ isSwapDisabled: true })
-                this.setState({
+                await this.setState({ isSwapDisabled: true })
+                await this.setState({
                     fromAmountDisplay: 0,
                     fromAmount: new BN(0),
                     toAmount: new BN(0),
                 })
             }
             if (e.target.value > 0) {
-                this.setState({ isSwapDisabled: false })
-                this.setState({
+                await this.setState({ isSwapDisabled: false })
+                await this.setState({
                     toAmount: this.convertDisplayToAmount(
                         e.target.value,
                         this.state.toToken
@@ -316,7 +341,10 @@ class App extends Component {
                 await this.checkIfIsApproveRequired()
                 await this.calcPriceProfitSlippage()
             } else {
-                this.setState({ fromAmount: new BN(0), fromAmountDisplay: 0 })
+                await this.setState({
+                    fromAmount: new BN(0),
+                    fromAmountDisplay: 0,
+                })
             }
         }
         //To Do:If user selects fromToke == toToken convert the other one into DAI
@@ -329,12 +357,12 @@ class App extends Component {
                         e.target.value === this.state.yesContractAddress ||
                         e.target.value === this.state.noContractAddress
                     ) {
-                        this.setState({
+                        await this.setState({
                             fromToken: this.state.daiContractAddress,
                         })
                     }
                     if (e.target.value === this.state.daiContractAddress) {
-                        this.setState({
+                        await this.setState({
                             fromToken: this.state.noContractAddress,
                         })
                     }
@@ -355,12 +383,14 @@ class App extends Component {
                         e.target.value === this.state.yesContractAddress ||
                         e.target.value === this.state.noContractAddress
                     ) {
-                        this.setState({
+                        await this.setState({
                             toToken: this.state.daiContractAddress,
                         })
                     }
                     if (e.target.value === this.state.daiContractAddress) {
-                        this.setState({ toToken: this.state.noContractAddress })
+                        await this.setState({
+                            toToken: this.state.noContractAddress,
+                        })
                     }
                 }
                 await this.updateBalances()
@@ -438,7 +468,7 @@ class App extends Component {
 
             var accounts = await web3.eth.getAccounts()
 
-            this.setState({ web3: web3, accounts: accounts })
+            await this.setState({ web3: web3, accounts: accounts })
             await this.componentDidMount()
 
             // //uncomment to test approval pattern
@@ -466,7 +496,7 @@ class App extends Component {
             await erc20Instance.methods.balanceOf(accounts[0]).call()
         )
 
-        this.setState({
+        await this.setState({
             fromAmount: maxAmount,
             fromAmountDisplay: this.convertAmountToDisplay(
                 maxAmount,
@@ -478,8 +508,12 @@ class App extends Component {
         await this.checkIfhasEnoughBalance()
         await this.calcPriceProfitSlippage()
     }
-    setlocalStorage = () => {
-        const { fromToken, toToken, market } = this.state
+    setlocalStorage = (
+        fromToken = this.state.fromToken,
+        toToken = this.state.toToken,
+        market = this.state.market
+    ) => {
+        // const { fromToken, toToken, market } = this.state
         ls.setItem('market', market)
         if (fromToken != this.state.daiContractAddress) {
             ls.setItem('from', marketInfo[this.state.market][fromToken])
@@ -598,11 +632,18 @@ class App extends Component {
         return info
     }
     // Calculates number of "to" tokens received for a given number of "from" tokens
-    calcToGivenFrom = async () => {
-        const { pool, market } = this.state
+    calcToGivenFrom = async (
+        bpoolAddress = this.state.bpoolAddress,
+        market = this.state.market,
+        fromToken = this.state.fromToken,
+        fromAmount = this.state.fromAmount,
+        toToken = this.state.toToken
+    ) => {
+        // const { pool, market } = this.state
+        const { pool } = this.state
 
-        const { fromToken, fromAmount } = this.state
-        const { toToken } = this.state
+        // const { fromToken, fromAmount } = this.state
+        // const { toToken } = this.state
         pool.options.address = this.state.bpoolAddress
         try {
             //if the market is election market then use 0x API
@@ -623,7 +664,7 @@ class App extends Component {
 
                 toAmount = new BN(toAmount)
 
-                this.setState({
+                await this.setState({
                     toAmount: toAmount,
                     fromExact: true,
                     toAmountDisplay: this.convertAmountToDisplay(
@@ -633,7 +674,14 @@ class App extends Component {
                 })
                 await this.calcPriceProfitSlippage()
 
-                return toAmount
+                return {
+                    toAmount: toAmount,
+                    fromExact: true,
+                    toAmountDisplay: this.convertAmountToDisplay(
+                        toAmount,
+                        toToken
+                    ),
+                }
             }
         } catch (error) {
             alert(
@@ -689,10 +737,15 @@ class App extends Component {
     }
 
     // Calculates number of "from" tokens spent for a given number of "to" tokens
-    calcFromGivenTo = async () => {
+    calcFromGivenTo = async (
+        market = this.state.market,
+        fromToken = this.state.fromToken,
+        toToken = this.state.toToken,
+        toAmount = this.state.toAmount
+    ) => {
         const { pool } = this.state
-        const { fromToken } = this.state
-        const { toToken, toAmount, market } = this.state
+        // const { fromToken } = this.state
+        // const { toToken, toAmount, market } = this.state
         pool.options.address = this.state.bpoolAddress
         try {
             if (market === '0x1ebb89156091eb0d59603c18379c03a5c84d7355') {
@@ -713,7 +766,7 @@ class App extends Component {
 
                 fromAmount = new BN(fromAmount)
 
-                this.setState({
+                await this.setState({
                     fromAmount: fromAmount,
                     fromExact: false,
                     fromAmountDisplay: this.convertAmountToDisplay(
@@ -721,9 +774,17 @@ class App extends Component {
                         fromToken
                     ),
                 })
-                await this.calcPriceProfitSlippage()
 
-                return fromAmount
+                await this.calcPriceProfitSlippage()
+                return {
+                    fromAmount: fromAmount,
+                    fromExact: false,
+                    fromAmountDisplay: this.convertAmountToDisplay(
+                        fromAmount,
+                        fromToken
+                    ),
+                }
+                // return fromAmount
             }
         } catch (error) {
             alert(
@@ -733,10 +794,16 @@ class App extends Component {
         }
     }
     // Calculates number of "from" tokens spent for a given number of "to" tokens
-    calcFromGivenTo0xAPI = async (isQuote) => {
+    calcFromGivenTo0xAPI = async (
+        isQuote,
+        fromToken = this.state.fromToken,
+        toToken = this.state.toToken,
+        toAmount = this.state.toAmount,
+        bPoolAddress = this.state.bPoolAddress
+    ) => {
         const { pool } = this.state
-        const { fromToken } = this.state
-        const { toToken, toAmount } = this.state
+        // const { fromToken } = this.state
+        // const { toToken, toAmount } = this.state
         pool.options.address = this.state.bpoolAddress
         try {
             let params = {
@@ -766,7 +833,15 @@ class App extends Component {
             })
             await this.calcPriceProfitSlippage0xAPI()
 
-            return fromAmount
+            return {
+                fromAmount: fromAmount,
+                fromExact: false,
+                fromAmountDisplay: this.convertAmountToDisplay(
+                    fromAmount,
+                    fromToken
+                ),
+                pricing: pricing,
+            }
         } catch (error) {
             alert(
                 `Calculate number of from tokens paid failed. Check console for details.`
@@ -1219,7 +1294,7 @@ class App extends Component {
                     })
                 }
             })
-        this.setState({ showApproveLoading: false })
+        await this.setState({ showApproveLoading: false })
 
         // allowance = await erc20Instance.methods
         //   .allowance(accounts[0], bpoolAddress)
@@ -1239,34 +1314,39 @@ class App extends Component {
     }
     // This function updates trader balances initially and after sale
     // Also resets price per share, max profit and price impact to 0
-    updateBalances = async () => {
+    updateBalances = async (
+        accounts = this.state.accounts,
+        fromToken = this.state.fromToken,
+        toToken = this.state.toToken,
+        market = this.state.market
+    ) => {
         const { web3 } = this.state
-        const { fromToken } = this.state
-        const { toToken } = this.state
+        // const { fromToken } = this.state
+        // const { toToken } = this.state
         const { daiContract } = this.state
         const { noContractAddress } = this.state
         const { yesContractAddress } = this.state
         const { daiContractAddress } = this.state
-        const { accounts } = this.state
+        // const { accounts } = this.state
         const { tokenMultiple } = this.state
         const { pool } = this.state
         const { erc20Instance } = this.state
-        const { market } = this.state
+        // const { market } = this.state
         pool.options.address = this.state.bpoolAddress
 
         console.log('updating balances state', this.state)
 
         let totalSwapVolume = await this.getTotalVolumeForThePool()
         var yesPrice = 0
-        if (market !== markets[0]) {
-            yesPrice = await pool.methods
-                .getSpotPrice(daiContractAddress, yesContractAddress)
-                .call()
-            yesPrice = web3.utils.fromWei(yesPrice)
-            yesPrice = Number(yesPrice)
-            yesPrice = yesPrice / tokenMultiple
-            yesPrice = yesPrice.toFixed(2)
-        }
+        // if (market !== markets[0]) {
+        yesPrice = await pool.methods
+            .getSpotPrice(daiContractAddress, yesContractAddress)
+            .call()
+        yesPrice = web3.utils.fromWei(yesPrice)
+        yesPrice = Number(yesPrice)
+        yesPrice = yesPrice / tokenMultiple
+        yesPrice = yesPrice.toFixed(2)
+        // }
 
         var noPrice = await pool.methods
             .getSpotPrice(daiContractAddress, noContractAddress)
@@ -1276,7 +1356,7 @@ class App extends Component {
         noPrice = noPrice / tokenMultiple
         noPrice = noPrice.toFixed(2)
         //update all the state variables at one for smoother experience
-        this.setState({
+        await this.setState({
             yesPrice: yesPrice,
             noPrice: noPrice,
             totalSwapVolume: totalSwapVolume,
@@ -1298,10 +1378,10 @@ class App extends Component {
         yesBalance = yesBalance.toFixed(2)
 
         if (fromToken === yesContractAddress) {
-            this.setState({ fromBalance: yesBalance })
+            await this.setState({ fromBalance: yesBalance })
         }
         if (toToken === yesContractAddress) {
-            this.setState({ toBalance: yesBalance })
+            await this.setState({ toBalance: yesBalance })
         }
 
         erc20Instance.options.address = noContractAddress
@@ -1314,14 +1394,14 @@ class App extends Component {
         noBalance = noBalance.toFixed(2)
 
         if (fromToken === noContractAddress) {
-            this.setState({ fromBalance: noBalance })
+            await this.setState({ fromBalance: noBalance })
         }
         if (toToken === noContractAddress) {
-            this.setState({ toBalance: noBalance })
+            await this.setState({ toBalance: noBalance })
         }
 
         //update all the state variables at one for smoother experience
-        this.setState({
+        await this.setState({
             noBalance: noBalance,
             yesBalance: yesBalance,
         })
@@ -1332,20 +1412,25 @@ class App extends Component {
         daiBalance = daiBalance.toFixed(2)
 
         if (fromToken === daiContractAddress) {
-            this.setState({ fromBalance: daiBalance })
+            await this.setState({ fromBalance: daiBalance })
         }
         if (toToken === daiContractAddress) {
-            this.setState({ toBalance: daiBalance })
+            await this.setState({ toBalance: daiBalance })
         }
     }
 
     // This function calculates miscellaneous numbers after quote
 
-    calcPriceProfitSlippage = async () => {
-        const { fromToken } = this.state
-        const { toToken } = this.state
-        var { fromAmount } = this.state
-        var { toAmount } = this.state
+    calcPriceProfitSlippage = async (
+        fromToken = this.state.fromToken,
+        toToken = this.state.toToken,
+        fromAmount = this.state.fromAmount,
+        toAmount = this.state.toAmount
+    ) => {
+        // const { fromToken } = this.state
+        // const { toToken } = this.state
+        // var { fromAmount } = this.state
+        // var { toAmount } = this.state
         const { daiContractAddress } = this.state
         const { pool } = this.state
         const { web3 } = this.state
@@ -1435,20 +1520,32 @@ class App extends Component {
 
         // console.log("fromAmount", fromAmount.toString());
 
-        this.setState({
+        await this.setState({
             pricePerShare: pricePerShare.toFixed(3),
             maxProfit: maxProfit.toFixed(2),
             priceImpact: realPriceImpact.toFixed(2),
             impliedOdds: impliedOdds.toFixed(2),
             priceImpactColor: priceImpactColor,
         })
+        return {
+            pricePerShare: pricePerShare.toFixed(3),
+            maxProfit: maxProfit.toFixed(2),
+            priceImpact: realPriceImpact.toFixed(2),
+            impliedOdds: impliedOdds.toFixed(2),
+            priceImpactColor: priceImpactColor,
+        }
     }
 
-    calcPriceProfitSlippage0xAPI = async () => {
-        const { fromToken } = this.state
-        const { toToken } = this.state
-        var { fromAmount } = this.state
-        var { toAmount } = this.state
+    calcPriceProfitSlippage0xAPI = async (
+        fromToken = this.state.fromToken,
+        toToken = this.state.toToken,
+        fromAmount = this.state.fromAmount,
+        toAmount = this.state.toAmount
+    ) => {
+        // const { fromToken } = this.state
+        // const { toToken } = this.state
+        // var { fromAmount } = this.state
+        // var { toAmount } = this.state
         const { daiContractAddress } = this.state
         const { pool } = this.state
         const { web3 } = this.state
@@ -1560,7 +1657,7 @@ class App extends Component {
 
         // console.log("fromAmount", fromAmount.toString());
 
-        this.setState({
+        await this.setState({
             pricePerShare: pricePerShare.toFixed(3),
             maxProfit: maxProfit.toFixed(2),
             priceImpact: 0,
@@ -1568,6 +1665,15 @@ class App extends Component {
             // priceImpactColor: priceImpactColor,
             minAmountReceived: minAmountReceived,
         })
+
+        return {
+            pricePerShare: pricePerShare.toFixed(3),
+            maxProfit: maxProfit.toFixed(2),
+            priceImpact: 0,
+            impliedOdds: impliedOdds.toFixed(2),
+            // priceImpactColor: priceImpactColor,
+            minAmountReceived: minAmountReceived,
+        }
     }
     showModal = () => {
         this.setState({ show: true })
@@ -1651,11 +1757,14 @@ class App extends Component {
         }
     }
 
-    checkIfhasEnoughBalance = async () => {
+    checkIfhasEnoughBalance = async (
+        fromToken = this.state.fromToken,
+        fromAmount = this.state.fromAmount
+    ) => {
         const {
             accounts,
-            fromToken,
-            fromAmount,
+            // fromToken,
+            // fromAmount,
             erc20Instance,
             daiContractAddress,
         } = this.state
@@ -1668,9 +1777,11 @@ class App extends Component {
         )
 
         if (balance.gte(fromAmount)) {
-            this.setState({ hasEnoughBalance: true })
+            await this.setState({ hasEnoughBalance: true })
+            return { hasEnoughBalance: true }
         } else {
-            this.setState({ hasEnoughBalance: false })
+            await this.setState({ hasEnoughBalance: false })
+            return { hasEnoughBalance: false }
         }
     }
 
@@ -1700,9 +1811,9 @@ class App extends Component {
         )
 
         if (allowance.lte(fromAmount)) {
-            this.setState({ isApproveRequired: true })
+            await this.setState({ isApproveRequired: true })
         } else {
-            this.setState({ isApproveRequired: false })
+            await this.setState({ isApproveRequired: false })
         }
     }
 
