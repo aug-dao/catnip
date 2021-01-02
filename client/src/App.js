@@ -648,7 +648,7 @@ class App extends Component {
         try {
             //if the market is election market then use 0x API
             if (market === '0x1ebb89156091eb0d59603c18379c03a5c84d7355') {
-                this.calcToGivenFrom0xAPI()
+                this.calcToGivenFrom0xAPI(false)
             } else {
                 let poolInfo = await this.getPoolInfo(fromToken, toToken)
                 var toAmount = await pool.methods
@@ -704,15 +704,15 @@ class App extends Component {
                 sellAmount: fromAmount.toString(),
             }
             let toAmount = new BN(0)
-            // let url = isQuote ? ZRX_QUOTE_URL : ZRX_PRICE_URL
-            let url = isQuote ? ZRX_QUOTE_URL : ZRX_QUOTE_URL
+            let url = isQuote ? ZRX_QUOTE_URL : ZRX_PRICE_URL
+            // let url = isQuote ? ZRX_QUOTE_URL : ZRX_QUOTE_URL
 
             let pricing = await this.fetchJSON(url, params)
             if (pricing.code && pricing.code !== 200) {
-                console.log(pricing)
+                console.log(pricing, isQuote)
                 console.log('error occurred')
             } else {
-                console.log(pricing)
+                console.log(pricing, isQuote)
                 toAmount = new BN(pricing.buyAmount)
                 await this.setState({
                     toAmount: toAmount,
@@ -749,7 +749,7 @@ class App extends Component {
         pool.options.address = this.state.bpoolAddress
         try {
             if (market === '0x1ebb89156091eb0d59603c18379c03a5c84d7355') {
-                this.calcFromGivenTo0xAPI()
+                this.calcFromGivenTo0xAPI(false)
             } else {
                 let poolInfo = await this.getPoolInfo(fromToken, toToken)
 
@@ -815,10 +815,10 @@ class App extends Component {
             let url = isQuote ? ZRX_QUOTE_URL : ZRX_PRICE_URL
             let pricing = await this.fetchJSON(url, params)
             if (pricing.code && pricing.code !== 200) {
-                console.log(pricing)
+                console.log(pricing, isQuote)
                 console.log('error occurred')
             } else {
-                console.log(pricing)
+                console.log(pricing, isQuote)
                 fromAmount = new BN(pricing.sellAmount)
             }
 
@@ -1338,23 +1338,52 @@ class App extends Component {
 
         let totalSwapVolume = await this.getTotalVolumeForThePool()
         var yesPrice = 0
-        // if (market !== markets[0]) {
-        yesPrice = await pool.methods
-            .getSpotPrice(daiContractAddress, yesContractAddress)
-            .call()
-        yesPrice = web3.utils.fromWei(yesPrice)
-        yesPrice = Number(yesPrice)
-        yesPrice = yesPrice / tokenMultiple
-        yesPrice = yesPrice.toFixed(2)
-        // }
+        if (market === markets[0]) {
+            let params = {
+                sellToken: yesContractAddress,
+                buyToken: daiContractAddress,
+                sellAmount: this.convertDisplayToAmount(
+                    new BN(100),
+                    yesContractAddress
+                ),
+            }
+            let pricing = await this.fetchJSON(ZRX_PRICE_URL, params)
+            console.log('pricing', pricing)
+            yesPrice = parseFloat(pricing.price)
+            yesPrice = yesPrice.toFixed(2)
+        } else {
+            yesPrice = await pool.methods
+                .getSpotPrice(daiContractAddress, yesContractAddress)
+                .call()
+            yesPrice = web3.utils.fromWei(yesPrice)
+            yesPrice = Number(yesPrice)
+            yesPrice = yesPrice / tokenMultiple
+            yesPrice = yesPrice.toFixed(2)
+        }
 
-        var noPrice = await pool.methods
-            .getSpotPrice(daiContractAddress, noContractAddress)
-            .call()
-        noPrice = web3.utils.fromWei(noPrice)
-        noPrice = Number(noPrice)
-        noPrice = noPrice / tokenMultiple
-        noPrice = noPrice.toFixed(2)
+        var noPrice = 0
+        if (market === markets[0]) {
+            let params = {
+                sellToken: noContractAddress,
+                buyToken: daiContractAddress,
+                sellAmount: this.convertDisplayToAmount(
+                    new BN(100),
+                    noContractAddress
+                ),
+            }
+            let pricing = await this.fetchJSON(ZRX_PRICE_URL, params)
+            console.log('pricing', pricing)
+            noPrice = parseFloat(pricing.price)
+            noPrice = noPrice.toFixed(2)
+        } else {
+            noPrice = await pool.methods
+                .getSpotPrice(daiContractAddress, noContractAddress)
+                .call()
+            noPrice = web3.utils.fromWei(noPrice)
+            noPrice = Number(noPrice)
+            noPrice = noPrice / tokenMultiple
+            noPrice = noPrice.toFixed(2)
+        }
         //update all the state variables at one for smoother experience
         await this.setState({
             yesPrice: yesPrice,
