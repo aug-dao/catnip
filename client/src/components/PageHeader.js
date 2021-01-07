@@ -7,7 +7,8 @@ import "fontsource-roboto";
 import Typography from "@material-ui/core/Typography";
 import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import DarkLogo from "../assets/images/dark_logo.png";
+import logoLight from "../assets/images/logo_light.jpg";
+import logoDark from "../assets/images/logo_dark.jpg";
 import discordIcon from "../assets/images/discordIcon.png";
 import TImg from "../assets/images/t.png";
 import NTImg from "../assets/images/nt.png";
@@ -250,15 +251,10 @@ export default function PageHeader(props) {
           <Box textAlign="left">
             <div className={classes.logo}>
               {isContrast ? (
-                <img src={DarkLogo} width="100" />
+                <img src={logoDark} width="100" alt="catnip logo" />
               ) : (
-                <img
-                  src={
-                    "https://cdn.discordapp.com/attachments/744571125484224643/752307707708440606/catnip1.png"
-                  }
-                  alt="catnip"
-                  width="100"
-                />
+                <img src={logoLight} width="100" alt="catnip logo" />
+
               )}
             </div>
           </Box>
