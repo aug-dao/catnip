@@ -1297,7 +1297,7 @@ export default function Trading({
                                                 <Typography>
                                                     {balances[market.info.no]}{' '}
                                                     <span className="no">
-                                                        no
+                                                        n
                                                     </span>
                                                     {market.info.symbolPostfix}
                                                 </Typography>
