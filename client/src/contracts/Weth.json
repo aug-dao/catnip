@@ -321,20 +321,14 @@
   "ast": {
     "absolutePath": "/Users/jerryfireman/Projects/Augur-Balancer-pool/contracts/Weth.sol",
     "exportedSymbols": {
-      "Weth": [
-        6009
-      ]
+      "Weth": [6009]
     },
     "id": 6010,
     "nodeType": "SourceUnit",
     "nodes": [
       {
         "id": 5515,
-        "literals": [
-          "solidity",
-          "0.5",
-          ".12"
-        ],
+        "literals": ["solidity", "0.5", ".12"],
         "nodeType": "PragmaDirective",
         "src": "643:23:11"
       },
@@ -345,9 +339,7 @@
         "documentation": null,
         "fullyImplemented": true,
         "id": 6009,
-        "linearizedBaseContracts": [
-          6009
-        ],
+        "linearizedBaseContracts": [6009],
         "name": "Weth",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -695,10 +687,7 @@
                       "id": 5537,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "1013:7:11",
                       "typeDescriptions": {
@@ -1083,10 +1072,7 @@
                       "id": 5572,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7159,
                       "src": "1310:7:11",
                       "typeDescriptions": {
@@ -1362,10 +1348,7 @@
                       "id": 5593,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7159,
                       "src": "1417:7:11",
                       "typeDescriptions": {
@@ -2162,10 +2145,7 @@
                       "id": 5665,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "2016:7:11",
                       "typeDescriptions": {
@@ -4730,10 +4710,7 @@
                       "id": 5859,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "3316:7:11",
                       "typeDescriptions": {
@@ -5841,10 +5818,7 @@
                       "id": 5935,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "3812:7:11",
                       "typeDescriptions": {
@@ -6807,20 +6781,14 @@
   "legacyAST": {
     "absolutePath": "/Users/jerryfireman/Projects/Augur-Balancer-pool/contracts/Weth.sol",
     "exportedSymbols": {
-      "Weth": [
-        6009
-      ]
+      "Weth": [6009]
     },
     "id": 6010,
     "nodeType": "SourceUnit",
     "nodes": [
       {
         "id": 5515,
-        "literals": [
-          "solidity",
-          "0.5",
-          ".12"
-        ],
+        "literals": ["solidity", "0.5", ".12"],
         "nodeType": "PragmaDirective",
         "src": "643:23:11"
       },
@@ -6831,9 +6799,7 @@
         "documentation": null,
         "fullyImplemented": true,
         "id": 6009,
-        "linearizedBaseContracts": [
-          6009
-        ],
+        "linearizedBaseContracts": [6009],
         "name": "Weth",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -7181,10 +7147,7 @@
                       "id": 5537,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "1013:7:11",
                       "typeDescriptions": {
@@ -7569,10 +7532,7 @@
                       "id": 5572,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7159,
                       "src": "1310:7:11",
                       "typeDescriptions": {
@@ -7848,10 +7808,7 @@
                       "id": 5593,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7159,
                       "src": "1417:7:11",
                       "typeDescriptions": {
@@ -8648,10 +8605,7 @@
                       "id": 5665,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "2016:7:11",
                       "typeDescriptions": {
@@ -11216,10 +11170,7 @@
                       "id": 5859,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "3316:7:11",
                       "typeDescriptions": {
@@ -12327,10 +12278,7 @@
                       "id": 5935,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "3812:7:11",
                       "typeDescriptions": {

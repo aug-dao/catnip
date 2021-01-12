@@ -267,20 +267,14 @@
   "ast": {
     "absolutePath": "/Users/jerryfireman/Projects/augur-balancer-pool/contracts/BConst.sol",
     "exportedSymbols": {
-      "BConst": [
-        108
-      ]
+      "BConst": [108]
     },
     "id": 109,
     "nodeType": "SourceUnit",
     "nodes": [
       {
         "id": 22,
-        "literals": [
-          "solidity",
-          "0.5",
-          ".12"
-        ],
+        "literals": ["solidity", "0.5", ".12"],
         "nodeType": "PragmaDirective",
         "src": "643:23:1"
       },
@@ -316,19 +310,12 @@
             "src": "711:7:1"
           }
         ],
-        "contractDependencies": [
-          7,
-          20
-        ],
+        "contractDependencies": [7, 20],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
         "id": 108,
-        "linearizedBaseContracts": [
-          108,
-          20,
-          7
-        ],
+        "linearizedBaseContracts": [108, 20, 7],
         "name": "BConst",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -1601,20 +1588,14 @@
   "legacyAST": {
     "absolutePath": "/Users/jerryfireman/Projects/augur-balancer-pool/contracts/BConst.sol",
     "exportedSymbols": {
-      "BConst": [
-        108
-      ]
+      "BConst": [108]
     },
     "id": 109,
     "nodeType": "SourceUnit",
     "nodes": [
       {
         "id": 22,
-        "literals": [
-          "solidity",
-          "0.5",
-          ".12"
-        ],
+        "literals": ["solidity", "0.5", ".12"],
         "nodeType": "PragmaDirective",
         "src": "643:23:1"
       },
@@ -1650,19 +1631,12 @@
             "src": "711:7:1"
           }
         ],
-        "contractDependencies": [
-          7,
-          20
-        ],
+        "contractDependencies": [7, 20],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
         "id": 108,
-        "linearizedBaseContracts": [
-          108,
-          20,
-          7
-        ],
+        "linearizedBaseContracts": [108, 20, 7],
         "name": "BConst",
         "nodeType": "ContractDefinition",
         "nodes": [

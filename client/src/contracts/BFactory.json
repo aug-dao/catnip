@@ -152,20 +152,14 @@
   "ast": {
     "absolutePath": "/Users/jerryfireman/Projects/augur-balancer-pool/contracts/BFactory.sol",
     "exportedSymbols": {
-      "BFactory": [
-        260
-      ]
+      "BFactory": [260]
     },
     "id": 261,
     "nodeType": "SourceUnit",
     "nodes": [
       {
         "id": 110,
-        "literals": [
-          "solidity",
-          "0.5",
-          ".12"
-        ],
+        "literals": ["solidity", "0.5", ".12"],
         "nodeType": "PragmaDirective",
         "src": "644:23:2"
       },
@@ -201,20 +195,12 @@
             "src": "803:7:2"
           }
         ],
-        "contractDependencies": [
-          7,
-          20,
-          3473
-        ],
+        "contractDependencies": [7, 20, 3473],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
         "id": 260,
-        "linearizedBaseContracts": [
-          260,
-          20,
-          7
-        ],
+        "linearizedBaseContracts": [260, 20, 7],
         "name": "BFactory",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -546,9 +532,7 @@
               "src": "1222:201:2",
               "statements": [
                 {
-                  "assignments": [
-                    147
-                  ],
+                  "assignments": [147],
                   "declarations": [
                     {
                       "constant": false,
@@ -1334,10 +1318,7 @@
                       "id": 202,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "1689:7:2",
                       "typeDescriptions": {
@@ -1655,10 +1636,7 @@
                       "id": 226,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "1868:7:2",
                       "typeDescriptions": {
@@ -1685,9 +1663,7 @@
                   "src": "1868:46:2"
                 },
                 {
-                  "assignments": [
-                    235
-                  ],
+                  "assignments": [235],
                   "declarations": [
                     {
                       "constant": false,
@@ -1860,9 +1836,7 @@
                   "src": "1924:54:2"
                 },
                 {
-                  "assignments": [
-                    246
-                  ],
+                  "assignments": [246],
                   "declarations": [
                     {
                       "constant": false,
@@ -2027,10 +2001,7 @@
                       "id": 253,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "2042:7:2",
                       "typeDescriptions": {
@@ -2122,20 +2093,14 @@
   "legacyAST": {
     "absolutePath": "/Users/jerryfireman/Projects/augur-balancer-pool/contracts/BFactory.sol",
     "exportedSymbols": {
-      "BFactory": [
-        260
-      ]
+      "BFactory": [260]
     },
     "id": 261,
     "nodeType": "SourceUnit",
     "nodes": [
       {
         "id": 110,
-        "literals": [
-          "solidity",
-          "0.5",
-          ".12"
-        ],
+        "literals": ["solidity", "0.5", ".12"],
         "nodeType": "PragmaDirective",
         "src": "644:23:2"
       },
@@ -2171,20 +2136,12 @@
             "src": "803:7:2"
           }
         ],
-        "contractDependencies": [
-          7,
-          20,
-          3473
-        ],
+        "contractDependencies": [7, 20, 3473],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
         "id": 260,
-        "linearizedBaseContracts": [
-          260,
-          20,
-          7
-        ],
+        "linearizedBaseContracts": [260, 20, 7],
         "name": "BFactory",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -2516,9 +2473,7 @@
               "src": "1222:201:2",
               "statements": [
                 {
-                  "assignments": [
-                    147
-                  ],
+                  "assignments": [147],
                   "declarations": [
                     {
                       "constant": false,
@@ -3304,10 +3259,7 @@
                       "id": 202,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "1689:7:2",
                       "typeDescriptions": {
@@ -3625,10 +3577,7 @@
                       "id": 226,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "1868:7:2",
                       "typeDescriptions": {
@@ -3655,9 +3604,7 @@
                   "src": "1868:46:2"
                 },
                 {
-                  "assignments": [
-                    235
-                  ],
+                  "assignments": [235],
                   "declarations": [
                     {
                       "constant": false,
@@ -3830,9 +3777,7 @@
                   "src": "1924:54:2"
                 },
                 {
-                  "assignments": [
-                    246
-                  ],
+                  "assignments": [246],
                   "declarations": [
                     {
                       "constant": false,
@@ -3997,10 +3942,7 @@
                       "id": 253,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "2042:7:2",
                       "typeDescriptions": {

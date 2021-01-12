@@ -78,20 +78,14 @@
   "ast": {
     "absolutePath": "/Users/jerryfireman/Projects/augur-balancer-pool/contracts/Migrations.sol",
     "exportedSymbols": {
-      "Migrations": [
-        4599
-      ]
+      "Migrations": [4599]
     },
     "id": 4600,
     "nodeType": "SourceUnit",
     "nodes": [
       {
         "id": 4544,
-        "literals": [
-          "solidity",
-          "0.5",
-          ".12"
-        ],
+        "literals": ["solidity", "0.5", ".12"],
         "nodeType": "PragmaDirective",
         "src": "0:23:8"
       },
@@ -102,9 +96,7 @@
         "documentation": null,
         "fullyImplemented": true,
         "id": 4599,
-        "linearizedBaseContracts": [
-          4599
-        ],
+        "linearizedBaseContracts": [4599],
         "name": "Migrations",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -482,9 +474,7 @@
               "src": "424:117:8",
               "statements": [
                 {
-                  "assignments": [
-                    4586
-                  ],
+                  "assignments": [4586],
                   "declarations": [
                     {
                       "constant": false,
@@ -723,20 +713,14 @@
   "legacyAST": {
     "absolutePath": "/Users/jerryfireman/Projects/augur-balancer-pool/contracts/Migrations.sol",
     "exportedSymbols": {
-      "Migrations": [
-        4599
-      ]
+      "Migrations": [4599]
     },
     "id": 4600,
     "nodeType": "SourceUnit",
     "nodes": [
       {
         "id": 4544,
-        "literals": [
-          "solidity",
-          "0.5",
-          ".12"
-        ],
+        "literals": ["solidity", "0.5", ".12"],
         "nodeType": "PragmaDirective",
         "src": "0:23:8"
       },
@@ -747,9 +731,7 @@
         "documentation": null,
         "fullyImplemented": true,
         "id": 4599,
-        "linearizedBaseContracts": [
-          4599
-        ],
+        "linearizedBaseContracts": [4599],
         "name": "Migrations",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -1127,9 +1109,7 @@
               "src": "424:117:8",
               "statements": [
                 {
-                  "assignments": [
-                    4586
-                  ],
+                  "assignments": [4586],
                   "declarations": [
                     {
                       "constant": false,

@@ -27,23 +27,15 @@
   "ast": {
     "absolutePath": "/Users/jerryfireman/Projects/augur-balancer-pool/contracts/BColor.sol",
     "exportedSymbols": {
-      "BBronze": [
-        20
-      ],
-      "BColor": [
-        7
-      ]
+      "BBronze": [20],
+      "BColor": [7]
     },
     "id": 21,
     "nodeType": "SourceUnit",
     "nodes": [
       {
         "id": 1,
-        "literals": [
-          "solidity",
-          "0.5",
-          ".12"
-        ],
+        "literals": ["solidity", "0.5", ".12"],
         "nodeType": "PragmaDirective",
         "src": "643:23:0"
       },
@@ -54,9 +46,7 @@
         "documentation": null,
         "fullyImplemented": false,
         "id": 7,
-        "linearizedBaseContracts": [
-          7
-        ],
+        "linearizedBaseContracts": [7],
         "name": "BColor",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -139,17 +129,12 @@
             "src": "782:6:0"
           }
         ],
-        "contractDependencies": [
-          7
-        ],
+        "contractDependencies": [7],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
         "id": 20,
-        "linearizedBaseContracts": [
-          20,
-          7
-        ],
+        "linearizedBaseContracts": [20, 7],
         "name": "BBronze",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -285,23 +270,15 @@
   "legacyAST": {
     "absolutePath": "/Users/jerryfireman/Projects/augur-balancer-pool/contracts/BColor.sol",
     "exportedSymbols": {
-      "BBronze": [
-        20
-      ],
-      "BColor": [
-        7
-      ]
+      "BBronze": [20],
+      "BColor": [7]
     },
     "id": 21,
     "nodeType": "SourceUnit",
     "nodes": [
       {
         "id": 1,
-        "literals": [
-          "solidity",
-          "0.5",
-          ".12"
-        ],
+        "literals": ["solidity", "0.5", ".12"],
         "nodeType": "PragmaDirective",
         "src": "643:23:0"
       },
@@ -312,9 +289,7 @@
         "documentation": null,
         "fullyImplemented": false,
         "id": 7,
-        "linearizedBaseContracts": [
-          7
-        ],
+        "linearizedBaseContracts": [7],
         "name": "BColor",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -397,17 +372,12 @@
             "src": "782:6:0"
           }
         ],
-        "contractDependencies": [
-          7
-        ],
+        "contractDependencies": [7],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
         "id": 20,
-        "linearizedBaseContracts": [
-          20,
-          7
-        ],
+        "linearizedBaseContracts": [20, 7],
         "name": "BBronze",
         "nodeType": "ContractDefinition",
         "nodes": [

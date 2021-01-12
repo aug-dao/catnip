@@ -167,30 +167,20 @@
   "ast": {
     "absolutePath": "/home/safu/ethereum/catnip/quickFixCatnip/contracts/Multicall.sol",
     "exportedSymbols": {
-      "Multicall": [
-        4758
-      ]
+      "Multicall": [4758]
     },
     "id": 4759,
     "nodeType": "SourceUnit",
     "nodes": [
       {
         "id": 4601,
-        "literals": [
-          "solidity",
-          ">=",
-          "0.5",
-          ".0"
-        ],
+        "literals": ["solidity", ">=", "0.5", ".0"],
         "nodeType": "PragmaDirective",
         "src": "0:24:9"
       },
       {
         "id": 4602,
-        "literals": [
-          "experimental",
-          "ABIEncoderV2"
-        ],
+        "literals": ["experimental", "ABIEncoderV2"],
         "nodeType": "PragmaDirective",
         "src": "25:33:9"
       },
@@ -201,9 +191,7 @@
         "documentation": "@title Multicall - Aggregate results from multiple read-only function calls\n @author Michael Elliot <mike@makerdao.com>\n @author Joshua Levine <joshua@makerdao.com>\n @author Nick Johnson <arachnid@notdot.net>",
         "fullyImplemented": true,
         "id": 4758,
-        "linearizedBaseContracts": [
-          4758
-        ],
+        "linearizedBaseContracts": [4758],
         "name": "Multicall",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -465,10 +453,7 @@
                     "src": "642:192:9",
                     "statements": [
                       {
-                        "assignments": [
-                          4644,
-                          4646
-                        ],
+                        "assignments": [4644, 4646],
                         "declarations": [
                           {
                             "constant": false,
@@ -706,10 +691,7 @@
                             "id": 4658,
                             "name": "require",
                             "nodeType": "Identifier",
-                            "overloadedDeclarations": [
-                              7318,
-                              7319
-                            ],
+                            "overloadedDeclarations": [7318, 7319],
                             "referencedDeclaration": 7318,
                             "src": "774:7:9",
                             "typeDescriptions": {
@@ -873,9 +855,7 @@
                   },
                   "id": 4669,
                   "initializationExpression": {
-                    "assignments": [
-                      4633
-                    ],
+                    "assignments": [4633],
                     "declarations": [
                       {
                         "constant": false,
@@ -2105,30 +2085,20 @@
   "legacyAST": {
     "absolutePath": "/home/safu/ethereum/catnip/quickFixCatnip/contracts/Multicall.sol",
     "exportedSymbols": {
-      "Multicall": [
-        4758
-      ]
+      "Multicall": [4758]
     },
     "id": 4759,
     "nodeType": "SourceUnit",
     "nodes": [
       {
         "id": 4601,
-        "literals": [
-          "solidity",
-          ">=",
-          "0.5",
-          ".0"
-        ],
+        "literals": ["solidity", ">=", "0.5", ".0"],
         "nodeType": "PragmaDirective",
         "src": "0:24:9"
       },
       {
         "id": 4602,
-        "literals": [
-          "experimental",
-          "ABIEncoderV2"
-        ],
+        "literals": ["experimental", "ABIEncoderV2"],
         "nodeType": "PragmaDirective",
         "src": "25:33:9"
       },
@@ -2139,9 +2109,7 @@
         "documentation": "@title Multicall - Aggregate results from multiple read-only function calls\n @author Michael Elliot <mike@makerdao.com>\n @author Joshua Levine <joshua@makerdao.com>\n @author Nick Johnson <arachnid@notdot.net>",
         "fullyImplemented": true,
         "id": 4758,
-        "linearizedBaseContracts": [
-          4758
-        ],
+        "linearizedBaseContracts": [4758],
         "name": "Multicall",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -2403,10 +2371,7 @@
                     "src": "642:192:9",
                     "statements": [
                       {
-                        "assignments": [
-                          4644,
-                          4646
-                        ],
+                        "assignments": [4644, 4646],
                         "declarations": [
                           {
                             "constant": false,
@@ -2644,10 +2609,7 @@
                             "id": 4658,
                             "name": "require",
                             "nodeType": "Identifier",
-                            "overloadedDeclarations": [
-                              7318,
-                              7319
-                            ],
+                            "overloadedDeclarations": [7318, 7319],
                             "referencedDeclaration": 7318,
                             "src": "774:7:9",
                             "typeDescriptions": {
@@ -2811,9 +2773,7 @@
                   },
                   "id": 4669,
                   "initializationExpression": {
-                    "assignments": [
-                      4633
-                    ],
+                    "assignments": [4633],
                     "declarations": [
                       {
                         "constant": false,
