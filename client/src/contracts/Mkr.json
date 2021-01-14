@@ -321,20 +321,14 @@
   "ast": {
     "absolutePath": "/Users/jerryfireman/Projects/Augur-Balancer-pool/contracts/Mkr.sol",
     "exportedSymbols": {
-      "Mkr": [
-        5095
-      ]
+      "Mkr": [5095]
     },
     "id": 5096,
     "nodeType": "SourceUnit",
     "nodes": [
       {
         "id": 4601,
-        "literals": [
-          "solidity",
-          "0.5",
-          ".12"
-        ],
+        "literals": ["solidity", "0.5", ".12"],
         "nodeType": "PragmaDirective",
         "src": "643:23:9"
       },
@@ -345,9 +339,7 @@
         "documentation": null,
         "fullyImplemented": true,
         "id": 5095,
-        "linearizedBaseContracts": [
-          5095
-        ],
+        "linearizedBaseContracts": [5095],
         "name": "Mkr",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -695,10 +687,7 @@
                       "id": 4623,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "1010:7:9",
                       "typeDescriptions": {
@@ -1083,10 +1072,7 @@
                       "id": 4658,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7159,
                       "src": "1307:7:9",
                       "typeDescriptions": {
@@ -1362,10 +1348,7 @@
                       "id": 4679,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7159,
                       "src": "1414:7:9",
                       "typeDescriptions": {
@@ -2162,10 +2145,7 @@
                       "id": 4751,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "2013:7:9",
                       "typeDescriptions": {
@@ -4730,10 +4710,7 @@
                       "id": 4945,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "3313:7:9",
                       "typeDescriptions": {
@@ -5841,10 +5818,7 @@
                       "id": 5021,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "3809:7:9",
                       "typeDescriptions": {
@@ -6807,20 +6781,14 @@
   "legacyAST": {
     "absolutePath": "/Users/jerryfireman/Projects/Augur-Balancer-pool/contracts/Mkr.sol",
     "exportedSymbols": {
-      "Mkr": [
-        5095
-      ]
+      "Mkr": [5095]
     },
     "id": 5096,
     "nodeType": "SourceUnit",
     "nodes": [
       {
         "id": 4601,
-        "literals": [
-          "solidity",
-          "0.5",
-          ".12"
-        ],
+        "literals": ["solidity", "0.5", ".12"],
         "nodeType": "PragmaDirective",
         "src": "643:23:9"
       },
@@ -6831,9 +6799,7 @@
         "documentation": null,
         "fullyImplemented": true,
         "id": 5095,
-        "linearizedBaseContracts": [
-          5095
-        ],
+        "linearizedBaseContracts": [5095],
         "name": "Mkr",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -7181,10 +7147,7 @@
                       "id": 4623,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "1010:7:9",
                       "typeDescriptions": {
@@ -7569,10 +7532,7 @@
                       "id": 4658,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7159,
                       "src": "1307:7:9",
                       "typeDescriptions": {
@@ -7848,10 +7808,7 @@
                       "id": 4679,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7159,
                       "src": "1414:7:9",
                       "typeDescriptions": {
@@ -8648,10 +8605,7 @@
                       "id": 4751,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "2013:7:9",
                       "typeDescriptions": {
@@ -11216,10 +11170,7 @@
                       "id": 4945,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "3313:7:9",
                       "typeDescriptions": {
@@ -12327,10 +12278,7 @@
                       "id": 5021,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "3809:7:9",
                       "typeDescriptions": {

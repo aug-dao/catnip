@@ -844,20 +844,14 @@
   "ast": {
     "absolutePath": "/Users/jerryfireman/Projects/augur-balancer-pool/contracts/test/TMath.sol",
     "exportedSymbols": {
-      "TMath": [
-        6165
-      ]
+      "TMath": [6165]
     },
     "id": 6166,
     "nodeType": "SourceUnit",
     "nodes": [
       {
         "id": 6011,
-        "literals": [
-          "solidity",
-          "0.5",
-          ".12"
-        ],
+        "literals": ["solidity", "0.5", ".12"],
         "nodeType": "PragmaDirective",
         "src": "643:23:12"
       },
@@ -904,25 +898,12 @@
             "src": "784:5:12"
           }
         ],
-        "contractDependencies": [
-          7,
-          20,
-          108,
-          831,
-          1304
-        ],
+        "contractDependencies": [7, 20, 108, 831, 1304],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
         "id": 6165,
-        "linearizedBaseContracts": [
-          6165,
-          831,
-          1304,
-          108,
-          20,
-          7
-        ],
+        "linearizedBaseContracts": [6165, 831, 1304, 108, 20, 7],
         "name": "TMath",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -2769,20 +2750,14 @@
   "legacyAST": {
     "absolutePath": "/Users/jerryfireman/Projects/augur-balancer-pool/contracts/test/TMath.sol",
     "exportedSymbols": {
-      "TMath": [
-        6165
-      ]
+      "TMath": [6165]
     },
     "id": 6166,
     "nodeType": "SourceUnit",
     "nodes": [
       {
         "id": 6011,
-        "literals": [
-          "solidity",
-          "0.5",
-          ".12"
-        ],
+        "literals": ["solidity", "0.5", ".12"],
         "nodeType": "PragmaDirective",
         "src": "643:23:12"
       },
@@ -2829,25 +2804,12 @@
             "src": "784:5:12"
           }
         ],
-        "contractDependencies": [
-          7,
-          20,
-          108,
-          831,
-          1304
-        ],
+        "contractDependencies": [7, 20, 108, 831, 1304],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
         "id": 6165,
-        "linearizedBaseContracts": [
-          6165,
-          831,
-          1304,
-          108,
-          20,
-          7
-        ],
+        "linearizedBaseContracts": [6165, 831, 1304, 108, 20, 7],
         "name": "TMath",
         "nodeType": "ContractDefinition",
         "nodes": [

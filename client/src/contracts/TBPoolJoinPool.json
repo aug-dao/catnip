@@ -313,9 +313,7 @@
   "ast": {
     "absolutePath": "/Users/jerryfireman/Projects/augur-balancer-pool/contracts/test/echidna/TBPoolJoinPool.sol",
     "exportedSymbols": {
-      "TBPoolJoinPool": [
-        7141
-      ]
+      "TBPoolJoinPool": [7141]
     },
     "id": 7142,
     "nodeType": "SourceUnit",
@@ -333,11 +331,7 @@
       },
       {
         "id": 7056,
-        "literals": [
-          "solidity",
-          "0.5",
-          ".12"
-        ],
+        "literals": ["solidity", "0.5", ".12"],
         "nodeType": "PragmaDirective",
         "src": "26:23:16"
       },
@@ -362,23 +356,12 @@
             "src": "78:4:16"
           }
         ],
-        "contractDependencies": [
-          7,
-          20,
-          108,
-          1304
-        ],
+        "contractDependencies": [7, 20, 108, 1304],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
         "id": 7141,
-        "linearizedBaseContracts": [
-          7141,
-          1304,
-          108,
-          20,
-          7
-        ],
+        "linearizedBaseContracts": [7141, 1304, 108, 20, 7],
         "name": "TBPoolJoinPool",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -496,10 +479,7 @@
                       "id": 7072,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7159,
                       "src": "506:7:16",
                       "typeDescriptions": {
@@ -590,10 +570,7 @@
                       "id": 7078,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7159,
                       "src": "547:7:16",
                       "typeDescriptions": {
@@ -684,10 +661,7 @@
                       "id": 7084,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7159,
                       "src": "586:7:16",
                       "typeDescriptions": {
@@ -815,10 +789,7 @@
                       "id": 7090,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7159,
                       "src": "635:7:16",
                       "typeDescriptions": {
@@ -845,9 +816,7 @@
                   "src": "635:36:16"
                 },
                 {
-                  "assignments": [
-                    7099
-                  ],
+                  "assignments": [7099],
                   "declarations": [
                     {
                       "constant": false,
@@ -1033,10 +1002,7 @@
                       "id": 7105,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "735:7:16",
                       "typeDescriptions": {
@@ -1063,9 +1029,7 @@
                   "src": "735:38:16"
                 },
                 {
-                  "assignments": [
-                    7113
-                  ],
+                  "assignments": [7113],
                   "declarations": [
                     {
                       "constant": false,
@@ -1112,9 +1076,7 @@
                   "src": "784:29:16"
                 },
                 {
-                  "assignments": [
-                    7117
-                  ],
+                  "assignments": [7117],
                   "declarations": [
                     {
                       "constant": false,
@@ -1278,10 +1240,7 @@
                       "id": 7123,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7159,
                       "src": "871:7:16",
                       "typeDescriptions": {
@@ -1372,10 +1331,7 @@
                       "id": 7129,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7159,
                       "src": "907:7:16",
                       "typeDescriptions": {
@@ -1595,9 +1551,7 @@
   "legacyAST": {
     "absolutePath": "/Users/jerryfireman/Projects/augur-balancer-pool/contracts/test/echidna/TBPoolJoinPool.sol",
     "exportedSymbols": {
-      "TBPoolJoinPool": [
-        7141
-      ]
+      "TBPoolJoinPool": [7141]
     },
     "id": 7142,
     "nodeType": "SourceUnit",
@@ -1615,11 +1569,7 @@
       },
       {
         "id": 7056,
-        "literals": [
-          "solidity",
-          "0.5",
-          ".12"
-        ],
+        "literals": ["solidity", "0.5", ".12"],
         "nodeType": "PragmaDirective",
         "src": "26:23:16"
       },
@@ -1644,23 +1594,12 @@
             "src": "78:4:16"
           }
         ],
-        "contractDependencies": [
-          7,
-          20,
-          108,
-          1304
-        ],
+        "contractDependencies": [7, 20, 108, 1304],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
         "id": 7141,
-        "linearizedBaseContracts": [
-          7141,
-          1304,
-          108,
-          20,
-          7
-        ],
+        "linearizedBaseContracts": [7141, 1304, 108, 20, 7],
         "name": "TBPoolJoinPool",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -1778,10 +1717,7 @@
                       "id": 7072,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7159,
                       "src": "506:7:16",
                       "typeDescriptions": {
@@ -1872,10 +1808,7 @@
                       "id": 7078,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7159,
                       "src": "547:7:16",
                       "typeDescriptions": {
@@ -1966,10 +1899,7 @@
                       "id": 7084,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7159,
                       "src": "586:7:16",
                       "typeDescriptions": {
@@ -2097,10 +2027,7 @@
                       "id": 7090,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7159,
                       "src": "635:7:16",
                       "typeDescriptions": {
@@ -2127,9 +2054,7 @@
                   "src": "635:36:16"
                 },
                 {
-                  "assignments": [
-                    7099
-                  ],
+                  "assignments": [7099],
                   "declarations": [
                     {
                       "constant": false,
@@ -2315,10 +2240,7 @@
                       "id": 7105,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "735:7:16",
                       "typeDescriptions": {
@@ -2345,9 +2267,7 @@
                   "src": "735:38:16"
                 },
                 {
-                  "assignments": [
-                    7113
-                  ],
+                  "assignments": [7113],
                   "declarations": [
                     {
                       "constant": false,
@@ -2394,9 +2314,7 @@
                   "src": "784:29:16"
                 },
                 {
-                  "assignments": [
-                    7117
-                  ],
+                  "assignments": [7117],
                   "declarations": [
                     {
                       "constant": false,
@@ -2560,10 +2478,7 @@
                       "id": 7123,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7159,
                       "src": "871:7:16",
                       "typeDescriptions": {
@@ -2654,10 +2569,7 @@
                       "id": 7129,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7159,
                       "src": "907:7:16",
                       "typeDescriptions": {

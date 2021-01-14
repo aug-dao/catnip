@@ -559,26 +559,16 @@
   "ast": {
     "absolutePath": "/Users/jerryfireman/Projects/augur-balancer-pool/contracts/BToken.sol",
     "exportedSymbols": {
-      "BToken": [
-        4046
-      ],
-      "BTokenBase": [
-        3740
-      ],
-      "IERC20": [
-        3543
-      ]
+      "BToken": [4046],
+      "BTokenBase": [3740],
+      "IERC20": [3543]
     },
     "id": 4047,
     "nodeType": "SourceUnit",
     "nodes": [
       {
         "id": 3475,
-        "literals": [
-          "solidity",
-          "0.5",
-          ".12"
-        ],
+        "literals": ["solidity", "0.5", ".12"],
         "nodeType": "PragmaDirective",
         "src": "643:23:6"
       },
@@ -600,9 +590,7 @@
         "documentation": null,
         "fullyImplemented": false,
         "id": 3543,
-        "linearizedBaseContracts": [
-          3543
-        ],
+        "linearizedBaseContracts": [3543],
         "name": "IERC20",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -1423,23 +1411,12 @@
             "src": "1368:4:6"
           }
         ],
-        "contractDependencies": [
-          7,
-          20,
-          108,
-          1304
-        ],
+        "contractDependencies": [7, 20, 108, 1304],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
         "id": 3740,
-        "linearizedBaseContracts": [
-          3740,
-          1304,
-          108,
-          20,
-          7
-        ],
+        "linearizedBaseContracts": [3740, 1304, 108, 20, 7],
         "name": "BTokenBase",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -2484,10 +2461,7 @@
                       "id": 3616,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "1956:7:6",
                       "typeDescriptions": {
@@ -3179,10 +3153,7 @@
                       "id": 3669,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "2275:7:6",
                       "typeDescriptions": {
@@ -4179,27 +4150,12 @@
             "src": "2708:6:6"
           }
         ],
-        "contractDependencies": [
-          7,
-          20,
-          108,
-          1304,
-          3543,
-          3740
-        ],
+        "contractDependencies": [7, 20, 108, 1304, 3543, 3740],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
         "id": 4046,
-        "linearizedBaseContracts": [
-          4046,
-          3543,
-          3740,
-          1304,
-          108,
-          20,
-          7
-        ],
+        "linearizedBaseContracts": [4046, 3543, 3740, 1304, 108, 20, 7],
         "name": "BToken",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -5170,9 +5126,7 @@
                       "id": 3831,
                       "name": "Approval",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        3484
-                      ],
+                      "overloadedDeclarations": [3484],
                       "referencedDeclaration": 3484,
                       "src": "3561:8:6",
                       "typeDescriptions": {
@@ -5723,9 +5677,7 @@
                       "id": 3867,
                       "name": "Approval",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        3484
-                      ],
+                      "overloadedDeclarations": [3484],
                       "referencedDeclaration": 3484,
                       "src": "3791:8:6",
                       "typeDescriptions": {
@@ -5890,9 +5842,7 @@
               "src": "3952:315:6",
               "statements": [
                 {
-                  "assignments": [
-                    3892
-                  ],
+                  "assignments": [3892],
                   "declarations": [
                     {
                       "constant": false,
@@ -6510,9 +6460,7 @@
                       "id": 3927,
                       "name": "Approval",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        3484
-                      ],
+                      "overloadedDeclarations": [3484],
                       "referencedDeclaration": 3484,
                       "src": "4185:8:6",
                       "typeDescriptions": {
@@ -7150,10 +7098,7 @@
                       "id": 3972,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "4501:7:6",
                       "typeDescriptions": {
@@ -7918,9 +7863,7 @@
                             "id": 4028,
                             "name": "Approval",
                             "nodeType": "Identifier",
-                            "overloadedDeclarations": [
-                              3484
-                            ],
+                            "overloadedDeclarations": [3484],
                             "referencedDeclaration": 3484,
                             "src": "4800:8:6",
                             "typeDescriptions": {
@@ -8118,26 +8061,16 @@
   "legacyAST": {
     "absolutePath": "/Users/jerryfireman/Projects/augur-balancer-pool/contracts/BToken.sol",
     "exportedSymbols": {
-      "BToken": [
-        4046
-      ],
-      "BTokenBase": [
-        3740
-      ],
-      "IERC20": [
-        3543
-      ]
+      "BToken": [4046],
+      "BTokenBase": [3740],
+      "IERC20": [3543]
     },
     "id": 4047,
     "nodeType": "SourceUnit",
     "nodes": [
       {
         "id": 3475,
-        "literals": [
-          "solidity",
-          "0.5",
-          ".12"
-        ],
+        "literals": ["solidity", "0.5", ".12"],
         "nodeType": "PragmaDirective",
         "src": "643:23:6"
       },
@@ -8159,9 +8092,7 @@
         "documentation": null,
         "fullyImplemented": false,
         "id": 3543,
-        "linearizedBaseContracts": [
-          3543
-        ],
+        "linearizedBaseContracts": [3543],
         "name": "IERC20",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -8982,23 +8913,12 @@
             "src": "1368:4:6"
           }
         ],
-        "contractDependencies": [
-          7,
-          20,
-          108,
-          1304
-        ],
+        "contractDependencies": [7, 20, 108, 1304],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
         "id": 3740,
-        "linearizedBaseContracts": [
-          3740,
-          1304,
-          108,
-          20,
-          7
-        ],
+        "linearizedBaseContracts": [3740, 1304, 108, 20, 7],
         "name": "BTokenBase",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -10043,10 +9963,7 @@
                       "id": 3616,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "1956:7:6",
                       "typeDescriptions": {
@@ -10738,10 +10655,7 @@
                       "id": 3669,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "2275:7:6",
                       "typeDescriptions": {
@@ -11738,27 +11652,12 @@
             "src": "2708:6:6"
           }
         ],
-        "contractDependencies": [
-          7,
-          20,
-          108,
-          1304,
-          3543,
-          3740
-        ],
+        "contractDependencies": [7, 20, 108, 1304, 3543, 3740],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
         "id": 4046,
-        "linearizedBaseContracts": [
-          4046,
-          3543,
-          3740,
-          1304,
-          108,
-          20,
-          7
-        ],
+        "linearizedBaseContracts": [4046, 3543, 3740, 1304, 108, 20, 7],
         "name": "BToken",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -12729,9 +12628,7 @@
                       "id": 3831,
                       "name": "Approval",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        3484
-                      ],
+                      "overloadedDeclarations": [3484],
                       "referencedDeclaration": 3484,
                       "src": "3561:8:6",
                       "typeDescriptions": {
@@ -13282,9 +13179,7 @@
                       "id": 3867,
                       "name": "Approval",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        3484
-                      ],
+                      "overloadedDeclarations": [3484],
                       "referencedDeclaration": 3484,
                       "src": "3791:8:6",
                       "typeDescriptions": {
@@ -13449,9 +13344,7 @@
               "src": "3952:315:6",
               "statements": [
                 {
-                  "assignments": [
-                    3892
-                  ],
+                  "assignments": [3892],
                   "declarations": [
                     {
                       "constant": false,
@@ -14069,9 +13962,7 @@
                       "id": 3927,
                       "name": "Approval",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        3484
-                      ],
+                      "overloadedDeclarations": [3484],
                       "referencedDeclaration": 3484,
                       "src": "4185:8:6",
                       "typeDescriptions": {
@@ -14709,10 +14600,7 @@
                       "id": 3972,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "4501:7:6",
                       "typeDescriptions": {
@@ -15477,9 +15365,7 @@
                             "id": 4028,
                             "name": "Approval",
                             "nodeType": "Identifier",
-                            "overloadedDeclarations": [
-                              3484
-                            ],
+                            "overloadedDeclarations": [3484],
                             "referencedDeclaration": 3484,
                             "src": "4800:8:6",
                             "typeDescriptions": {

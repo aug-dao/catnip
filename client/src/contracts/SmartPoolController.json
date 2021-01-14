@@ -61,24 +61,14 @@
   "ast": {
     "absolutePath": "/Users/jerryfireman/Projects/smart-pool-controller/contracts/SmartPoolController.sol",
     "exportedSymbols": {
-      "SmartPoolController": [
-        91
-      ]
+      "SmartPoolController": [91]
     },
     "id": 92,
     "nodeType": "SourceUnit",
     "nodes": [
       {
         "id": 58,
-        "literals": [
-          "solidity",
-          ">=",
-          "0.4",
-          ".21",
-          "<",
-          "0.7",
-          ".0"
-        ],
+        "literals": ["solidity", ">=", "0.4", ".21", "<", "0.7", ".0"],
         "nodeType": "PragmaDirective",
         "src": "0:32:1"
       },
@@ -89,9 +79,7 @@
         "documentation": null,
         "fullyImplemented": true,
         "id": 91,
-        "linearizedBaseContracts": [
-          91
-        ],
+        "linearizedBaseContracts": [91],
         "name": "SmartPoolController",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -473,24 +461,14 @@
   "legacyAST": {
     "absolutePath": "/Users/jerryfireman/Projects/smart-pool-controller/contracts/SmartPoolController.sol",
     "exportedSymbols": {
-      "SmartPoolController": [
-        91
-      ]
+      "SmartPoolController": [91]
     },
     "id": 92,
     "nodeType": "SourceUnit",
     "nodes": [
       {
         "id": 58,
-        "literals": [
-          "solidity",
-          ">=",
-          "0.4",
-          ".21",
-          "<",
-          "0.7",
-          ".0"
-        ],
+        "literals": ["solidity", ">=", "0.4", ".21", "<", "0.7", ".0"],
         "nodeType": "PragmaDirective",
         "src": "0:32:1"
       },
@@ -501,9 +479,7 @@
         "documentation": null,
         "fullyImplemented": true,
         "id": 91,
-        "linearizedBaseContracts": [
-          91
-        ],
+        "linearizedBaseContracts": [91],
         "name": "SmartPoolController",
         "nodeType": "ContractDefinition",
         "nodes": [

@@ -321,20 +321,14 @@
   "ast": {
     "absolutePath": "/Users/jerryfireman/Projects/augur-balancer-pool/contracts/test/TToken.sol",
     "exportedSymbols": {
-      "TToken": [
-        6661
-      ]
+      "TToken": [6661]
     },
     "id": 6662,
     "nodeType": "SourceUnit",
     "nodes": [
       {
         "id": 6167,
-        "literals": [
-          "solidity",
-          "0.5",
-          ".12"
-        ],
+        "literals": ["solidity", "0.5", ".12"],
         "nodeType": "PragmaDirective",
         "src": "643:23:13"
       },
@@ -345,9 +339,7 @@
         "documentation": null,
         "fullyImplemented": true,
         "id": 6661,
-        "linearizedBaseContracts": [
-          6661
-        ],
+        "linearizedBaseContracts": [6661],
         "name": "TToken",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -695,10 +687,7 @@
                       "id": 6189,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "1020:7:13",
                       "typeDescriptions": {
@@ -1083,10 +1072,7 @@
                       "id": 6224,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7159,
                       "src": "1317:7:13",
                       "typeDescriptions": {
@@ -1362,10 +1348,7 @@
                       "id": 6245,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7159,
                       "src": "1424:7:13",
                       "typeDescriptions": {
@@ -2162,10 +2145,7 @@
                       "id": 6317,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "2023:7:13",
                       "typeDescriptions": {
@@ -4730,10 +4710,7 @@
                       "id": 6511,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "3323:7:13",
                       "typeDescriptions": {
@@ -5841,10 +5818,7 @@
                       "id": 6587,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "3819:7:13",
                       "typeDescriptions": {
@@ -6807,20 +6781,14 @@
   "legacyAST": {
     "absolutePath": "/Users/jerryfireman/Projects/augur-balancer-pool/contracts/test/TToken.sol",
     "exportedSymbols": {
-      "TToken": [
-        6661
-      ]
+      "TToken": [6661]
     },
     "id": 6662,
     "nodeType": "SourceUnit",
     "nodes": [
       {
         "id": 6167,
-        "literals": [
-          "solidity",
-          "0.5",
-          ".12"
-        ],
+        "literals": ["solidity", "0.5", ".12"],
         "nodeType": "PragmaDirective",
         "src": "643:23:13"
       },
@@ -6831,9 +6799,7 @@
         "documentation": null,
         "fullyImplemented": true,
         "id": 6661,
-        "linearizedBaseContracts": [
-          6661
-        ],
+        "linearizedBaseContracts": [6661],
         "name": "TToken",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -7181,10 +7147,7 @@
                       "id": 6189,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "1020:7:13",
                       "typeDescriptions": {
@@ -7569,10 +7532,7 @@
                       "id": 6224,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7159,
                       "src": "1317:7:13",
                       "typeDescriptions": {
@@ -7848,10 +7808,7 @@
                       "id": 6245,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7159,
                       "src": "1424:7:13",
                       "typeDescriptions": {
@@ -8648,10 +8605,7 @@
                       "id": 6317,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "2023:7:13",
                       "typeDescriptions": {
@@ -11216,10 +11170,7 @@
                       "id": 6511,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "3323:7:13",
                       "typeDescriptions": {
@@ -12327,10 +12278,7 @@
                       "id": 6587,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        7159,
-                        7160
-                      ],
+                      "overloadedDeclarations": [7159, 7160],
                       "referencedDeclaration": 7160,
                       "src": "3819:7:13",
                       "typeDescriptions": {
