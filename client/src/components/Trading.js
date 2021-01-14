@@ -492,11 +492,6 @@ export default function Trading(props) {
                             square={true}
                             elevation={0}
                         >
-                            {props.market === markets[2] && (
-                                <div className={classes.new_market}>
-                                    &#128293; <strong> NEW MARKET </strong>
-                                </div>
-                            )}
                             {/* {props.totalSwapVolume > 0 && (
                 <div className={classes.trading_volume}>
                   <Typography variant="body2">
