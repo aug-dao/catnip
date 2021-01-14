@@ -448,7 +448,7 @@ export const TradingProvider = ({ children }) => {
     // This function updates trader allowances initially and after sale
     const updateAllowances = useCallback(async () => {
         const { dai, erc20 } = contractInstances;
-        const { info, address } = market;
+        const { info } = market;
 
         if (dai && erc20 && account && info && market.address) {
             try {
