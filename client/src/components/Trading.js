@@ -479,6 +479,11 @@ export default function Trading(props) {
                                     <strong>&#128293; Update Dec. 25th</strong>: Catnip now finds you the best price among multiple exchanges, using the 0x API.
                                 </div>
                             )}
+                            {(props.market === markets[1] || props.market === markets[2]) && (
+                                <div class="slippage_alert">
+                                    Trades may not go through on this market due to low liquidity at this time. All winning shares will be redeemable for one DAI once the market settles.
+                                </div>
+                            )}
                         </Box>
                         <Paper
                             className={`main_part ${
