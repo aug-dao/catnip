@@ -84,10 +84,6 @@ const useStyles = makeStyles(theme => ({
             marginLeft: 15,
             padding: 20,
             paddingRight: 50,
-<<<<<<< HEAD
-=======
-            border: '1px solid #ccc',
->>>>>>> 255c8d341d57704287f11875fadd9b68cc0b88ac
             borderRadius: 8,
             border: 'none',
             boxShadow:
