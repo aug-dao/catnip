@@ -11,6 +11,7 @@ import {
     DAI_CONTRACT_ADDRESS,
     MULTICALL_CONTRACT_ADDRESS,
     MARKETS,
+    DEFAULT_MARKET,
     MARKET_INFO,
     MAX_UINT256,
     TEN_THOUSAND_BN,
@@ -90,7 +91,7 @@ export const TradingProvider = ({ children }) => {
         const from = ls.getItem(LS_FROM_TOKEN);
         const to = ls.getItem(LS_TO_TOKEN);
         if (MARKETS.indexOf(chosenMarket) === -1) {
-            chosenMarket = MARKETS[2];
+            chosenMarket = DEFAULT_MARKET;
         }
         const marketInfo = MARKET_INFO[chosenMarket];
         let fromTokenAddress = DAI_CONTRACT_ADDRESS;
