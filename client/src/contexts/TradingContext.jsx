@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext, useCallback } from "react";
 import BPoolContractABI from "../contracts/BPool.json";
 import DaiContractABI from "../contracts/Dai.json";
+import ERC20WrapperABI from "../contracts/ERC20Wrapper.json";
 import MultiCallContractABI from "../contracts/Multicall.json";
 import { Web3Context } from "./Web3Context";
 import { AppContext } from "./AppContext";
@@ -54,7 +55,7 @@ export const TradingProvider = ({ children }) => {
         multicall: null
     });
     const [hasEnoughBalance, setHasEnoughBalance] = useState(false);
-    const [hasEnoughLiquidity,setHasEnoughLiquidity] = useState(true);
+    const [hasEnoughLiquidity, setHasEnoughLiquidity] = useState(true);
     const [swapFee, setSwapFee] = useState();
 
     const [priceProfitSlippage, setPriceProfitSlippage] = useState({});
@@ -114,7 +115,7 @@ export const TradingProvider = ({ children }) => {
                 DAI_CONTRACT_ADDRESS
             );
             var erc20Instance = new web3.eth.Contract(
-                DaiContractABI.abi,
+                ERC20WrapperABI.abi,
                 DAI_CONTRACT_ADDRESS
             );
             var poolInstance = new web3.eth.Contract(
@@ -152,7 +153,7 @@ export const TradingProvider = ({ children }) => {
 
     const calcToGivenFrom0xAPI = useCallback(async isQuote => {
         setToAmountLoading(true);
-        console.log("calcToGivenFrom0xAPI")
+        console.log("calcToGivenFrom0xAPI");
         const { pool } = contractInstances;
         const { info } = market;
         if (fromToken && toToken && pool && info && fromAmountDisplay) {
@@ -167,13 +168,13 @@ export const TradingProvider = ({ children }) => {
                 sellAmount: fromAmount.toString()
             };
             let newToAmount = new BN(0);
-            const url = isQuote ? ZRX_QUOTE_URL : ZRX_PRICE_URL
+            const url = isQuote ? ZRX_QUOTE_URL : ZRX_PRICE_URL;
             // let url = isQuote ? ZRX_QUOTE_URL : ZRX_QUOTE_URL;
             // const url = ZRX_QUOTE_URL;
 
             let pricing = await fetchJSON(url, params);
             // const { code } = pricing;
-          
+
             if (pricing) {
                 newToAmount = new BN(pricing.buyAmount);
                 setToAmount(newToAmount);
@@ -181,7 +182,7 @@ export const TradingProvider = ({ children }) => {
                     convertAmountToDisplay(newToAmount, toToken)
                 );
                 setAllowanceTarget(pricing.allowanceTarget);
-                console.log(pricing)
+                console.log(pricing);
                 const gotPriceProfitSlippage = await calcPriceProfitSlippage0xAPI(
                     fromToken,
                     fromAmount,
@@ -193,7 +194,7 @@ export const TradingProvider = ({ children }) => {
                     ..._init,
                     ...gotPriceProfitSlippage
                 }));
-                setZRXPricing(pricing);                
+                setZRXPricing(pricing);
             }
         }
         setToAmountLoading(false);
@@ -268,7 +269,7 @@ export const TradingProvider = ({ children }) => {
                 if (market.address === ZRX_MARKET_ADDRESS) {
                     calcFromGivenTo0xAPI();
                 } else {
-                   
+
                     let poolInfo = await getPoolInfo(
                         web3,
                         fromToken,
@@ -371,9 +372,9 @@ export const TradingProvider = ({ children }) => {
                 //if the market is election market then use 0x API
                 if (market.address === ZRX_MARKET_ADDRESS) {
                     calcToGivenFrom0xAPI();
-                  
+
                 } else {
-                    
+
                     let poolInfo = await getPoolInfo(
                         web3,
                         fromToken,
@@ -382,7 +383,7 @@ export const TradingProvider = ({ children }) => {
                         pool,
                         market.info.pool
                     );
-                    if(new BN(poolInfo.fromTokenBalance).lt(fromAmount)){
+                    if (new BN(poolInfo.fromTokenBalance).lt(fromAmount)) {
                         setHasEnoughLiquidity(false);
                         setToAmount(0);
                         setToAmountDisplay(
@@ -489,126 +490,126 @@ export const TradingProvider = ({ children }) => {
         const { info } = market;
 
         if (pool && dai && erc20 && account && info) {
-        
-                pool.options.address = info.pool;
 
-                let totalSwapVolume = await getTotalVolumeForThePool(info.pool);
-                var yesPrice = "0.0";
-                var noPrice = "0.0";
-               
-                if (market.address === ZRX_MARKET_ADDRESS) {
-                    let params = {
-                        sellToken: info.yes,
-                        buyToken: DAI_CONTRACT_ADDRESS,
-                        sellAmount: convertDisplayToAmount(
-                            new BN(100),
-                            info.yes
-                        ),
-                    }
-                    let pricing = await fetchJSON(ZRX_PRICE_URL, params)
-                    yesPrice = parseFloat(pricing.price)
-                    yesPrice = yesPrice.toFixed(2)
+            pool.options.address = info.pool;
+
+            let totalSwapVolume = await getTotalVolumeForThePool(info.pool);
+            var yesPrice = "0.0";
+            var noPrice = "0.0";
+
+            if (market.address === ZRX_MARKET_ADDRESS) {
+                let params = {
+                    sellToken: info.yes,
+                    buyToken: DAI_CONTRACT_ADDRESS,
+                    sellAmount: convertDisplayToAmount(
+                        new BN(100),
+                        info.yes
+                    ),
+                };
+                let pricing = await fetchJSON(ZRX_PRICE_URL, params);
+                yesPrice = parseFloat(pricing.price);
+                yesPrice = yesPrice.toFixed(2);
+            }
+            else {
+
+                try {
+                    yesPrice = await pool.methods
+                        .getSpotPrice(DAI_CONTRACT_ADDRESS, info.yes)
+                        .call();
+                    yesPrice = Web3.utils.fromWei(yesPrice);
+                    yesPrice = Number(yesPrice);
+                    yesPrice = yesPrice / TOKEN_MULTIPLE;
+                    yesPrice = yesPrice.toFixed(2);
                 }
-                else{           
+                catch (spotPriceError) {
+                    // handle the case when spot price throws 
+                    // it is when pool token does not have any liquidity  
 
-                    try {
-                        yesPrice = await pool.methods
-                            .getSpotPrice(DAI_CONTRACT_ADDRESS, info.yes)
-                            .call();
-                        yesPrice = Web3.utils.fromWei(yesPrice);
-                        yesPrice = Number(yesPrice);
-                        yesPrice = yesPrice / TOKEN_MULTIPLE;
-                        yesPrice = yesPrice.toFixed(2);
-                    }
-                    catch (spotPriceError) {
-                        // handle the case when spot price throws 
-                        // it is when pool token does not have any liquidity  
-                        
-                        setHasEnoughLiquidity(false);
-                        console.error({ spotPriceError });
-                    }
+                    setHasEnoughLiquidity(false);
+                    console.error({ spotPriceError });
                 }
+            }
 
-                if (market.address === ZRX_MARKET_ADDRESS) {
-                    let params = {
-                        sellToken: info.no,
-                        buyToken: DAI_CONTRACT_ADDRESS,
-                        sellAmount: convertDisplayToAmount(
-                            new BN(100),
-                            info.no
-                        ),
-                    }
-                    let pricing = await fetchJSON(ZRX_PRICE_URL, params)
-                    noPrice = parseFloat(pricing.price)
-                    noPrice = noPrice.toFixed(2)
+            if (market.address === ZRX_MARKET_ADDRESS) {
+                let params = {
+                    sellToken: info.no,
+                    buyToken: DAI_CONTRACT_ADDRESS,
+                    sellAmount: convertDisplayToAmount(
+                        new BN(100),
+                        info.no
+                    ),
+                };
+                let pricing = await fetchJSON(ZRX_PRICE_URL, params);
+                noPrice = parseFloat(pricing.price);
+                noPrice = noPrice.toFixed(2);
+            }
+            else {
+                try {
+                    noPrice = await pool.methods
+                        .getSpotPrice(DAI_CONTRACT_ADDRESS, info.no)
+                        .call();
+                    noPrice = Web3.utils.fromWei(noPrice);
+                    noPrice = Number(noPrice);
+                    noPrice = noPrice / TOKEN_MULTIPLE;
+                    noPrice = noPrice.toFixed(2);
                 }
-                else{           
-                    try {
-                        noPrice = await pool.methods
-                            .getSpotPrice(DAI_CONTRACT_ADDRESS, info.no)
-                            .call();
-                        noPrice = Web3.utils.fromWei(noPrice);
-                        noPrice = Number(noPrice);
-                        noPrice = noPrice / TOKEN_MULTIPLE;
-                        noPrice = noPrice.toFixed(2);
-                    }
-                    catch (spotPriceError) {
-                        // handle the case when spot price throws 
-                        // it is when pool token does not have any liquidity  
-                        
-                        setHasEnoughLiquidity(false);
-                        console.error({ spotPriceError });
-                    }
+                catch (spotPriceError) {
+                    // handle the case when spot price throws 
+                    // it is when pool token does not have any liquidity  
+
+                    setHasEnoughLiquidity(false);
+                    console.error({ spotPriceError });
                 }
-                console.log("yesPrice",yesPrice)
-                console.log("noPrice",noPrice)
-                setPrice(_init => ({
-                    ..._init,
-                    yesPrice: yesPrice,
-                    noPrice: noPrice,
-                    totalSwapVolume: totalSwapVolume
-                }));
+            }
+            console.log("yesPrice", yesPrice);
+            console.log("noPrice", noPrice);
+            setPrice(_init => ({
+                ..._init,
+                yesPrice: yesPrice,
+                noPrice: noPrice,
+                totalSwapVolume: totalSwapVolume
+            }));
 
-                erc20.options.address = info.yes;
-                var yesBalance = new BN(
-                    await erc20.methods.balanceOf(account).call()
-                );
+            erc20.options.address = info.yes;
+            var yesBalance = new BN(
+                await erc20.methods.balanceOf(account).call()
+            );
 
-                erc20.options.address = info.no;
-                var noBalance = new BN(
-                    await erc20.methods.balanceOf(account).call()
-                );
+            erc20.options.address = info.no;
+            var noBalance = new BN(
+                await erc20.methods.balanceOf(account).call()
+            );
 
-                var daiBalance = new BN(
-                    await dai.methods.balanceOf(account).call()
-                );
+            var daiBalance = new BN(
+                await dai.methods.balanceOf(account).call()
+            );
 
-                setBalances({
-                    [info.yes]: yesBalance,
-                    [info.no]: noBalance,
-                    [DAI_CONTRACT_ADDRESS]: daiBalance
-                });
+            setBalances({
+                [info.yes]: yesBalance,
+                [info.no]: noBalance,
+                [DAI_CONTRACT_ADDRESS]: daiBalance
+            });
 
-                yesBalance = Web3.utils.fromWei(yesBalance);
-                yesBalance = Number(yesBalance);
-                yesBalance = TOKEN_MULTIPLE * yesBalance;
-                yesBalance = yesBalance.toFixed(2);
+            yesBalance = Web3.utils.fromWei(yesBalance);
+            yesBalance = Number(yesBalance);
+            yesBalance = TOKEN_MULTIPLE * yesBalance;
+            yesBalance = yesBalance.toFixed(2);
 
-                noBalance = Web3.utils.fromWei(noBalance);
-                noBalance = Number(noBalance);
-                noBalance = TOKEN_MULTIPLE * noBalance;
-                noBalance = noBalance.toFixed(2);
+            noBalance = Web3.utils.fromWei(noBalance);
+            noBalance = Number(noBalance);
+            noBalance = TOKEN_MULTIPLE * noBalance;
+            noBalance = noBalance.toFixed(2);
 
-                daiBalance = Web3.utils.fromWei(daiBalance);
-                daiBalance = Number(daiBalance);
-                daiBalance = daiBalance.toFixed(2);
+            daiBalance = Web3.utils.fromWei(daiBalance);
+            daiBalance = Number(daiBalance);
+            daiBalance = daiBalance.toFixed(2);
 
-                setDisplayBalances({
-                    [info.yes]: yesBalance,
-                    [info.no]: noBalance,
-                    [DAI_CONTRACT_ADDRESS]: daiBalance
-                });
-            } 
+            setDisplayBalances({
+                [info.yes]: yesBalance,
+                [info.no]: noBalance,
+                [DAI_CONTRACT_ADDRESS]: daiBalance
+            });
+        }
     }, [market, account, contractInstances]);
 
     const approve = useCallback(async () => {
@@ -641,14 +642,14 @@ export const TradingProvider = ({ children }) => {
                     });
                     setApproveLoading(true);
                 })
-                .on("receipt", function() {
+                .on("receipt", function () {
                     notification.destroy();
                     notification.success({
                         duration: 7,
                         message: "Approve Done"
                     });
                 })
-                .on("error", function(error) {
+                .on("error", function (error) {
                     notification.destroy();
                     if (
                         error.message.includes(
@@ -719,7 +720,7 @@ export const TradingProvider = ({ children }) => {
                             icon: <LoadingOutlined />
                         });
                     })
-                    .on("receipt", function(receipt) {
+                    .on("receipt", function (receipt) {
                         notification.destroy();
                         notification.success({
                             duration: 7,
@@ -729,7 +730,7 @@ export const TradingProvider = ({ children }) => {
                             )
                         });
                     })
-                    .on("error", function(error) {
+                    .on("error", function (error) {
                         notification.destroy();
                         if (
                             error.message.includes(
@@ -811,7 +812,7 @@ export const TradingProvider = ({ children }) => {
                                 icon: <LoadingOutlined />
                             });
                         })
-                        .on("receipt", function(receipt) {
+                        .on("receipt", function (receipt) {
                             notification.destroy();
                             notification.success({
                                 duration: 7,
@@ -823,7 +824,7 @@ export const TradingProvider = ({ children }) => {
                                 )
                             });
                         })
-                        .on("error", function(error) {
+                        .on("error", function (error) {
                             notification.destroy();
                             if (
                                 error.message.includes(
@@ -890,7 +891,7 @@ export const TradingProvider = ({ children }) => {
                             icon: <LoadingOutlined />
                         });
                     })
-                    .on("receipt", function(receipt) {
+                    .on("receipt", function (receipt) {
                         notification.destroy();
                         notification.success({
                             duration: 7,
@@ -900,7 +901,7 @@ export const TradingProvider = ({ children }) => {
                             )
                         });
                     })
-                    .on("error", function(error) {
+                    .on("error", function (error) {
                         notification.destroy();
                         if (
                             error.message.includes(
@@ -981,7 +982,7 @@ export const TradingProvider = ({ children }) => {
                                 icon: <LoadingOutlined />
                             });
                         })
-                        .on("receipt", function(receipt) {
+                        .on("receipt", function (receipt) {
                             notification.destroy();
                             notification.success({
                                 duration: 7,
@@ -993,7 +994,7 @@ export const TradingProvider = ({ children }) => {
                                 )
                             });
                         })
-                        .on("error", function(error) {
+                        .on("error", function (error) {
                             notification.destroy();
                             if (
                                 error.message.includes(
