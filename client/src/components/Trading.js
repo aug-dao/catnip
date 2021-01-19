@@ -1,10 +1,10 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect } from 'react';
 import {
     makeStyles,
     ThemeProvider,
     createMuiTheme,
     withStyles,
-} from '@material-ui/core/styles'
+} from '@material-ui/core/styles';
 import {
     Tooltip,
     Paper,
@@ -16,23 +16,23 @@ import {
     Select,
     Typography,
     Link,
-} from '@material-ui/core'
-import 'fontsource-roboto'
-import StyledButton from './StyledButton'
-import DImg from '../assets/images/d.png'
-import flipUpIcon from '../assets/images/flipUp.svg'
-import flipDownIcon from '../assets/images/flipDown.svg'
-import maxIcon from '../assets/images/max.svg'
-import classNames from 'classnames'
-import { ExpandMore, InfoOutlined, HelpOutline } from '@material-ui/icons'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import { AppContext } from '../contexts/AppContext'
-import { Web3Context } from '../contexts/Web3Context'
-import { TradingContext } from '../contexts/TradingContext'
-import { LoadingOutlined } from '@ant-design/icons'
-import { DAI_CONTRACT_ADDRESS, MARKETS, MARKET_INFO } from '../utils/constants'
-import { timeConverter } from '../utils/helpers'
-import { useHistory } from 'react-router-dom'
+} from '@material-ui/core';
+import 'fontsource-roboto';
+import StyledButton from './StyledButton';
+import DImg from '../assets/images/d.png';
+import flipUpIcon from '../assets/images/flipUp.svg';
+import flipDownIcon from '../assets/images/flipDown.svg';
+import maxIcon from '../assets/images/max.svg';
+import classNames from 'classnames';
+import { ExpandMore, InfoOutlined, HelpOutline } from '@material-ui/icons';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { AppContext } from '../contexts/AppContext';
+import { Web3Context } from '../contexts/Web3Context';
+import { TradingContext } from '../contexts/TradingContext';
+import { LoadingOutlined } from '@ant-design/icons';
+import { DAI_CONTRACT_ADDRESS, MARKETS, MARKET_INFO } from '../utils/constants';
+import { timeConverter } from '../utils/helpers';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
     textBox: {
@@ -378,13 +378,13 @@ const useStyles = makeStyles(theme => ({
         position: 'relative',
         padding: 10,
     },
-}))
+}));
 
 const iconStyles = {
     selectIcon: {
         color: 'black',
     },
-}
+};
 
 const CustomExpandMore = withStyles(iconStyles)(
     ({ className, classes, ...rest }) => {
@@ -393,18 +393,18 @@ const CustomExpandMore = withStyles(iconStyles)(
                 {...rest}
                 className={classNames(className, classes.selectIcon)}
             />
-        )
+        );
     }
-)
+);
 
 export default function Trading({
     match: {
         params: { marketAddress },
     },
 }) {
-    const classes = useStyles()
-    const { isContrast } = useContext(AppContext)
-    const { account, connectWeb3 } = useContext(Web3Context)
+    const classes = useStyles();
+    const { isContrast } = useContext(AppContext);
+    const { account, connectWeb3 } = useContext(Web3Context);
     const {
         market,
         fromToken,
@@ -435,20 +435,20 @@ export default function Trading({
         minAmountReceived,
         impliedOdds,
         updateMarket,
-    } = useContext(TradingContext)
+    } = useContext(TradingContext);
 
-    const history = useHistory()
+    const history = useHistory();
     const changeMarket = e => {
-        history.push(`/markets/${e.target.value}`)
-    }
+        history.push(`/markets/${e.target.value}`);
+    };
 
     useEffect(() => {
         if (MARKETS.indexOf(marketAddress) === -1) {
-            history.push(`/`)
+            history.push(`/`);
         } else {
-            updateMarket(marketAddress.toLowerCase())
+            updateMarket(marketAddress.toLowerCase());
         }
-    }, [marketAddress, history, updateMarket])
+    }, [marketAddress, history, updateMarket]);
 
     const themeConfig = {
         overrides: {
@@ -468,10 +468,10 @@ export default function Trading({
                 },
             },
         },
-    }
+    };
 
-    const theme = createMuiTheme(isContrast ? themeConfig : {})
-    const [showMarketInfoTooltip, setShowMarketInfoTooltip] = useState(false)
+    const theme = createMuiTheme(isContrast ? themeConfig : {});
+    const [showMarketInfoTooltip, setShowMarketInfoTooltip] = useState(false);
 
     return (
         <div className={classes.root}>
@@ -500,21 +500,20 @@ export default function Trading({
                                 </div>
                             )}
                             {market.address === MARKETS[1] ||
-                            market.address === MARKETS[2] ? (
-                                <div class="slippage_alert">
-                                    Trades may not go through on this market due
-                                    to low liquidity at this time. All winning
-                                    shares will be redeemable for one DAI once
-                                    the market settles.
-                                </div>
-                            ) : (
-                                <div></div>
-                            )}
+                                market.address === MARKETS[2] ? (
+                                    <div class="slippage_alert">
+                                        Trades may not go through on this market due
+                                        to low liquidity at this time. All winning
+                                        shares will be redeemable for one DAI once
+                                        the market settles.
+                                    </div>
+                                ) : (
+                                    <div></div>
+                                )}
                         </Box>
                         <Paper
-                            className={`main_part ${
-                                isContrast ? 'dark' : 'light'
-                            }`}
+                            className={`main_part ${isContrast ? 'dark' : 'light'
+                                }`}
                             square={true}
                             elevation={0}
                         >
@@ -539,9 +538,8 @@ export default function Trading({
               )} */}
                             <div className={classes.flex_Part}>
                                 <div
-                                    className={`select_part ${
-                                        isContrast ? 'dark' : 'light'
-                                    }`}
+                                    className={`select_part ${isContrast ? 'dark' : 'light'
+                                        }`}
                                 >
                                     <ThemeProvider theme={theme}>
                                         <Select
@@ -555,6 +553,19 @@ export default function Trading({
                                             }}
                                             IconComponent={CustomExpandMore}
                                         >
+                                            //TODO: add for loop
+                                            <MenuItem value={MARKETS[4]}>
+                                                {
+                                                    MARKET_INFO[MARKETS[4]]
+                                                        .marketQuestion
+                                                }
+                                            </MenuItem>
+                                            <MenuItem value={MARKETS[3]}>
+                                                {
+                                                    MARKET_INFO[MARKETS[3]]
+                                                        .marketQuestion
+                                                }
+                                            </MenuItem>
                                             <MenuItem value={MARKETS[2]}>
                                                 {
                                                     MARKET_INFO[MARKETS[2]]
@@ -674,21 +685,21 @@ export default function Trading({
                                     {fromAmountLoading ? (
                                         <LoadingOutlined />
                                     ) : (
-                                        <InputBase
-                                            className={classes.margin}
-                                            name="fromAmountDisplay"
-                                            value={fromAmountDisplay}
-                                            type="number"
-                                            min="0"
-                                            onChange={handleChange}
-                                            inputProps={{
-                                                style: {
-                                                    fontSize: 24,
-                                                    paddingRight: 10,
-                                                },
-                                            }}
-                                        />
-                                    )}
+                                            <InputBase
+                                                className={classes.margin}
+                                                name="fromAmountDisplay"
+                                                value={fromAmountDisplay}
+                                                type="number"
+                                                min="0"
+                                                onChange={handleChange}
+                                                inputProps={{
+                                                    style: {
+                                                        fontSize: 24,
+                                                        paddingRight: 10,
+                                                    },
+                                                }}
+                                            />
+                                        )}
                                 </div>
 
                                 <img
@@ -757,55 +768,55 @@ export default function Trading({
                                             </Select>
                                         </ThemeProvider>
                                     ) : (
-                                        <ThemeProvider theme={theme}>
-                                            <Select
-                                                disableUnderline
-                                                name="fromToken"
-                                                value={fromToken}
-                                                onChange={handleChange}
-                                                style={{
-                                                    fontSize: 24,
-                                                }}
-                                                IconComponent={CustomExpandMore}
-                                            >
-                                                <MenuItem
-                                                    value={market.info.yes}
-                                                    className={
-                                                        classes.menu_item
-                                                    }
+                                            <ThemeProvider theme={theme}>
+                                                <Select
+                                                    disableUnderline
+                                                    name="fromToken"
+                                                    value={fromToken}
+                                                    onChange={handleChange}
+                                                    style={{
+                                                        fontSize: 24,
+                                                    }}
+                                                    IconComponent={CustomExpandMore}
                                                 >
-                                                    <img
-                                                        src={
-                                                            market.info.yesIcon
+                                                    <MenuItem
+                                                        value={market.info.yes}
+                                                        className={
+                                                            classes.menu_item
                                                         }
-                                                        alt=""
-                                                    />{' '}
-                                                    <span>YES</span>
-                                                </MenuItem>
-                                                <MenuItem
-                                                    value={market.info.no}
-                                                    className={
-                                                        classes.menu_item
-                                                    }
-                                                >
-                                                    <img
-                                                        src={market.info.noIcon}
-                                                        alt=""
-                                                    />{' '}
-                                                    <span>NO</span>
-                                                </MenuItem>
-                                                <MenuItem
-                                                    value={DAI_CONTRACT_ADDRESS}
-                                                    className={
-                                                        classes.menu_item
-                                                    }
-                                                >
-                                                    <img src={DImg} alt="" />{' '}
-                                                    <span>DAI</span>
-                                                </MenuItem>
-                                            </Select>
-                                        </ThemeProvider>
-                                    )}
+                                                    >
+                                                        <img
+                                                            src={
+                                                                market.info.yesIcon
+                                                            }
+                                                            alt=""
+                                                        />{' '}
+                                                        <span>YES</span>
+                                                    </MenuItem>
+                                                    <MenuItem
+                                                        value={market.info.no}
+                                                        className={
+                                                            classes.menu_item
+                                                        }
+                                                    >
+                                                        <img
+                                                            src={market.info.noIcon}
+                                                            alt=""
+                                                        />{' '}
+                                                        <span>NO</span>
+                                                    </MenuItem>
+                                                    <MenuItem
+                                                        value={DAI_CONTRACT_ADDRESS}
+                                                        className={
+                                                            classes.menu_item
+                                                        }
+                                                    >
+                                                        <img src={DImg} alt="" />{' '}
+                                                        <span>DAI</span>
+                                                    </MenuItem>
+                                                </Select>
+                                            </ThemeProvider>
+                                        )}
                                 </div>
                             </div>
                             <div className={classes.flip} onClick={reversePair}>
@@ -827,21 +838,21 @@ export default function Trading({
                                     {toAmountLoading ? (
                                         <LoadingOutlined />
                                     ) : (
-                                        <InputBase
-                                            className={classes.margin}
-                                            name="toAmountDisplay"
-                                            value={toAmountDisplay}
-                                            type="number"
-                                            min="0"
-                                            onChange={handleChange}
-                                            inputProps={{
-                                                style: {
-                                                    fontSize: 24,
-                                                    paddingRight: 10,
-                                                },
-                                            }}
-                                        />
-                                    )}
+                                            <InputBase
+                                                className={classes.margin}
+                                                name="toAmountDisplay"
+                                                value={toAmountDisplay}
+                                                type="number"
+                                                min="0"
+                                                onChange={handleChange}
+                                                inputProps={{
+                                                    style: {
+                                                        fontSize: 24,
+                                                        paddingRight: 10,
+                                                    },
+                                                }}
+                                            />
+                                        )}
                                 </div>
                                 <div>
                                     {balances[toToken] && (
@@ -902,55 +913,55 @@ export default function Trading({
                                             </Select>
                                         </ThemeProvider>
                                     ) : (
-                                        <ThemeProvider theme={theme}>
-                                            <Select
-                                                disableUnderline
-                                                name="toToken"
-                                                value={toToken}
-                                                onChange={handleChange}
-                                                style={{
-                                                    fontSize: 24,
-                                                }}
-                                                IconComponent={CustomExpandMore}
-                                            >
-                                                <MenuItem
-                                                    value={market.info.yes}
-                                                    className={
-                                                        classes.menu_item
-                                                    }
+                                            <ThemeProvider theme={theme}>
+                                                <Select
+                                                    disableUnderline
+                                                    name="toToken"
+                                                    value={toToken}
+                                                    onChange={handleChange}
+                                                    style={{
+                                                        fontSize: 24,
+                                                    }}
+                                                    IconComponent={CustomExpandMore}
                                                 >
-                                                    <img
-                                                        src={
-                                                            market.info.yesIcon
+                                                    <MenuItem
+                                                        value={market.info.yes}
+                                                        className={
+                                                            classes.menu_item
                                                         }
-                                                        alt=""
-                                                    />{' '}
-                                                    <span>YES</span>
-                                                </MenuItem>
-                                                <MenuItem
-                                                    value={market.info.no}
-                                                    className={
-                                                        classes.menu_item
-                                                    }
-                                                >
-                                                    <img
-                                                        src={market.info.noIcon}
-                                                        alt=""
-                                                    />{' '}
-                                                    <span>NO</span>
-                                                </MenuItem>
-                                                <MenuItem
-                                                    value={DAI_CONTRACT_ADDRESS}
-                                                    className={
-                                                        classes.menu_item
-                                                    }
-                                                >
-                                                    <img src={DImg} alt="" />{' '}
-                                                    <span>DAI</span>
-                                                </MenuItem>
-                                            </Select>
-                                        </ThemeProvider>
-                                    )}
+                                                    >
+                                                        <img
+                                                            src={
+                                                                market.info.yesIcon
+                                                            }
+                                                            alt=""
+                                                        />{' '}
+                                                        <span>YES</span>
+                                                    </MenuItem>
+                                                    <MenuItem
+                                                        value={market.info.no}
+                                                        className={
+                                                            classes.menu_item
+                                                        }
+                                                    >
+                                                        <img
+                                                            src={market.info.noIcon}
+                                                            alt=""
+                                                        />{' '}
+                                                        <span>NO</span>
+                                                    </MenuItem>
+                                                    <MenuItem
+                                                        value={DAI_CONTRACT_ADDRESS}
+                                                        className={
+                                                            classes.menu_item
+                                                        }
+                                                    >
+                                                        <img src={DImg} alt="" />{' '}
+                                                        <span>DAI</span>
+                                                    </MenuItem>
+                                                </Select>
+                                            </ThemeProvider>
+                                        )}
                                 </div>
                             </div>
                             {fromAmount.gt(0) && (
@@ -985,11 +996,10 @@ export default function Trading({
                                             variant="body2"
                                             padding="20px"
                                         >
-                                            {`Implied Odds for ${
-                                                toToken === market.info.yes
-                                                    ? 'YES'
-                                                    : 'NO'
-                                            }:`}
+                                            {`Implied Odds for ${toToken === market.info.yes
+                                                ? 'YES'
+                                                : 'NO'
+                                                }:`}
                                         </Typography>
 
                                         <Typography
@@ -1014,47 +1024,46 @@ export default function Trading({
                                                 {approveLoading ? (
                                                     <LoadingOutlined />
                                                 ) : (
-                                                    'Approve'
-                                                )}
+                                                        'Approve'
+                                                    )}
                                             </StyledButton>
                                         ) : (
+                                                <StyledButton
+                                                    variant="contained"
+                                                    onClick={swapBranch}
+                                                    disabled={isSwapDisabled}
+                                                >
+                                                    Swap
+                                                </StyledButton>
+                                            )
+                                    ) : (
                                             <StyledButton
                                                 variant="contained"
-                                                onClick={swapBranch}
-                                                disabled={isSwapDisabled}
+                                                disabled
                                             >
-                                                Swap
+                                                Insufficient Balance
                                             </StyledButton>
                                         )
-                                    ) : (
-                                        <StyledButton
-                                            variant="contained"
-                                            disabled
-                                        >
-                                            Insufficient Balance
+                                ) : (
+                                        <StyledButton variant="contained" disabled>
+                                            Insufficient Liquidity
                                         </StyledButton>
                                     )
-                                ) : (
-                                    <StyledButton variant="contained" disabled>
-                                        Insufficient Liquidity
-                                    </StyledButton>
-                                )
                             ) : (
-                                <StyledButton
-                                    variant="contained"
-                                    onClick={connectWeb3}
-                                >
-                                    Connect Wallet
-                                </StyledButton>
-                            )}
+                                    <StyledButton
+                                        variant="contained"
+                                        onClick={connectWeb3}
+                                    >
+                                        Connect Wallet
+                                    </StyledButton>
+                                )}
                         </Paper>
                         {fromAmount > 0 && (
                             <Paper
                                 square={true}
                                 elevation={0}
-                                className={`main_footer ${
-                                    isContrast ? 'dark' : 'light'
-                                }`}
+                                className={`main_footer ${isContrast ? 'dark' : 'light'
+                                    }`}
                             >
                                 <Box textAlign="right">
                                     <form
@@ -1085,7 +1094,7 @@ export default function Trading({
                                                                 the market
                                                                 resolves to{' '}
                                                                 {toToken ===
-                                                                market.info.yes
+                                                                    market.info.yes
                                                                     ? 'YES'
                                                                     : 'NO'}
                                                                 . Winning shares
@@ -1101,11 +1110,10 @@ export default function Trading({
                                                         }
                                                     >
                                                         <HelpOutline
-                                                            className={`question_logo ${
-                                                                isContrast
-                                                                    ? 'dark'
-                                                                    : 'light'
-                                                            }`}
+                                                            className={`question_logo ${isContrast
+                                                                ? 'dark'
+                                                                : 'light'
+                                                                }`}
                                                         />
                                                     </Tooltip>
                                                 </div>
@@ -1156,11 +1164,10 @@ export default function Trading({
                                                         }
                                                     >
                                                         <HelpOutline
-                                                            className={`question_logo ${
-                                                                isContrast
-                                                                    ? 'dark'
-                                                                    : 'light'
-                                                            }`}
+                                                            className={`question_logo ${isContrast
+                                                                ? 'dark'
+                                                                : 'light'
+                                                                }`}
                                                         />
                                                     </Tooltip>
                                                 </div>
@@ -1215,11 +1222,10 @@ export default function Trading({
                                                         }
                                                     >
                                                         <HelpOutline
-                                                            className={`question_logo ${
-                                                                isContrast
-                                                                    ? 'dark'
-                                                                    : 'light'
-                                                            }`}
+                                                            className={`question_logo ${isContrast
+                                                                ? 'dark'
+                                                                : 'light'
+                                                                }`}
                                                         />
                                                     </Tooltip>
                                                 </div>
@@ -1252,86 +1258,44 @@ export default function Trading({
                             style={{ margin: '0 auto' }}
                         >
                             {balances[market.info.yes] !== 0 ||
-                            balances[market.info.no] !== 0 ? (
-                                <div
-                                    className={`holding-status ${
-                                        isContrast ? 'box-dark' : 'box-light'
-                                    }`}
-                                >
-                                    <div className="flex-item">
-                                        <Typography
-                                            variant="h6"
-                                            fontWeight="fontWeightBold"
-                                            padding="0px"
-                                        >
-                                            Holdings
-                                        </Typography>
-                                        <Typography variant="h6" padding="20px">
-                                            Current Price
-                                        </Typography>
-                                    </div>
-                                    <div className="flex-item">
+                                balances[market.info.no] !== 0 ? (
+                                    <div
+                                        className={`holding-status ${isContrast ? 'box-dark' : 'box-light'
+                                            }`}
+                                    >
                                         <div className="flex-item">
-                                            <img
-                                                src={market.info.yesIcon}
-                                                display="inline"
-                                                alt="yes-icon"
-                                            />
-                                            <div>
-                                                <Typography>
-                                                    {balances[market.info.yes]}{' '}
-                                                    <span className="yes">
-                                                        y
-                                                    </span>
-                                                    {market.info.symbolPostfix}
-                                                </Typography>
-                                                {window.ethereum && (
-                                                    <Link
-                                                        className="holding_num"
-                                                        onClick={() =>
-                                                            addTokenToMetamask(
-                                                                market.info.yes
-                                                            )
-                                                        }
-                                                        component="button"
-                                                        variant="body2"
-                                                    >
-                                                        Show in wallet
-                                                    </Link>
-                                                )}
-                                            </div>
+                                            <Typography
+                                                variant="h6"
+                                                fontWeight="fontWeightBold"
+                                                padding="0px"
+                                            >
+                                                Holdings
+                                        </Typography>
+                                            <Typography variant="h6" padding="20px">
+                                                Current Price
+                                        </Typography>
                                         </div>
-                                        <Typography
-                                            variant="body2"
-                                            padding="20px"
-                                        >
-                                            ${yesPrice}
-                                        </Typography>
-                                    </div>
-                                    <div className="flex-item last">
                                         <div className="flex-item">
-                                            <img
-                                                src={market.info.noIcon}
-                                                display="inline"
-                                                alt="no-icon"
-                                            />
-                                            <div>
-                                                <Typography>
-                                                    {balances[market.info.no]}{' '}
-                                                    <span className="no">
-                                                        n
+                                            <div className="flex-item">
+                                                <img
+                                                    src={market.info.yesIcon}
+                                                    display="inline"
+                                                    alt="yes-icon"
+                                                />
+                                                <div>
+                                                    <Typography>
+                                                        {balances[market.info.yes]}{' '}
+                                                        <span className="yes">
+                                                            y
                                                     </span>
-                                                    {market.info.symbolPostfix}
-                                                </Typography>
-                                                {window.web3 &&
-                                                    window.web3
-                                                        .currentProvider && (
+                                                        {market.info.symbolPostfix}
+                                                    </Typography>
+                                                    {window.ethereum && (
                                                         <Link
                                                             className="holding_num"
                                                             onClick={() =>
                                                                 addTokenToMetamask(
-                                                                    market.info
-                                                                        .no
+                                                                    market.info.yes
                                                                 )
                                                             }
                                                             component="button"
@@ -1340,20 +1304,61 @@ export default function Trading({
                                                             Show in wallet
                                                         </Link>
                                                     )}
+                                                </div>
                                             </div>
+                                            <Typography
+                                                variant="body2"
+                                                padding="20px"
+                                            >
+                                                ${yesPrice}
+                                            </Typography>
                                         </div>
-                                        <Typography variant="body2">
-                                            ${noPrice}
-                                        </Typography>
+                                        <div className="flex-item last">
+                                            <div className="flex-item">
+                                                <img
+                                                    src={market.info.noIcon}
+                                                    display="inline"
+                                                    alt="no-icon"
+                                                />
+                                                <div>
+                                                    <Typography>
+                                                        {balances[market.info.no]}{' '}
+                                                        <span className="no">
+                                                            n
+                                                    </span>
+                                                        {market.info.symbolPostfix}
+                                                    </Typography>
+                                                    {window.web3 &&
+                                                        window.web3
+                                                            .currentProvider && (
+                                                            <Link
+                                                                className="holding_num"
+                                                                onClick={() =>
+                                                                    addTokenToMetamask(
+                                                                        market.info
+                                                                            .no
+                                                                    )
+                                                                }
+                                                                component="button"
+                                                                variant="body2"
+                                                            >
+                                                                Show in wallet
+                                                            </Link>
+                                                        )}
+                                                </div>
+                                            </div>
+                                            <Typography variant="body2">
+                                                ${noPrice}
+                                            </Typography>
+                                        </div>
                                     </div>
-                                </div>
-                            ) : (
-                                ''
-                            )}
+                                ) : (
+                                    ''
+                                )}
                         </Grid>
                     )}
                 </Grid>
             </Container>
         </div>
-    )
+    );
 }

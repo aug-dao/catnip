@@ -64,6 +64,8 @@ export default {
             '0x1ebb89156091eb0d59603c18379c03a5c84d7355'.toLowerCase(),
             '0x6e6ffb10179febf29b0223d22793d1c1d8a8f541'.toLowerCase(),
             '0x0946A3Eab3d638c606459b0A9F1E76EB5324985F'.toLowerCase(),
+            '0x827f9A41cA4f4C6aD8098f18a045c8115d4D2749'.toLowerCase(),
+            '0xc8EfC74f5b5742E4d1c15ACa63684116EDe96111'.toLowerCase()
         ],
         marketInfo: {
             ['0x1ebb89156091eb0d59603c18379c03a5c84d7355'.toLowerCase()]: {
@@ -135,6 +137,52 @@ export default {
                 },
                 endTime: '1611273600',
             },
+            ['0x827f9A41cA4f4C6aD8098f18a045c8115d4D2749'.toLowerCase()]: {
+                yes: "0x7d1d38ef81EBDFc0EEE7b987cE569563C3C2Fee0".toLowerCase(),
+                no: "0x6E93403916A0cf7b51908da63eE60753E389Bd0A".toLowerCase(),
+                ["0x7d1d38ef81EBDFc0EEE7b987cE569563C3C2Fee0".toLowerCase()]: 'yes',
+                ["0x6E93403916A0cf7b51908da63eE60753E389Bd0A".toLowerCase()]: 'no',
+                pool: "0xc7d919fe3418abad0979569041bed141726e9b86".toLowerCase(),
+                symbolPostfix: 'BIILS',
+                extraInfo: {
+                    "categories": ["Sports", "American Football", "NFL"],
+                    "description": "Will the Buffalo Bills Win the 2021 AFC Championship Game?",
+                    "longDescription": "If the game in question has not taken place by market expiration time or fewer than 55 minutes of game time have elapsed, then the market shall resolve as Invalid. If the game is suspended after at least 55 minutes of play and not resumed by market expiration time, then the score when the game is halted will determine the market outcome. If the Bills have a higher score at that time, then the market shall resolve as YES. If the Bills have a lower score or the score is tied at that time, then the market shall resolve as NO. If the game is still in play at market expiration time and at least 55 minutes of game time have elapsed, then the market shall resolve as YES if the Bills have a higher score at that time and as NO if the Bills have a lower score or if the score is tied.",
+                    "_scalarDenomination": "",
+                    "offsetName": null,
+                    "template": null
+                },
+                yesIcon:
+                    'https://cloudflare-ipfs.com/ipfs/QmbEDv7Jy6Aouj5jFJU88uocQYQMtSVgeUbaPSULGMuaKX',
+                noIcon:
+                    'https://cloudflare-ipfs.com/ipfs/QmbEDv7Jy6Aouj5jFJU88uocQYQMtSVgeUbaPSULGMuaKX',
+                marketQuestion:
+                    'Will the Buffalo Bills Win the 2021 AFC Championship Game?',
+                endTime: "1611619200",
+            },
+            ['0xc8EfC74f5b5742E4d1c15ACa63684116EDe96111'.toLowerCase()]: {
+                yes: "0xD12653380cb0d88ede6Cd8129Ed56FAbCc21928D".toLowerCase(),
+                no: "0x15D4abb1c530A45cFbdDd1a595E7a9d6304f84Cb".toLowerCase(),
+                ["0xD12653380cb0d88ede6Cd8129Ed56FAbCc21928D".toLowerCase()]: 'yes',
+                ["0x15D4abb1c530A45cFbdDd1a595E7a9d6304f84Cb".toLowerCase()]: 'no',
+                pool: "0xea09809ad3768504fe81bddc69e11653c1e7e629".toLowerCase(),
+                symbolPostfix: 'BUCCS',
+                extraInfo: {
+                    "categories": ["Sports", "American Football", "NFL"],
+                    "description": "Will the Tampa Bay Buccaneers Win the 2021 NFC Championship Game?",
+                    "longDescription": "If the game in question has not taken place by market expiration time or fewer than 55 minutes of game time have elapsed, then the market shall resolve as Invalid. If the game is suspended after at least 55 minutes of play and not resumed by market expiration time, then the score when the game is halted will determine the market outcome. If the Buccaneers have a higher score at that time, then the market shall resolve as YES. If the Buccaneers have a lower score or the score is tied at that time, then the market shall resolve as NO. If the game is still in play at market expiration time and at least 55 minutes of game time have elapsed, then the market shall resolve as YES if the Buccaneers have a higher score at that time and as NO if the Buccaneers have a lower score or if the score is tied",
+                    "_scalarDenomination": "",
+                    "offsetName": null,
+                    "template": null
+                },
+                yesIcon:
+                    'https://cloudflare-ipfs.com/ipfs/QmQVw7Mb9X6NvThWfgSVncwGh53vZvnBNLZzWHMufjFqdD',
+                noIcon:
+                    'https://cloudflare-ipfs.com/ipfs/QmXobRt9JNPiZmNw8fy5f1PUyTWkVrthMmEz7aRwq9ji3Q',
+                marketQuestion:
+                    'Will the Tampa Bay Buccaneers Win the 2021 NFC Championship Game?',
+                endTime: "1611619200",
+            }
         },
     },
-}
+};
