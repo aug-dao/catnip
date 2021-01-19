@@ -499,14 +499,16 @@ export default function Trading({
                                     multiple exchanges, using the 0x API.
                                 </div>
                             )}
-                            {(props.market === markets[1] ||
-                                props.market === markets[2]) && (
+                            {market.address === MARKETS[1] ||
+                            market.address === MARKETS[2] ? (
                                 <div class="slippage_alert">
                                     Trades may not go through on this market due
                                     to low liquidity at this time. All winning
                                     shares will be redeemable for one DAI once
                                     the market settles.
                                 </div>
+                            ) : (
+                                <div></div>
                             )}
                         </Box>
                         <Paper
