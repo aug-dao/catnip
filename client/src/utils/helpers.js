@@ -233,3 +233,14 @@ export const timeConverter = UNIX_timestamp => {
     var time = a.toLocaleString('en-US', { timeZoneName: 'short' });
     return time;
 };
+
+export const getMarketAssociatedWithToken = (tokenAddress, ERC20Wrapper, ShareToken) => {
+    ERC20Wrapper.options.adddress = tokenAddress;
+    const tokenId = ERC20Wrapper.methods.tokenId().call();
+    return ShareToken.methods.getMarket().call();
+};
+export const isMarketFinalized = (marketAddress, Market) => {
+    Market.options.address = marketAddress;
+    return Market.methods.isFinalized().call();
+};
+

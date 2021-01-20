@@ -553,37 +553,20 @@ export default function Trading({
                                             }}
                                             IconComponent={CustomExpandMore}
                                         >
-                                            //TODO: add for loop
-                                            <MenuItem value={MARKETS[4]}>
-                                                {
-                                                    MARKET_INFO[MARKETS[4]]
-                                                        .marketQuestion
-                                                }
-                                            </MenuItem>
-                                            <MenuItem value={MARKETS[3]}>
-                                                {
-                                                    MARKET_INFO[MARKETS[3]]
-                                                        .marketQuestion
-                                                }
-                                            </MenuItem>
-                                            <MenuItem value={MARKETS[2]}>
-                                                {
-                                                    MARKET_INFO[MARKETS[2]]
-                                                        .marketQuestion
-                                                }
-                                            </MenuItem>
-                                            <MenuItem value={MARKETS[1]}>
-                                                {
-                                                    MARKET_INFO[MARKETS[1]]
-                                                        .marketQuestion
-                                                }
-                                            </MenuItem>
-                                            <MenuItem value={MARKETS[0]}>
-                                                {
-                                                    MARKET_INFO[MARKETS[0]]
-                                                        .marketQuestion
-                                                }
-                                            </MenuItem>
+                                            {
+                                                //The last market is the first to be displayed in the select
+                                            }
+                                            {
+                                                MARKETS.slice(0).reverse().map((market) => (
+
+                                                    <MenuItem value={market} >
+                                                        {
+                                                            MARKET_INFO[market]
+                                                                .marketQuestion
+                                                        }
+                                                    </MenuItem>
+                                                ))
+                                            }
                                         </Select>
                                     </ThemeProvider>
                                 </div>
@@ -1359,6 +1342,6 @@ export default function Trading({
                     )}
                 </Grid>
             </Container>
-        </div>
+        </div >
     );
 }
