@@ -143,7 +143,7 @@ export default {
                 ["0x7d1d38ef81EBDFc0EEE7b987cE569563C3C2Fee0".toLowerCase()]: 'yes',
                 ["0x6E93403916A0cf7b51908da63eE60753E389Bd0A".toLowerCase()]: 'no',
                 pool: "0xc7d919fe3418abad0979569041bed141726e9b86".toLowerCase(),
-                symbolPostfix: 'BIILS',
+                symbolPostfix: 'BILLS',
                 extraInfo: {
                     "categories": ["Sports", "American Football", "NFL"],
                     "description": "Will the Buffalo Bills Win the 2021 AFC Championship Game?",
