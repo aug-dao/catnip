@@ -236,17 +236,14 @@ export const timeConverter = UNIX_timestamp => {
 
 export const getTokenIdAssociatedWithToken = async (tokenAddress, ERC20Wrapper) => {
     ERC20Wrapper.options.adddress = tokenAddress;
-    return ERC20Wrapper.methods.tokenId().call();
+    return await ERC20Wrapper.methods.tokenId().call();
 
 };
 export const getMarketAssociatedWithToken = async (tokenAddress, ERC20Wrapper, ShareToken) => {
     const tokenId = await getTokenIdAssociatedWithToken(tokenAddress, ERC20Wrapper);
-    return ShareToken.methods.getMarket(tokenId).call();
+    return await ShareToken.methods.getMarket(tokenId).call();
 };
-export const getOutcomeAssocitedWithToken = async (tokenAddress, ERC20Wrapper, ShareToken) => {
-    const tokenId = await getTokenIdAssociatedWithToken(tokenAddress, ERC20Wrapper);
-    return ShareToken.methods.getOutcome(tokenId).call();
-};
+
 export const isMarketFinalized = async (marketAddress, Market) => {
     Market.options.address = marketAddress;
     return await Market.methods.isFinalized().call();

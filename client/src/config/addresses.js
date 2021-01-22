@@ -21,6 +21,10 @@ export default {
                     'nTrump',
                     'iTrump'
                 ],
+                outcomeIcons: [
+                    'https://cloudflare-ipfs.com/ipfs/QmRWo92JEL6s2ydN1fK2Q3KAX2rzBnTnfqkABFYHmA5EUT',
+                    'https://cloudflare-ipfs.com/ipfs/QmUVCPwVDCTzM2kBxejB85MS2m3KRjSW7f2w81pSr8ZvTL',
+                ],
                 ['0x0967675871F33962beab13a52EF03813a9a884CA'.toLowerCase()]: 'yes',
                 ['0x511C37BABe3BF76a674A697326D169de1ED70043'.toLowerCase()]: 'no',
                 ['0x4053dCBd78b2459c361d2728E28d39BE819bf986'.toLowerCase()]: 'Invalid',
@@ -54,6 +58,10 @@ export default {
                     'nTrump',
                     'iTrump'
                 ],
+                outcomeIcons: [
+                    'https://cloudflare-ipfs.com/ipfs/QmRWo92JEL6s2ydN1fK2Q3KAX2rzBnTnfqkABFYHmA5EUT',
+                    'https://cloudflare-ipfs.com/ipfs/QmUVCPwVDCTzM2kBxejB85MS2m3KRjSW7f2w81pSr8ZvTL',
+                ],
                 ['0x1dbCcF29375304c38bd0d162f636BAA8Dd6CcE44'.toLowerCase()]: 'yes',
                 ['0xeb69840f09A9235df82d9Ed9D43CafFFea2a1eE9'.toLowerCase()]: 'no',
                 ['0x0d0Bd297350b49Ee96d5D4E15a12001928fDdB1e'.toLowerCase()]: 'Invalid',
@@ -83,6 +91,10 @@ export default {
                 outcomeSymbols: [
                     'yAnthony',
                     'nAnthony',
+                ],
+                outcomeIcons: [
+                    'https://cloudflare-ipfs.com/ipfs/QmUA2ExuPSRPHepiRqe3VH4oZKHkw6URoNtFB7UqHN8Vgh',
+                    'https://cloudflare-ipfs.com/ipfs/QmZfAjSUevTSJe5Lqg22vx4zAPGrkafDKz33LJG2GWoAqG',
                 ],
                 ['0xaC9C1c55901c51b4ff78d957e66bbFE35580528B'.toLowerCase()]: 'yes',
                 ['0xF7EF92d2a34137dfa2d60A983eb68dbF0ec3db07'.toLowerCase()]: 'no',
@@ -127,6 +139,10 @@ export default {
                     'yTrump',
                     'nTrump'
                 ],
+                outcomeIcons: [
+                    'https://cloudflare-ipfs.com/ipfs/QmRWo92JEL6s2ydN1fK2Q3KAX2rzBnTnfqkABFYHmA5EUT',
+                    'https://cloudflare-ipfs.com/ipfs/QmUVCPwVDCTzM2kBxejB85MS2m3KRjSW7f2w81pSr8ZvTL',
+                ],
                 ['0x3af375d9f77Ddd4F16F86A5D51a9386b7B4493Fa'.toLowerCase()]: 'yes',
                 ['0x44Ea84a85616F8e9cD719Fc843DE31D852ad7240'.toLowerCase()]: 'no',
                 pool: '0xed0413d19cdf94759bbe3fe9981c4bd085b430cf'.toLowerCase(),
@@ -156,6 +172,10 @@ export default {
                     'yBlue',
                     'nBlue'
                 ],
+                outcomeIcons: [
+                    'https://cloudflare-ipfs.com/ipfs/QmUA2ExuPSRPHepiRqe3VH4oZKHkw6URoNtFB7UqHN8Vgh',
+                    'https://cloudflare-ipfs.com/ipfs/QmZfAjSUevTSJe5Lqg22vx4zAPGrkafDKz33LJG2GWoAqG',
+                ],
                 ['0xf732ee9ccbf0df22f53fbdd9ec88d62df298fbf8'.toLowerCase()]: 'yes',
                 ['0x542439Eca879E52E03E0d6E87bcdCA165634245D'.toLowerCase()]: 'no',
                 pool: '0x68c74e157f35a3e40f1b02bba3e6e3827d534059'.toLowerCase(),
@@ -184,6 +204,10 @@ export default {
                 outcomeSymbols: [
                     'yINAUG',
                     'nINAUG'
+                ],
+                outcomeIcons: [
+                    'https://cloudflare-ipfs.com/ipfs/Qmc14RQHBa9zezBYERJqMDAknkfmC14VN8coPz9KYiMKMU',
+                    'https://cloudflare-ipfs.com/ipfs/QmPPHjD2wYJzs46kfYrGFsELLj2a2NQjiKWtoHTs1yVvfF',
                 ],
                 ['0x934E03e671E09528A52cb3373dc7Bb7CA475b924'.toLowerCase()]: 'yes',
                 ['0x55b2969a6D832c6091Ba1AF4ed6d0E6E7c2C0d90'.toLowerCase()]: 'no',
@@ -217,6 +241,10 @@ export default {
                     'yBILLS',
                     'nBILLS'
                 ],
+                outcomeIcons: [
+                    'https://cloudflare-ipfs.com/ipfs/QmbEDv7Jy6Aouj5jFJU88uocQYQMtSVgeUbaPSULGMuaKX',
+                    'https://cloudflare-ipfs.com/ipfs/QmbEDv7Jy6Aouj5jFJU88uocQYQMtSVgeUbaPSULGMuaKX',
+                ],
                 ["0x7d1d38ef81EBDFc0EEE7b987cE569563C3C2Fee0".toLowerCase()]: 'yes',
                 ["0x6E93403916A0cf7b51908da63eE60753E389Bd0A".toLowerCase()]: 'no',
                 pool: "0xc7d919fe3418abad0979569041bed141726e9b86".toLowerCase(),
@@ -246,6 +274,10 @@ export default {
                 outcomeSymbols: [
                     'yBUCCS',
                     'nBUCCS'
+                ],
+                outcomeIcons: [
+                    'https://cloudflare-ipfs.com/ipfs/QmQVw7Mb9X6NvThWfgSVncwGh53vZvnBNLZzWHMufjFqdD',
+                    'https://cloudflare-ipfs.com/ipfs/QmXobRt9JNPiZmNw8fy5f1PUyTWkVrthMmEz7aRwq9ji3Q',
                 ],
                 ["0xD12653380cb0d88ede6Cd8129Ed56FAbCc21928D".toLowerCase()]: 'yes',
                 ["0x15D4abb1c530A45cFbdDd1a595E7a9d6304f84Cb".toLowerCase()]: 'no',

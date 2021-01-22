@@ -438,6 +438,9 @@ export default function Trading({
         updateMarket,
         claimableTokens,
         claim,
+        tokenSymbols,
+        tokenIcons,
+        hasWinningTokens
     } = useContext(TradingContext);
 
     const history = useHistory();
@@ -1336,29 +1339,74 @@ export default function Trading({
                                                 ${noPrice}
                                             </Typography>
                                         </div>
-                                        {(!!claimableTokens) && (
-                                            <div>
 
-
-                                                {claimableTokens.map((claimableToken, index) => (
-
-
-
-                                                    < StyledButton
-                                                        variant="contained"
-                                                        onClick={() =>
-                                                            claim(
-                                                                claimableToken
-                                                            )
-                                                        }
-                                                    >claim</StyledButton>))}
-                                            </div>)}
                                     </div>
 
 
                                 ) : (
                                     ''
                                 )}
+                            {(!!claimableTokens && !!hasWinningTokens) && (
+                                <div
+                                    className={`holding-status ${isContrast ? 'box-dark' : 'box-light'
+                                        }`}
+                                >
+                                    <div className="flex-item">
+                                        <Typography
+                                            variant="h6"
+                                            fontWeight="fontWeightBold"
+                                            padding="0px"
+                                        >
+                                            Finalized Markets
+                                                 </Typography>
+
+                                    </div>
+                                    {claimableTokens.map((claimableToken, index) => (
+                                        <div>
+                                            <div className="flex-item last">
+                                                <div className="flex-item">
+                                                    <img
+                                                        src={tokenIcons[claimableToken]}
+                                                        display="inline"
+                                                        alt="no-icon"
+                                                    />
+                                                    <div>
+                                                        <Typography>
+                                                            {balances[claimableToken]}{' '}
+                                                            {tokenSymbols[claimableToken]}
+                                                        </Typography>
+                                                        {window.ethereum && (
+                                                            <Link
+                                                                className="holding_num"
+                                                                onClick={() =>
+                                                                    addTokenToMetamask(
+                                                                        claimableToken
+                                                                    )
+                                                                }
+                                                                component="button"
+                                                                variant="body2"
+                                                            >
+                                                                Show in wallet
+                                                            </Link>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                < StyledButton
+                                                    variant="contained"
+                                                    onClick={() =>
+                                                        claim(
+                                                            claimableToken
+                                                        )
+                                                    }
+                                                >REDEEM DAI
+                                                    </StyledButton>
+                                            </div>
+
+                                        </div>
+                                    )
+                                    )
+                                    }
+                                </div>)}
                         </Grid>
                     )}
 

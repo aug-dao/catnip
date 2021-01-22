@@ -5,7 +5,9 @@ export const NETWORK = addresses.network; // set NETWORK as "ganache" or "kovan"
 const isKovanNetwork = NETWORK === "kovan";
 // if network is ganache, run truffle migrate --develop and disable metamask
 // if network is kovan, enable metamask, set to kovan network and open account with kovan eth
-export const TOKEN_MULTIPLE = isKovanNetwork ? new BN(100) : new BN(1000);
+// export const TOKEN_MULTIPLE = isKovanNetwork ? new BN(100) : new BN(1000);
+//the updated augur contracts on kovan has numticks = 1000 as well
+export const TOKEN_MULTIPLE = new BN(1000);
 export const DAI_CONTRACT_ADDRESS = addresses[NETWORK].dai;
 export const MULTICALL_CONTRACT_ADDRESS = addresses[NETWORK].multicall;
 export const SHARETOKEN_ADDRESS = addresses[NETWORK].shareToken;

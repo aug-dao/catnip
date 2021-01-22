@@ -91,7 +91,11 @@ export const TradingProvider = ({ children }) => {
     const [balances, setBalances] = useState({});
     const [claimableTokens, setClaimableTokens] = useState([]);
     const [displayBalances, setDisplayBalances] = useState({});
+    const [tokenSymbols, setTokenSymbols] = useState({});
+    const [tokenIcons, setTokenIcons] = useState({});
     const [allowances, setAllowances] = useState({});
+
+    const [hasWinningTokens, setHasWinningTokens] = useState(false);
 
     const [isSwapDisabled, setSwapDisabled] = useState(false);
 
@@ -635,62 +639,83 @@ export const TradingProvider = ({ children }) => {
     const claimBalances = useCallback(async () => {
         const { erc20, shareToken, marketContract } = contractInstances;
 
-        if (marketContract && account) {
+        if (contractInstances && account) {
             //loop through all the outcome tokens and check if it claimmable 
             //meaning if the market associated with it was finalized and if it is the winning outcome
+            let claimableTokens = [];
+            let balancesOfClaimableTokensForDisplay = {};
+            let tokenSymbols = {};
+            let hasWinningTokens = false;
             for (let i = 0; i < MARKETS.length; i++) {
                 const marketFinalized = await isMarketFinalized(MARKETS[i], marketContract);
                 const marketNumTicks = await getNumTicks(MARKETS[i], marketContract);
-                console.log("marketNumTicks", marketNumTicks);
-                console.log("isMarketFinalized", marketFinalized);
-
-                const outcomeTokens = MARKET_INFO[MARKETS[i]].outcomeTokens;
+                const { outcomeTokens, outcomeSymbols, outcomeIcons } = MARKET_INFO[MARKETS[i]];
                 if (marketFinalized) {
-                    let claimableTokens1 = [];
-                    let balancesOfClaimableTokensForDisplay = {};
-                    for (let i = 0; i < outcomeTokens.length; i++) {
-                        const outcome = await getOutcomeAssocitedWithToken(outcomeTokens[i], erc20, shareToken);
-
-                        console.log("outcome", outcome);
+                    for (let j = 0; j < outcomeTokens.length; j++) {
+                        // const outcome = await getOutcomeAssocitedWithToken(outcomeTokens[j], erc20, shareToken);
+                        erc20.options.address = outcomeTokens[j];
+                        const tokenId = await erc20.methods.tokenId().call();
+                        const outcome = await shareToken.methods.getOutcome(tokenId).call();
                         //if the winning payout numberator for this token is equal to numTicks then provide a claim button
                         //It means that this method does not support a scalar market
-                        let payoutNumerator = await getWinningPayoutNumerator(outcome, MARKETS[i], marketContract);
-                        console.log("payoutNumerator", payoutNumerator);
+                        const payoutNumerator = await getWinningPayoutNumerator(outcome, MARKETS[i], marketContract);
+
+
+                        // console.log("isMarketFinalized", marketFinalized);
+                        // console.log("market", MARKETS[i]);
+                        // console.log("payoutNumerator", payoutNumerator);
+                        // console.log("marketNumTicks", marketNumTicks);
+                        // console.log("outcomeToken", outcomeTokens[j]);
+                        // console.log("outcome", outcome);
                         if (marketNumTicks === payoutNumerator) {
-                            claimableTokens1.push(outcomeTokens[i]);
+                            claimableTokens.push(outcomeTokens[j]);
                             //TODO: make a getBlance method
-                            erc20.options.address = outcomeTokens[i];
+                            erc20.options.address = outcomeTokens[j];
                             var balance = await erc20.methods.balanceOf(account).call();
                             balance = Web3.utils.fromWei(balance);
                             balance = Number(balance);
                             balance = TOKEN_MULTIPLE * balance;
+                            if (balance > 0) {
+                                hasWinningTokens = true;
+                            }
                             balance = balance.toFixed(2);
-                            balancesOfClaimableTokensForDisplay[outcomeTokens[i]] = balance;
 
+                            balancesOfClaimableTokensForDisplay[outcomeTokens[j]] = balance;
+                            tokenSymbols[outcomeTokens[j]] = outcomeSymbols[j];
+                            tokenIcons[outcomeTokens[j]] = outcomeIcons[j];
                         }
 
                     }
-                    console.log("claimbaleTokens", claimableTokens1);
-                    console.log("balancesOfClaimableTokensForDisplay", balancesOfClaimableTokensForDisplay);
-                    setClaimableTokens(claimableTokens1);
-                    setDisplayBalances(balancesOfClaimableTokensForDisplay);
                 }
             }
+            // console.log("claimbaleTokens", claimableTokens);
+            // console.log("balancesOfClaimableTokensForDisplay", balancesOfClaimableTokensForDisplay);
+            setClaimableTokens(claimableTokens);
+            setDisplayBalances(balancesOfClaimableTokensForDisplay);
+            setTokenSymbols(tokenSymbols);
+            setTokenIcons(tokenIcons);
+            setHasWinningTokens(hasWinningTokens);
         }
     }, [contractInstances, account]);
 
+    const getTokenSymbol = useCallback(async (tokenAddress) => {
+        const { erc20 } = contractInstances;
+        erc20.options.address = tokenAddress;
+
+        return await erc20.methods.symbol().call();
+    }, [contractInstances]);
     const claim = useCallback(async (tokenAddress) => {
         const { erc20 } = contractInstances;
-        console.log("in");
+
         if (erc20 && account) {
-            console.log("in");
+
             erc20.options.address = tokenAddress;
             await erc20.methods
                 .claim(account)
                 .send({ from: account })
                 .on("transactionHash", transactionHash => {
                     notification.info({
-                        message: "Approve Pending",
+                        message: "Redeem Pending",
                         description: (
                             <div>
                                 <p>This can take a moment...</p>
@@ -705,7 +730,7 @@ export const TradingProvider = ({ children }) => {
                     notification.destroy();
                     notification.success({
                         duration: 7,
-                        message: "Approve Done"
+                        message: "Redeem Done"
                     });
                 })
                 .on("error", function (error) {
@@ -727,10 +752,11 @@ export const TradingProvider = ({ children }) => {
                         });
                     }
                 });
-
+            updateBalances();
+            claimBalances();
         }
     }, [account,
-        contractInstances,
+        contractInstances, claimBalances, updateBalances
     ]);
 
     const approve = useCallback(async () => {
@@ -1404,6 +1430,9 @@ export const TradingProvider = ({ children }) => {
                 balances: displayBalances,
                 claimableTokens,
                 claim,
+                tokenSymbols,
+                tokenIcons,
+                hasWinningTokens,
                 approveLoading,
                 swapBranch,
                 ...price,
@@ -1414,7 +1443,8 @@ export const TradingProvider = ({ children }) => {
                 approve,
                 swapFee,
                 updateMarket,
-                addTokenToMetamask
+                addTokenToMetamask,
+                getTokenSymbol,
             }}
         >
             {children}
