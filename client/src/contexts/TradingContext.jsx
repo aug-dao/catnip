@@ -3,6 +3,8 @@ import BPoolContractABI from "../contracts/BPool.json";
 import DaiContractABI from "../contracts/Dai.json";
 import ERC20WrapperABI from "../contracts/ERC20Wrapper.json";
 import MultiCallContractABI from "../contracts/Multicall.json";
+import MarketContractABI from "../contracts/Market.json";
+import ShareTokenContractABI from "../contracts/ShareToken.json";
 import { Web3Context } from "./Web3Context";
 import { AppContext } from "./AppContext";
 import {
@@ -10,6 +12,7 @@ import {
     ZRX_MARKET_ADDRESS,
     DAI_CONTRACT_ADDRESS,
     MULTICALL_CONTRACT_ADDRESS,
+    SHARETOKEN_ADDRESS,
     MARKETS,
     DEFAULT_MARKET,
     MARKET_INFO,
@@ -28,7 +31,11 @@ import {
     calcPriceProfitSlippage0xAPI,
     fetchJSON,
     convertDisplayToAmount,
-    setLocalStorage
+    setLocalStorage,
+    isMarketFinalized,
+    getOutcomeAssocitedWithToken,
+    getWinningPayoutNumerator,
+    getNumTicks
 } from "../utils/helpers";
 import { getPoolInfo, getTotalVolumeForThePool } from "../utils/balancer";
 import BN from "bn.js";
@@ -53,7 +60,9 @@ export const TradingProvider = ({ children }) => {
         dai: null,
         erc20: null,
         pool: null,
-        multicall: null
+        multicall: null,
+        marketContract: null,
+        shareToken: null,
     });
     const [hasEnoughBalance, setHasEnoughBalance] = useState(false);
     const [hasEnoughLiquidity, setHasEnoughLiquidity] = useState(true);
@@ -80,6 +89,7 @@ export const TradingProvider = ({ children }) => {
     const [approveLoading, setApproveLoading] = useState(false);
     const [allowanceTarget, setAllowanceTarget] = useState(ALLOWANCE_TARGET);
     const [balances, setBalances] = useState({});
+    const [claimableTokens, setClaimableTokens] = useState([]);
     const [displayBalances, setDisplayBalances] = useState({});
     const [allowances, setAllowances] = useState({});
 
@@ -127,11 +137,20 @@ export const TradingProvider = ({ children }) => {
                 MultiCallContractABI.abi,
                 MULTICALL_CONTRACT_ADDRESS
             );
+            var marketInstance = new web3.eth.Contract(
+                MarketContractABI.abi
+            );
+            var shareTokenInstance = new web3.eth.Contract(
+                ShareTokenContractABI.abi,
+                SHARETOKEN_ADDRESS
+            );
             setContractInstances({
                 dai: daiInstance,
                 erc20: erc20Instance,
                 pool: poolInstance,
-                multicall: multicallInstance
+                multicall: multicallInstance,
+                marketContract: marketInstance,
+                shareToken: shareTokenInstance,
             });
         }
     }, [web3]);
@@ -612,6 +631,107 @@ export const TradingProvider = ({ children }) => {
             });
         }
     }, [market, account, contractInstances]);
+
+    const claimBalances = useCallback(async () => {
+        const { erc20, shareToken, marketContract } = contractInstances;
+
+        if (marketContract && account) {
+            //loop through all the outcome tokens and check if it claimmable 
+            //meaning if the market associated with it was finalized and if it is the winning outcome
+            for (let i = 0; i < MARKETS.length; i++) {
+                const marketFinalized = await isMarketFinalized(MARKETS[i], marketContract);
+                const marketNumTicks = await getNumTicks(MARKETS[i], marketContract);
+                console.log("marketNumTicks", marketNumTicks);
+                console.log("isMarketFinalized", marketFinalized);
+
+                const outcomeTokens = MARKET_INFO[MARKETS[i]].outcomeTokens;
+                if (marketFinalized) {
+                    let claimableTokens1 = [];
+                    let balancesOfClaimableTokensForDisplay = {};
+                    for (let i = 0; i < outcomeTokens.length; i++) {
+                        const outcome = await getOutcomeAssocitedWithToken(outcomeTokens[i], erc20, shareToken);
+
+                        console.log("outcome", outcome);
+                        //if the winning payout numberator for this token is equal to numTicks then provide a claim button
+                        //It means that this method does not support a scalar market
+                        let payoutNumerator = await getWinningPayoutNumerator(outcome, MARKETS[i], marketContract);
+                        console.log("payoutNumerator", payoutNumerator);
+                        if (marketNumTicks === payoutNumerator) {
+                            claimableTokens1.push(outcomeTokens[i]);
+                            //TODO: make a getBlance method
+                            erc20.options.address = outcomeTokens[i];
+                            var balance = await erc20.methods.balanceOf(account).call();
+                            balance = Web3.utils.fromWei(balance);
+                            balance = Number(balance);
+                            balance = TOKEN_MULTIPLE * balance;
+                            balance = balance.toFixed(2);
+                            balancesOfClaimableTokensForDisplay[outcomeTokens[i]] = balance;
+
+                        }
+
+                    }
+                    console.log("claimbaleTokens", claimableTokens1);
+                    console.log("balancesOfClaimableTokensForDisplay", balancesOfClaimableTokensForDisplay);
+                    setClaimableTokens(claimableTokens1);
+                    setDisplayBalances(balancesOfClaimableTokensForDisplay);
+                }
+            }
+        }
+    }, [contractInstances, account]);
+
+    const claim = useCallback(async (tokenAddress) => {
+        const { erc20 } = contractInstances;
+        console.log("in");
+        if (erc20 && account) {
+            console.log("in");
+            erc20.options.address = tokenAddress;
+            await erc20.methods
+                .claim(account)
+                .send({ from: account })
+                .on("transactionHash", transactionHash => {
+                    notification.info({
+                        message: "Approve Pending",
+                        description: (
+                            <div>
+                                <p>This can take a moment...</p>
+                                <EtherscanLink hash={transactionHash} />
+                            </div>
+                        ),
+                        icon: <LoadingOutlined />
+                    });
+                    setApproveLoading(true);
+                })
+                .on("receipt", function () {
+                    notification.destroy();
+                    notification.success({
+                        duration: 7,
+                        message: "Approve Done"
+                    });
+                })
+                .on("error", function (error) {
+                    notification.destroy();
+                    if (
+                        error.message.includes(
+                            "User denied transaction signature"
+                        )
+                    ) {
+                        notification.error({
+                            duration: 7,
+                            message: "Transaction Rejected"
+                        });
+                    } else {
+                        notification.error({
+                            duration: 7,
+                            message:
+                                "There was an error in executing the transaction"
+                        });
+                    }
+                });
+
+        }
+    }, [account,
+        contractInstances,
+    ]);
 
     const approve = useCallback(async () => {
         const { erc20 } = contractInstances;
@@ -1171,7 +1291,9 @@ export const TradingProvider = ({ children }) => {
             calcFromGivenTo();
         }
     }, [calcFromGivenTo, toAmountLoading, fromValueIsExact]);
-
+    useEffect(() => {
+        claimBalances();
+    }, [claimBalances]);
     useEffect(() => {
         updateBalances();
     }, [market, updateBalances]);
@@ -1280,6 +1402,8 @@ export const TradingProvider = ({ children }) => {
                 hasEnoughBalance,
                 hasEnoughLiquidity,
                 balances: displayBalances,
+                claimableTokens,
+                claim,
                 approveLoading,
                 swapBranch,
                 ...price,

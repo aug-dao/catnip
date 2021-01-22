@@ -8,6 +8,7 @@ const isKovanNetwork = NETWORK === "kovan";
 export const TOKEN_MULTIPLE = isKovanNetwork ? new BN(100) : new BN(1000);
 export const DAI_CONTRACT_ADDRESS = addresses[NETWORK].dai;
 export const MULTICALL_CONTRACT_ADDRESS = addresses[NETWORK].multicall;
+export const SHARETOKEN_ADDRESS = addresses[NETWORK].shareToken;
 export const MARKETS = addresses[NETWORK].markets;
 export const MARKET_INFO = addresses[NETWORK].marketInfo;
 export const MAX_UINT256 = new BN(2).pow(new BN(256)).sub(new BN(1));

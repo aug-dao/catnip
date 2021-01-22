@@ -33,6 +33,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { DAI_CONTRACT_ADDRESS, MARKETS, MARKET_INFO } from '../utils/constants';
 import { timeConverter } from '../utils/helpers';
 import { useHistory } from 'react-router-dom';
+import { Button } from 'bootstrap';
 
 const useStyles = makeStyles(theme => ({
     textBox: {
@@ -435,6 +436,8 @@ export default function Trading({
         minAmountReceived,
         impliedOdds,
         updateMarket,
+        claimableTokens,
+        claim,
     } = useContext(TradingContext);
 
     const history = useHistory();
@@ -1107,6 +1110,7 @@ export default function Trading({
                                                     className={
                                                         classes.no_price_impact
                                                     }
+
                                                 >
                                                     ${maxProfit}
                                                 </Typography>
@@ -1311,36 +1315,55 @@ export default function Trading({
                                                     </span>
                                                         {market.info.symbolPostfix}
                                                     </Typography>
-                                                    {window.web3 &&
-                                                        window.web3
-                                                            .currentProvider && (
-                                                            <Link
-                                                                className="holding_num"
-                                                                onClick={() =>
-                                                                    addTokenToMetamask(
-                                                                        market.info
-                                                                            .no
-                                                                    )
-                                                                }
-                                                                component="button"
-                                                                variant="body2"
-                                                            >
-                                                                Show in wallet
-                                                            </Link>
-                                                        )}
+                                                    {window.ethereum && (
+                                                        <Link
+                                                            className="holding_num"
+                                                            onClick={() =>
+                                                                addTokenToMetamask(
+                                                                    market.info
+                                                                        .no
+                                                                )
+                                                            }
+                                                            component="button"
+                                                            variant="body2"
+                                                        >
+                                                            Show in wallet
+                                                        </Link>
+                                                    )}
                                                 </div>
                                             </div>
                                             <Typography variant="body2">
                                                 ${noPrice}
                                             </Typography>
                                         </div>
+                                        {(!!claimableTokens) && (
+                                            <div>
+
+
+                                                {claimableTokens.map((claimableToken, index) => (
+
+
+
+                                                    < StyledButton
+                                                        variant="contained"
+                                                        onClick={() =>
+                                                            claim(
+                                                                claimableToken
+                                                            )
+                                                        }
+                                                    >claim</StyledButton>))}
+                                            </div>)}
                                     </div>
+
+
                                 ) : (
                                     ''
                                 )}
                         </Grid>
                     )}
+
                 </Grid>
+
             </Container>
         </div >
     );

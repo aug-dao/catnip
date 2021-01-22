@@ -234,13 +234,29 @@ export const timeConverter = UNIX_timestamp => {
     return time;
 };
 
-export const getMarketAssociatedWithToken = (tokenAddress, ERC20Wrapper, ShareToken) => {
+export const getTokenIdAssociatedWithToken = async (tokenAddress, ERC20Wrapper) => {
     ERC20Wrapper.options.adddress = tokenAddress;
-    const tokenId = ERC20Wrapper.methods.tokenId().call();
-    return ShareToken.methods.getMarket().call();
+    return ERC20Wrapper.methods.tokenId().call();
+
 };
-export const isMarketFinalized = (marketAddress, Market) => {
+export const getMarketAssociatedWithToken = async (tokenAddress, ERC20Wrapper, ShareToken) => {
+    const tokenId = await getTokenIdAssociatedWithToken(tokenAddress, ERC20Wrapper);
+    return ShareToken.methods.getMarket(tokenId).call();
+};
+export const getOutcomeAssocitedWithToken = async (tokenAddress, ERC20Wrapper, ShareToken) => {
+    const tokenId = await getTokenIdAssociatedWithToken(tokenAddress, ERC20Wrapper);
+    return ShareToken.methods.getOutcome(tokenId).call();
+};
+export const isMarketFinalized = async (marketAddress, Market) => {
     Market.options.address = marketAddress;
-    return Market.methods.isFinalized().call();
+    return await Market.methods.isFinalized().call();
+};
+export const getWinningPayoutNumerator = async (outcome, marketAddress, Market) => {
+    Market.options.address = marketAddress;
+    return await Market.methods.getWinningPayoutNumerator(outcome).call();
+};
+export const getNumTicks = async (marketAddress, Market) => {
+    Market.options.address = marketAddress;
+    return await Market.methods.getNumTicks().call();
 };
 
