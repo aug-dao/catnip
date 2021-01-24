@@ -440,7 +440,8 @@ export default function Trading({
         claim,
         tokenSymbols,
         tokenIcons,
-        hasWinningTokens
+        hasWinningTokens,
+        nonFinalizedMarkets
     } = useContext(TradingContext);
 
     const history = useHistory();
@@ -563,7 +564,7 @@ export default function Trading({
                                                 //The last market is the first to be displayed in the select
                                             }
                                             {
-                                                MARKETS.slice(0).reverse().map((market) => (
+                                                nonFinalizedMarkets.slice(0).reverse().map((market) => (
 
                                                     <MenuItem value={market} >
                                                         {

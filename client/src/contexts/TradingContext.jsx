@@ -92,6 +92,7 @@ export const TradingProvider = ({ children }) => {
     const [claimableTokens, setClaimableTokens] = useState([]);
     const [displayBalances, setDisplayBalances] = useState({});
     const [tokenSymbols, setTokenSymbols] = useState({});
+    const [nonFinalizedMarkets, setNonFinalizedMarkets] = useState(MARKETS);
     const [tokenIcons, setTokenIcons] = useState({});
     const [allowances, setAllowances] = useState({});
 
@@ -646,8 +647,10 @@ export const TradingProvider = ({ children }) => {
             let balancesOfClaimableTokensForDisplay = {};
             let tokenSymbols = {};
             let hasWinningTokens = false;
+            let nonFinalizedMarkets = [];
             for (let i = 0; i < MARKETS.length; i++) {
                 const marketFinalized = await isMarketFinalized(MARKETS[i], marketContract);
+
                 const marketNumTicks = await getNumTicks(MARKETS[i], marketContract);
                 const { outcomeTokens, outcomeSymbols, outcomeIcons } = MARKET_INFO[MARKETS[i]];
                 if (marketFinalized) {
@@ -686,6 +689,8 @@ export const TradingProvider = ({ children }) => {
                         }
 
                     }
+                } else {
+                    nonFinalizedMarkets.push(MARKETS[i]);
                 }
             }
             // console.log("claimbaleTokens", claimableTokens);
@@ -695,6 +700,7 @@ export const TradingProvider = ({ children }) => {
             setTokenSymbols(tokenSymbols);
             setTokenIcons(tokenIcons);
             setHasWinningTokens(hasWinningTokens);
+            setNonFinalizedMarkets(nonFinalizedMarkets);
         }
     }, [contractInstances, account]);
 
@@ -1430,6 +1436,7 @@ export const TradingProvider = ({ children }) => {
                 balances: displayBalances,
                 claimableTokens,
                 claim,
+                nonFinalizedMarkets,
                 tokenSymbols,
                 tokenIcons,
                 hasWinningTokens,
