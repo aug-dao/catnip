@@ -640,7 +640,7 @@ export const TradingProvider = ({ children }) => {
     const claimBalances = useCallback(async () => {
         const { erc20, shareToken, marketContract } = contractInstances;
 
-        if (contractInstances && account) {
+        if (erc20 && shareToken && marketContract) {
             //loop through all the outcome tokens and check if it claimmable 
             //meaning if the market associated with it was finalized and if it is the winning outcome
             let claimableTokens = [];
@@ -654,40 +654,42 @@ export const TradingProvider = ({ children }) => {
                 const marketNumTicks = await getNumTicks(MARKETS[i], marketContract);
                 const { outcomeTokens, outcomeSymbols, outcomeIcons } = MARKET_INFO[MARKETS[i]];
                 if (marketFinalized) {
-                    for (let j = 0; j < outcomeTokens.length; j++) {
-                        // const outcome = await getOutcomeAssocitedWithToken(outcomeTokens[j], erc20, shareToken);
-                        erc20.options.address = outcomeTokens[j];
-                        const tokenId = await erc20.methods.tokenId().call();
-                        const outcome = await shareToken.methods.getOutcome(tokenId).call();
-                        //if the winning payout numberator for this token is equal to numTicks then provide a claim button
-                        //It means that this method does not support a scalar market
-                        const payoutNumerator = await getWinningPayoutNumerator(outcome, MARKETS[i], marketContract);
-
-
-                        // console.log("isMarketFinalized", marketFinalized);
-                        // console.log("market", MARKETS[i]);
-                        // console.log("payoutNumerator", payoutNumerator);
-                        // console.log("marketNumTicks", marketNumTicks);
-                        // console.log("outcomeToken", outcomeTokens[j]);
-                        // console.log("outcome", outcome);
-                        if (marketNumTicks === payoutNumerator) {
-                            claimableTokens.push(outcomeTokens[j]);
-                            //TODO: make a getBlance method
+                    if (account) {
+                        for (let j = 0; j < outcomeTokens.length; j++) {
+                            // const outcome = await getOutcomeAssocitedWithToken(outcomeTokens[j], erc20, shareToken);
                             erc20.options.address = outcomeTokens[j];
-                            var balance = await erc20.methods.balanceOf(account).call();
-                            balance = Web3.utils.fromWei(balance);
-                            balance = Number(balance);
-                            balance = TOKEN_MULTIPLE * balance;
-                            if (balance > 0) {
-                                hasWinningTokens = true;
+                            const tokenId = await erc20.methods.tokenId().call();
+                            const outcome = await shareToken.methods.getOutcome(tokenId).call();
+                            //if the winning payout numberator for this token is equal to numTicks then provide a claim button
+                            //It means that this method does not support a scalar market
+                            const payoutNumerator = await getWinningPayoutNumerator(outcome, MARKETS[i], marketContract);
+
+
+                            // console.log("isMarketFinalized", marketFinalized);
+                            // console.log("market", MARKETS[i]);
+                            // console.log("payoutNumerator", payoutNumerator);
+                            // console.log("marketNumTicks", marketNumTicks);
+                            // console.log("outcomeToken", outcomeTokens[j]);
+                            // console.log("outcome", outcome);
+                            if (marketNumTicks === payoutNumerator) {
+                                claimableTokens.push(outcomeTokens[j]);
+                                //TODO: make a getBlance method
+                                erc20.options.address = outcomeTokens[j];
+                                var balance = await erc20.methods.balanceOf(account).call();
+                                balance = Web3.utils.fromWei(balance);
+                                balance = Number(balance);
+                                balance = TOKEN_MULTIPLE * balance;
+                                if (balance > 0) {
+                                    hasWinningTokens = true;
+                                }
+                                balance = balance.toFixed(2);
+
+                                balancesOfClaimableTokensForDisplay[outcomeTokens[j]] = balance;
+                                tokenSymbols[outcomeTokens[j]] = outcomeSymbols[j];
+                                tokenIcons[outcomeTokens[j]] = outcomeIcons[j];
                             }
-                            balance = balance.toFixed(2);
 
-                            balancesOfClaimableTokensForDisplay[outcomeTokens[j]] = balance;
-                            tokenSymbols[outcomeTokens[j]] = outcomeSymbols[j];
-                            tokenIcons[outcomeTokens[j]] = outcomeIcons[j];
                         }
-
                     }
                 } else {
                     nonFinalizedMarkets.push(MARKETS[i]);
