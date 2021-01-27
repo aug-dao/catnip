@@ -720,32 +720,20 @@ export default function Trading({
                                                 }}
                                                 IconComponent={CustomExpandMore}
                                             >
-                                                <MenuItem
-                                                    value={market.info.yes}
-                                                    className={
-                                                        classes.menu_item
-                                                    }
-                                                >
-                                                    <img
-                                                        src={
-                                                            market.info.yesIcon
+                                                {market.info.outcomeTokens.map((outcomeToken, index) => (
+                                                    <MenuItem
+                                                        value={outcomeToken}
+                                                        className={
+                                                            classes.menu_item
                                                         }
-                                                        alt=""
-                                                    />{' '}
-                                                    <span>YES</span>
-                                                </MenuItem>
-                                                <MenuItem
-                                                    value={market.info.no}
-                                                    className={
-                                                        classes.menu_item
-                                                    }
-                                                >
-                                                    <img
-                                                        src={market.info.noIcon}
-                                                        alt=""
-                                                    />{' '}
-                                                    <span>NO</span>
-                                                </MenuItem>
+                                                    >
+                                                        <img
+                                                            src={market.info.outcomeIcons[index]}
+                                                            alt=""
+                                                        />{' '}
+                                                        <span>{market.info[outcomeToken.toLowerCase()]}</span>
+                                                    </MenuItem>
+                                                ))}
                                                 <MenuItem
                                                     value={DAI_CONTRACT_ADDRESS}
                                                     className={
@@ -769,32 +757,20 @@ export default function Trading({
                                                     }}
                                                     IconComponent={CustomExpandMore}
                                                 >
-                                                    <MenuItem
-                                                        value={market.info.yes}
-                                                        className={
-                                                            classes.menu_item
-                                                        }
-                                                    >
-                                                        <img
-                                                            src={
-                                                                market.info.yesIcon
+                                                    {market.info.outcomeTokens.map((outcomeToken, index) => (
+                                                        <MenuItem
+                                                            value={outcomeToken}
+                                                            className={
+                                                                classes.menu_item
                                                             }
-                                                            alt=""
-                                                        />{' '}
-                                                        <span>YES</span>
-                                                    </MenuItem>
-                                                    <MenuItem
-                                                        value={market.info.no}
-                                                        className={
-                                                            classes.menu_item
-                                                        }
-                                                    >
-                                                        <img
-                                                            src={market.info.noIcon}
-                                                            alt=""
-                                                        />{' '}
-                                                        <span>NO</span>
-                                                    </MenuItem>
+                                                        >
+                                                            <img
+                                                                src={market.info.outcomeIcons[index]}
+                                                                alt=""
+                                                            />{' '}
+                                                            <span>{market.info[outcomeToken.toLowerCase()]}</span>
+                                                        </MenuItem>
+                                                    ))}
                                                     <MenuItem
                                                         value={DAI_CONTRACT_ADDRESS}
                                                         className={
@@ -865,32 +841,20 @@ export default function Trading({
                                                 }}
                                                 IconComponent={CustomExpandMore}
                                             >
-                                                <MenuItem
-                                                    value={market.info.yes}
-                                                    className={
-                                                        classes.menu_item
-                                                    }
-                                                >
-                                                    <img
-                                                        src={
-                                                            market.info.yesIcon
+                                                {market.info.outcomeTokens.map((outcomeToken, index) => (
+                                                    <MenuItem
+                                                        value={outcomeToken}
+                                                        className={
+                                                            classes.menu_item
                                                         }
-                                                        alt=""
-                                                    />{' '}
-                                                    <span>YES</span>
-                                                </MenuItem>
-                                                <MenuItem
-                                                    value={market.info.no}
-                                                    className={
-                                                        classes.menu_item
-                                                    }
-                                                >
-                                                    <img
-                                                        src={market.info.noIcon}
-                                                        alt=""
-                                                    />{' '}
-                                                    <span>NO</span>
-                                                </MenuItem>
+                                                    >
+                                                        <img
+                                                            src={market.info.outcomeIcons[index]}
+                                                            alt=""
+                                                        />{' '}
+                                                        <span>{market.info[outcomeToken.toLowerCase()]}</span>
+                                                    </MenuItem>
+                                                ))}
                                                 <MenuItem
                                                     value={DAI_CONTRACT_ADDRESS}
                                                     className={
@@ -914,32 +878,20 @@ export default function Trading({
                                                     }}
                                                     IconComponent={CustomExpandMore}
                                                 >
-                                                    <MenuItem
-                                                        value={market.info.yes}
-                                                        className={
-                                                            classes.menu_item
-                                                        }
-                                                    >
-                                                        <img
-                                                            src={
-                                                                market.info.yesIcon
+                                                    {market.info.outcomeTokens.map((outcomeToken, index) => (
+                                                        <MenuItem
+                                                            value={outcomeToken}
+                                                            className={
+                                                                classes.menu_item
                                                             }
-                                                            alt=""
-                                                        />{' '}
-                                                        <span>YES</span>
-                                                    </MenuItem>
-                                                    <MenuItem
-                                                        value={market.info.no}
-                                                        className={
-                                                            classes.menu_item
-                                                        }
-                                                    >
-                                                        <img
-                                                            src={market.info.noIcon}
-                                                            alt=""
-                                                        />{' '}
-                                                        <span>NO</span>
-                                                    </MenuItem>
+                                                        >
+                                                            <img
+                                                                src={market.info.outcomeIcons[index]}
+                                                                alt=""
+                                                            />{' '}
+                                                            <span>{market.info[outcomeToken.toLowerCase()]}</span>
+                                                        </MenuItem>
+                                                    ))}
                                                     <MenuItem
                                                         value={DAI_CONTRACT_ADDRESS}
                                                         className={
@@ -986,10 +938,7 @@ export default function Trading({
                                             variant="body2"
                                             padding="20px"
                                         >
-                                            {`Implied Odds for ${toToken === market.info.yes
-                                                ? 'YES'
-                                                : 'NO'
-                                                }:`}
+                                            {`Implied Odds for ${market.info[toToken]}`}
                                         </Typography>
 
                                         <Typography
@@ -1083,10 +1032,7 @@ export default function Trading({
                                                                 gain in DAI if
                                                                 the market
                                                                 resolves to{' '}
-                                                                {toToken ===
-                                                                    market.info.yes
-                                                                    ? 'YES'
-                                                                    : 'NO'}
+                                                                {market.info[toToken]}
                                                                 . Winning shares
                                                                 pay out one DAI
                                                                 each, and losing

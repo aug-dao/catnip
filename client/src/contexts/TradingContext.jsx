@@ -482,26 +482,25 @@ export const TradingProvider = ({ children }) => {
                     market.address === ZRX_MARKET_ADDRESS
                         ? allowanceTarget
                         : info.pool;
+                let allowances = {};
+                for (let i = 0; i < info.outcomeTokens; i++) {
+                    erc20.options.address = info.outcomeTokens[i];
+                    const allowance = new BN(
+                        await erc20.methods.allowance(account, spender).call()
+                    );
 
-                erc20.options.address = info.yes;
-                const yesAllowance = new BN(
-                    await erc20.methods.allowance(account, spender).call()
-                );
+                    allowances[info.outcomeTokens[i]] = allowance;
 
-                erc20.options.address = info.no;
-                const noAllowance = new BN(
-                    await erc20.methods.allowance(account, spender).call()
-                );
+                }
+                erc20.options.address = DAI_CONTRACT_ADDRESS;
 
                 const daiAllowance = new BN(
                     await dai.methods.allowance(account, spender).call()
                 );
 
-                setAllowances({
-                    [info.yes]: yesAllowance,
-                    [info.no]: noAllowance,
-                    [DAI_CONTRACT_ADDRESS]: daiAllowance
-                });
+                allowances[DAI_CONTRACT_ADDRESS] = daiAllowance;
+
+                setAllowances(allowances);
             } catch (balancesError) {
                 console.error({ balancesError });
             }
@@ -510,6 +509,7 @@ export const TradingProvider = ({ children }) => {
 
     // This function updates trader balances initially and after sale
     // Also resets price per share, max profit and price impact to 0
+    //TODO: pricing for categorical markets
     const updateBalances = useCallback(async () => {
         const { dai, pool, erc20 } = contractInstances;
         const { info } = market;

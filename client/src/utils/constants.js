@@ -26,4 +26,4 @@ export const ALLOWANCE_TARGET = "0xf740b67da229f2f10bcbd38a7979992fcc71b8eb".toL
 export const LS_MARKET = "market-address";
 export const LS_FROM_TOKEN = "from-token";
 export const LS_TO_TOKEN = "to-token";
-export const DEFAULT_MARKET = MARKETS[MARKETS.length - 1]; /**The last one to be added**/ 
+export const DEFAULT_MARKET = MARKETS[0]; /**The first one (do not make a finalized market to be the default one)**/ 
