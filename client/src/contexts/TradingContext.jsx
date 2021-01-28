@@ -591,7 +591,8 @@ export const TradingProvider = ({ children }) => {
 
             setPrices(prices);
             setBalances(balances);
-            setDisplayBalances(displayBalances);
+            //We need to preserve the last display balances becuase the same state is updated when chaecking claimable tokens
+            setDisplayBalances(_prev => Object.assign(_prev, displayBalances));
             setPrice(_init => ({
                 ..._init,
                 totalSwapVolume: totalSwapVolume,
@@ -660,7 +661,8 @@ export const TradingProvider = ({ children }) => {
             // console.log("claimbaleTokens", claimableTokens);
             // console.log("balancesOfClaimableTokensForDisplay", balancesOfClaimableTokensForDisplay);
             setClaimableTokens(claimableTokens);
-            setDisplayBalances(balancesOfClaimableTokensForDisplay);
+            //We need to preserve the last display balances becuase the same state is updated by updateBalances
+            setDisplayBalances(_prev => Object.assign(_prev, displayBalances));
             setTokenSymbols(tokenSymbols);
             setTokenIcons(tokenIcons);
             setHasWinningTokens(hasWinningTokens);
