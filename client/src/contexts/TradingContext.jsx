@@ -370,25 +370,7 @@ export const TradingProvider = ({ children }) => {
             info &&
             fromAmountDisplay
         ) {
-            // console.log({
-            //     fromToken:
-            //         info.yes === fromToken
-            //             ? "yes"
-            //             : info.no === fromToken
-            //             ? "no"
-            //             : DAI_CONTRACT_ADDRESS === fromToken
-            //             ? "dai"
-            //             : "unknown",
-            //     toToken:
-            //         info.yes === toToken
-            //             ? "yes"
-            //             : info.no === toToken
-            //             ? "no"
-            //             : DAI_CONTRACT_ADDRESS === toToken
-            //             ? "dai"
-            //             : "unknown",
-            //     fromAmount: fromAmountDisplay
-            // });
+
             const fromAmount = convertDisplayToAmount(
                 fromAmountDisplay,
                 fromToken
@@ -528,6 +510,7 @@ export const TradingProvider = ({ children }) => {
             const outcomeTokens = info.outcomeTokens;
 
             for (let i = 0; i < outcomeTokens.length; i++) {
+                var price;
                 if (market.address === ZRX_MARKET_ADDRESS) {
                     let params = {
                         sellToken: outcomeTokens[i],
@@ -538,14 +521,13 @@ export const TradingProvider = ({ children }) => {
                         ),
                     };
                     const pricing = await fetchJSON(ZRX_PRICE_URL, params);
-                    var price = parseFloat(pricing.price);
+                    price = parseFloat(pricing.price);
                     price = price.toFixed(2);
                     prices[outcomeTokens[i]] = price;
                 }
                 else {
-
                     try {
-                        var price = await pool.methods
+                        price = await pool.methods
                             .getSpotPrice(DAI_CONTRACT_ADDRESS, outcomeTokens[i])
                             .call();
                         price = Web3.utils.fromWei(price);
@@ -587,7 +569,7 @@ export const TradingProvider = ({ children }) => {
             daiBalance = Number(daiBalance);
             daiBalance = daiBalance.toFixed(2);
 
-            displayBalances[DAI_CONTRACT_ADDRESS] = balance;
+            displayBalances[DAI_CONTRACT_ADDRESS] = daiBalance;
 
             setPrices(prices);
             setBalances(balances);
@@ -1335,13 +1317,7 @@ export const TradingProvider = ({ children }) => {
             tokenSymbol = await erc20.methods.symbol().call();
             decimals = await erc20.methods.decimals().call();
 
-            if (tokenAddress === info.yes) {
-                tokenImage = info.yesIcon;
-            } else if (tokenAddress === info.no) {
-                tokenImage = info.noIcon;
-            } else {
-                throw new Error("Cannot add this token to Metamask");
-            }
+            tokenImage = info.outcomeIcons[info.outcomeTokens.indexOf(tokenAddress)];
             const provider = window.ethereum;
             try {
                 provider.sendAsync(

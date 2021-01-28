@@ -301,27 +301,20 @@ export default {
                 endTime: "1611619200",
             },
             ['0x948b73ED9F9b22D25941D4A07A2ab6dDfC678C06'.toLowerCase()]: {
-                yes: "0xd4cabf0b165cbf076058f55766c7805bb5169dcf".toLowerCase(),
-                no: "0xffc16ab7d366273466c705f03cfeaca8dd964f89".toLowerCase(),
                 outcomeTokens: ['0xd4cabf0b165cbf076058f55766c7805bb5169dcf'.toLowerCase(),
                 '0xffc16ab7d366273466c705f03cfeaca8dd964f89'.toLowerCase()
                 ],
                 outcomeSymbols: [
                     'Bucs',
-                    'Cheifs'
+                    'Chiefs'
                 ],
                 outcomeIcons: [
                     'https://cloudflare-ipfs.com/ipfs/QmQVw7Mb9X6NvThWfgSVncwGh53vZvnBNLZzWHMufjFqdD',
                     'https://cloudflare-ipfs.com/ipfs/QmcrygUUrksinSjewEvTvAE5yZtUCpAPVRjb46HwcjNx5s',
                 ],
                 ["0xd4cabf0b165cbf076058f55766c7805bb5169dcf".toLowerCase()]: 'Bucs',
-                ["0xffc16ab7d366273466c705f03cfeaca8dd964f89".toLowerCase()]: 'Cheifs',
+                ["0xffc16ab7d366273466c705f03cfeaca8dd964f89".toLowerCase()]: 'Chiefs',
                 pool: "0xd4f73d51098df4dbe841cbbe3fa77d735422f656".toLowerCase(),
-                symbolPostfix: 'SB',
-                yesIcon:
-                    'https://cloudflare-ipfs.com/ipfs/QmQVw7Mb9X6NvThWfgSVncwGh53vZvnBNLZzWHMufjFqdD',
-                noIcon:
-                    'https://cloudflare-ipfs.com/ipfs/QmcrygUUrksinSjewEvTvAE5yZtUCpAPVRjb46HwcjNx5s',
                 marketQuestion:
                     'Which NFL Team Will Win the 2021 Super Bowl?',
                 extraInfo: {

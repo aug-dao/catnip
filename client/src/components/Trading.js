@@ -926,8 +926,10 @@ export default function Trading({
                                     </Typography>
                                 </div>
                             )}
-                            {impliedOdds > 0 &&
-                                [market.info.yes, market.info.no].indexOf(
+
+                            { /**impliedOdds > 0 and fromToken is one of the outcome tokens**/
+                                impliedOdds > 0 &&
+                                market.info.outcomeTokens.indexOf(
                                     fromToken
                                 ) !== -1 && (
                                     <div
@@ -1218,14 +1220,11 @@ export default function Trading({
                                                     <img
                                                         src={market.info.outcomeIcons[index]}
                                                         display="inline"
-                                                        alt="yes-icon"
+                                                        alt={"outcome-icon-number: " + index}
                                                     />
                                                     <div>
                                                         <Typography>
                                                             {balances[outcomeToken]}{' '}
-                                                            {/* <span className="yes">
-                                                            y
-                                                    </span> */}
                                                             {market.info.outcomeSymbols[index]}
                                                         </Typography>
                                                         {window.ethereum && (
