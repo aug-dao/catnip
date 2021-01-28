@@ -426,8 +426,6 @@ export default function Trading({
         reversePair,
         getMax,
         handleChange,
-        yesPrice,
-        noPrice,
         pricePerShare,
         swapBranch,
         priceImpact,
@@ -436,6 +434,7 @@ export default function Trading({
         minAmountReceived,
         impliedOdds,
         updateMarket,
+        prices,
         claimableTokens,
         claim,
         tokenSymbols,
@@ -1186,7 +1185,7 @@ export default function Trading({
                             </Paper>
                         )}
                     </Grid>
-                    {(!!yesPrice || !!noPrice) && (
+                    {(!!prices[market.info.outcomeTokens[0]] || !!prices[market.info.outcomeTokens[1]]) && (
                         <Grid
                             item
                             xs={12}
@@ -1194,8 +1193,8 @@ export default function Trading({
                             md={4}
                             style={{ margin: '0 auto' }}
                         >
-                            {balances[market.info.yes] !== 0 ||
-                                balances[market.info.no] !== 0 ? (
+                            {balances[market.info.outcomeTokens[0]] !== 0 ||
+                                balances[market.info.outcomeTokens[1]] !== 0 ? (
                                     <div
                                         className={`holding-status ${isContrast ? 'box-dark' : 'box-light'
                                             }`}
@@ -1212,84 +1211,50 @@ export default function Trading({
                                                 Current Price
                                         </Typography>
                                         </div>
-                                        <div className="flex-item">
+                                        {}
+                                        {market.info.outcomeTokens.map((outcomeToken, index) => (
                                             <div className="flex-item">
-                                                <img
-                                                    src={market.info.yesIcon}
-                                                    display="inline"
-                                                    alt="yes-icon"
-                                                />
-                                                <div>
-                                                    <Typography>
-                                                        {balances[market.info.yes]}{' '}
-                                                        <span className="yes">
+                                                <div className="flex-item">
+                                                    <img
+                                                        src={market.info.outcomeIcons[index]}
+                                                        display="inline"
+                                                        alt="yes-icon"
+                                                    />
+                                                    <div>
+                                                        <Typography>
+                                                            {balances[outcomeToken]}{' '}
+                                                            {/* <span className="yes">
                                                             y
-                                                    </span>
-                                                        {market.info.symbolPostfix}
-                                                    </Typography>
-                                                    {window.ethereum && (
-                                                        <Link
-                                                            className="holding_num"
-                                                            onClick={() =>
-                                                                addTokenToMetamask(
-                                                                    market.info.yes
-                                                                )
-                                                            }
-                                                            component="button"
-                                                            variant="body2"
-                                                        >
-                                                            Show in wallet
-                                                        </Link>
-                                                    )}
+                                                    </span> */}
+                                                            {market.info.outcomeSymbols[index]}
+                                                        </Typography>
+                                                        {window.ethereum && (
+                                                            <Link
+                                                                className="holding_num"
+                                                                onClick={() =>
+                                                                    addTokenToMetamask(
+                                                                        outcomeToken
+                                                                    )
+                                                                }
+                                                                component="button"
+                                                                variant="body2"
+                                                            >
+                                                                Show in wallet
+                                                            </Link>
+                                                        )}
+                                                    </div>
                                                 </div>
+                                                <Typography
+                                                    variant="body2"
+                                                    padding="20px"
+                                                >
+                                                    ${prices[outcomeToken]}
+                                                </Typography>
                                             </div>
-                                            <Typography
-                                                variant="body2"
-                                                padding="20px"
-                                            >
-                                                ${yesPrice}
-                                            </Typography>
-                                        </div>
-                                        <div className="flex-item last">
-                                            <div className="flex-item">
-                                                <img
-                                                    src={market.info.noIcon}
-                                                    display="inline"
-                                                    alt="no-icon"
-                                                />
-                                                <div>
-                                                    <Typography>
-                                                        {balances[market.info.no]}{' '}
-                                                        <span className="no">
-                                                            n
-                                                    </span>
-                                                        {market.info.symbolPostfix}
-                                                    </Typography>
-                                                    {window.ethereum && (
-                                                        <Link
-                                                            className="holding_num"
-                                                            onClick={() =>
-                                                                addTokenToMetamask(
-                                                                    market.info
-                                                                        .no
-                                                                )
-                                                            }
-                                                            component="button"
-                                                            variant="body2"
-                                                        >
-                                                            Show in wallet
-                                                        </Link>
-                                                    )}
-                                                </div>
-                                            </div>
-                                            <Typography variant="body2">
-                                                ${noPrice}
-                                            </Typography>
-                                        </div>
+
+                                        ))}
 
                                     </div>
-
-
                                 ) : (
                                     ''
                                 )}

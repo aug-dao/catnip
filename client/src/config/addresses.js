@@ -126,7 +126,8 @@ export default {
             '0x6e6ffb10179febf29b0223d22793d1c1d8a8f541'.toLowerCase(),
             '0x0946A3Eab3d638c606459b0A9F1E76EB5324985F'.toLowerCase(),
             '0x827f9A41cA4f4C6aD8098f18a045c8115d4D2749'.toLowerCase(),
-            '0xc8EfC74f5b5742E4d1c15ACa63684116EDe96111'.toLowerCase()
+            '0xc8EfC74f5b5742E4d1c15ACa63684116EDe96111'.toLowerCase(),
+            '0x948b73ED9F9b22D25941D4A07A2ab6dDfC678C06'.toLowerCase()
         ],
         marketInfo: {
             ['0x1ebb89156091eb0d59603c18379c03a5c84d7355'.toLowerCase()]: {
@@ -298,7 +299,41 @@ export default {
                 marketQuestion:
                     'Will the Tampa Bay Buccaneers Win the 2021 NFC Championship Game?',
                 endTime: "1611619200",
-            }
+            },
+            ['0x948b73ED9F9b22D25941D4A07A2ab6dDfC678C06'.toLowerCase()]: {
+                yes: "0xd4cabf0b165cbf076058f55766c7805bb5169dcf".toLowerCase(),
+                no: "0xffc16ab7d366273466c705f03cfeaca8dd964f89".toLowerCase(),
+                outcomeTokens: ['0xd4cabf0b165cbf076058f55766c7805bb5169dcf'.toLowerCase(),
+                '0xffc16ab7d366273466c705f03cfeaca8dd964f89'.toLowerCase()
+                ],
+                outcomeSymbols: [
+                    'Bucs',
+                    'Cheifs'
+                ],
+                outcomeIcons: [
+                    'https://cloudflare-ipfs.com/ipfs/QmQVw7Mb9X6NvThWfgSVncwGh53vZvnBNLZzWHMufjFqdD',
+                    'https://cloudflare-ipfs.com/ipfs/QmcrygUUrksinSjewEvTvAE5yZtUCpAPVRjb46HwcjNx5s',
+                ],
+                ["0xd4cabf0b165cbf076058f55766c7805bb5169dcf".toLowerCase()]: 'Bucs',
+                ["0xffc16ab7d366273466c705f03cfeaca8dd964f89".toLowerCase()]: 'Cheifs',
+                pool: "0xd4f73d51098df4dbe841cbbe3fa77d735422f656".toLowerCase(),
+                symbolPostfix: 'SB',
+                yesIcon:
+                    'https://cloudflare-ipfs.com/ipfs/QmQVw7Mb9X6NvThWfgSVncwGh53vZvnBNLZzWHMufjFqdD',
+                noIcon:
+                    'https://cloudflare-ipfs.com/ipfs/QmcrygUUrksinSjewEvTvAE5yZtUCpAPVRjb46HwcjNx5s',
+                marketQuestion:
+                    'Which NFL Team Will Win the 2021 Super Bowl?',
+                extraInfo: {
+                    categories: ["Sports", "American Football", "NFL"],
+                    description:
+                        'Which NFL Team Will Win the 2021 Super Bowl?',
+                    longDescription:
+                        "If the game in question has not taken place by market expiration time or fewer than 55 minutes of game time have elapsed, then the market shall resolve to Invalid.  If the game is suspended after at least 55 minutes of play and not resumed by market expiration time, then the score when the game is halted shall determine the market outcome. The market shall resolve to whichever team has a higher score at that time or to Invalid if the score is tied. If the game is still in play at market expiration time and at least 55 minutes of game time have elapsed, then the market shall resolve to whichever team has a higher score at that time or to Invalid if the score is tied.",
+                },
+                endTime: '1612828800',
+
+            },
         },
     },
 };

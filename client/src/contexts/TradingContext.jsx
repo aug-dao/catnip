@@ -89,6 +89,7 @@ export const TradingProvider = ({ children }) => {
     const [approveLoading, setApproveLoading] = useState(false);
     const [allowanceTarget, setAllowanceTarget] = useState(ALLOWANCE_TARGET);
     const [balances, setBalances] = useState({});
+    const [prices, setPrices] = useState({});
     const [claimableTokens, setClaimableTokens] = useState([]);
     const [displayBalances, setDisplayBalances] = useState({});
     const [tokenSymbols, setTokenSymbols] = useState({});
@@ -519,121 +520,82 @@ export const TradingProvider = ({ children }) => {
             pool.options.address = info.pool;
 
             let totalSwapVolume = await getTotalVolumeForThePool(info.pool);
-            var yesPrice = "0.0";
-            var noPrice = "0.0";
 
-            if (market.address === ZRX_MARKET_ADDRESS) {
-                let params = {
-                    sellToken: info.yes,
-                    buyToken: DAI_CONTRACT_ADDRESS,
-                    sellAmount: convertDisplayToAmount(
-                        new BN(100),
-                        info.yes
-                    ),
-                };
-                let pricing = await fetchJSON(ZRX_PRICE_URL, params);
-                yesPrice = parseFloat(pricing.price);
-                yesPrice = yesPrice.toFixed(2);
-            }
-            else {
 
-                try {
-                    yesPrice = await pool.methods
-                        .getSpotPrice(DAI_CONTRACT_ADDRESS, info.yes)
-                        .call();
-                    yesPrice = Web3.utils.fromWei(yesPrice);
-                    yesPrice = Number(yesPrice);
-                    yesPrice = yesPrice / TOKEN_MULTIPLE;
-                    yesPrice = yesPrice.toFixed(2);
+            var prices = {};
+            var balances = {};
+            var displayBalances = {};
+            const outcomeTokens = info.outcomeTokens;
+
+            for (let i = 0; i < outcomeTokens.length; i++) {
+                if (market.address === ZRX_MARKET_ADDRESS) {
+                    let params = {
+                        sellToken: outcomeTokens[i],
+                        buyToken: DAI_CONTRACT_ADDRESS,
+                        sellAmount: convertDisplayToAmount(
+                            new BN(100),
+                            outcomeTokens[i]
+                        ),
+                    };
+                    const pricing = await fetchJSON(ZRX_PRICE_URL, params);
+                    var price = parseFloat(pricing.price);
+                    price = price.toFixed(2);
+                    prices[outcomeTokens[i]] = price;
                 }
-                catch (spotPriceError) {
-                    // handle the case when spot price throws 
-                    // it is when pool token does not have any liquidity  
+                else {
 
-                    setHasEnoughLiquidity(false);
-                    console.error({ spotPriceError });
+                    try {
+                        var price = await pool.methods
+                            .getSpotPrice(DAI_CONTRACT_ADDRESS, outcomeTokens[i])
+                            .call();
+                        price = Web3.utils.fromWei(price);
+                        price = Number(price);
+                        price = price / TOKEN_MULTIPLE;
+                        price = price.toFixed(2);
+                        prices[outcomeTokens[i]] = price;
+
+                    }
+                    catch (spotPriceError) {
+                        // handle the case when spot price throws 
+                        // it is when pool token does not have any liquidity  
+
+                        setHasEnoughLiquidity(false);
+                        console.error({ spotPriceError });
+                    }
                 }
+                erc20.options.address = outcomeTokens[i];
+                var balance = new BN(
+                    await erc20.methods.balanceOf(account).call()
+                );
+                balances[outcomeTokens[i]] = balance;
+
+
+                balance = Web3.utils.fromWei(balance);
+                balance = Number(balance);
+                balance = TOKEN_MULTIPLE * balance;
+                balance = balance.toFixed(2);
+                displayBalances[outcomeTokens[i]] = balance;
+
             }
-
-            if (market.address === ZRX_MARKET_ADDRESS) {
-                let params = {
-                    sellToken: info.no,
-                    buyToken: DAI_CONTRACT_ADDRESS,
-                    sellAmount: convertDisplayToAmount(
-                        new BN(100),
-                        info.no
-                    ),
-                };
-                let pricing = await fetchJSON(ZRX_PRICE_URL, params);
-                noPrice = parseFloat(pricing.price);
-                noPrice = noPrice.toFixed(2);
-            }
-            else {
-                try {
-                    noPrice = await pool.methods
-                        .getSpotPrice(DAI_CONTRACT_ADDRESS, info.no)
-                        .call();
-                    noPrice = Web3.utils.fromWei(noPrice);
-                    noPrice = Number(noPrice);
-                    noPrice = noPrice / TOKEN_MULTIPLE;
-                    noPrice = noPrice.toFixed(2);
-                }
-                catch (spotPriceError) {
-                    // handle the case when spot price throws 
-                    // it is when pool token does not have any liquidity  
-
-                    setHasEnoughLiquidity(false);
-                    console.error({ spotPriceError });
-                }
-            }
-            console.log("yesPrice", yesPrice);
-            console.log("noPrice", noPrice);
-            setPrice(_init => ({
-                ..._init,
-                yesPrice: yesPrice,
-                noPrice: noPrice,
-                totalSwapVolume: totalSwapVolume
-            }));
-
-            erc20.options.address = info.yes;
-            var yesBalance = new BN(
-                await erc20.methods.balanceOf(account).call()
-            );
-
-            erc20.options.address = info.no;
-            var noBalance = new BN(
-                await erc20.methods.balanceOf(account).call()
-            );
-
+            erc20.options.address = DAI_CONTRACT_ADDRESS;
             var daiBalance = new BN(
                 await dai.methods.balanceOf(account).call()
             );
-
-            setBalances({
-                [info.yes]: yesBalance,
-                [info.no]: noBalance,
-                [DAI_CONTRACT_ADDRESS]: daiBalance
-            });
-
-            yesBalance = Web3.utils.fromWei(yesBalance);
-            yesBalance = Number(yesBalance);
-            yesBalance = TOKEN_MULTIPLE * yesBalance;
-            yesBalance = yesBalance.toFixed(2);
-
-            noBalance = Web3.utils.fromWei(noBalance);
-            noBalance = Number(noBalance);
-            noBalance = TOKEN_MULTIPLE * noBalance;
-            noBalance = noBalance.toFixed(2);
+            balances[DAI_CONTRACT_ADDRESS] = daiBalance;
 
             daiBalance = Web3.utils.fromWei(daiBalance);
             daiBalance = Number(daiBalance);
             daiBalance = daiBalance.toFixed(2);
 
-            setDisplayBalances({
-                [info.yes]: yesBalance,
-                [info.no]: noBalance,
-                [DAI_CONTRACT_ADDRESS]: daiBalance
-            });
+            displayBalances[DAI_CONTRACT_ADDRESS] = balance;
+
+            setPrices(prices);
+            setBalances(balances);
+            setDisplayBalances(displayBalances);
+            setPrice(_init => ({
+                ..._init,
+                totalSwapVolume: totalSwapVolume,
+            }));
         }
     }, [market, account, contractInstances]);
 
@@ -1292,7 +1254,7 @@ export const TradingProvider = ({ children }) => {
         setFromToken(DAI_CONTRACT_ADDRESS);
         setFromAmount(convertDisplayToAmount("100", DAI_CONTRACT_ADDRESS));
         setFromAmountDisplay("100");
-        setToToken(isMarket0 ? info.no : info.yes);
+        setToToken(isMarket0 ? info.outcomeTokens[0] : info.outcomeTokens[1]);
         setHasEnoughLiquidity(true);
     }, []);
 
@@ -1436,6 +1398,7 @@ export const TradingProvider = ({ children }) => {
                 hasEnoughBalance,
                 hasEnoughLiquidity,
                 balances: displayBalances,
+                prices,
                 claimableTokens,
                 claim,
                 nonFinalizedMarkets,
