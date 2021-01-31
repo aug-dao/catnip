@@ -466,7 +466,7 @@ export const TradingProvider = ({ children }) => {
                         ? allowanceTarget
                         : info.pool;
                 let allowances = {};
-                for (let i = 0; i < info.outcomeTokens; i++) {
+                for (let i = 0; i < info.outcomeTokens.length; i++) {
                     erc20.options.address = info.outcomeTokens[i];
                     const allowance = new BN(
                         await erc20.methods.allowance(account, spender).call()
