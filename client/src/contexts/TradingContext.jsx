@@ -127,6 +127,8 @@ export const TradingProvider = ({ children }) => {
 
     useEffect(() => {
         if (web3) {
+            //for testing in a mainnet fork
+            //setWeb3(new Web3(window.ethereum));
             var daiInstance = new web3.eth.Contract(
                 DaiContractABI.abi,
                 DAI_CONTRACT_ADDRESS
