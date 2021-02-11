@@ -499,10 +499,9 @@ export default function Trading({
                                         >
                                             &#128293;
                                         </span>{' '}
-                                        Update Dec. 25th
+                                        Update Feb. 11th
                                     </strong>
-                                    : Catnip now finds you the best price among
-                                    multiple exchanges, using the 0x API.
+                                    : The election market has now settled to nTrump. To redeem your winnings, connect your wallet and click “CLAIM DAI.” <br /> There are no further active markets right now, come back soon for more!
                                 </div>
                             )}
                             {market.address === MARKETS[1] ||

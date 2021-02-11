@@ -165,67 +165,79 @@ export const calcPriceProfitSlippage0xAPI = async (
     toAmount,
     pricing
 ) => {
-    if (fromToken !== DAI_CONTRACT_ADDRESS) {
-        fromAmount = fromAmount.mul(TOKEN_MULTIPLE);
-    }
-    if (toToken !== DAI_CONTRACT_ADDRESS) {
-        toAmount = toAmount.mul(TOKEN_MULTIPLE);
-    }
-    fromAmount = new BigNumber(fromAmount);
-    toAmount = new BigNumber(toAmount);
+    try {
+        if (fromToken !== DAI_CONTRACT_ADDRESS) {
+            fromAmount = fromAmount.mul(TOKEN_MULTIPLE);
+        }
+        if (toToken !== DAI_CONTRACT_ADDRESS) {
+            toAmount = toAmount.mul(TOKEN_MULTIPLE);
+        }
+        fromAmount = new BigNumber(fromAmount);
+        toAmount = new BigNumber(toAmount);
 
-    let pricePerShare = new BigNumber(0);
+        let pricePerShare = new BigNumber(0);
 
-    if (toToken === DAI_CONTRACT_ADDRESS) {
-        pricePerShare = toAmount.div(fromAmount);
-    } else {
-        pricePerShare = fromAmount.div(toAmount);
-    }
+        if (toToken === DAI_CONTRACT_ADDRESS) {
+            pricePerShare = toAmount.div(fromAmount);
+        } else {
+            pricePerShare = fromAmount.div(toAmount);
+        }
 
-    let impliedOdds = 0;
+        let impliedOdds = 0;
 
-    if (
-        fromToken !== DAI_CONTRACT_ADDRESS &&
-        toToken !== DAI_CONTRACT_ADDRESS
-    ) {
-        impliedOdds = new BigNumber(100).minus(
-            new BigNumber(100).dividedBy(new BigNumber(1).plus(pricePerShare))
+        if (
+            fromToken !== DAI_CONTRACT_ADDRESS &&
+            toToken !== DAI_CONTRACT_ADDRESS
+        ) {
+            impliedOdds = new BigNumber(100).minus(
+                new BigNumber(100).dividedBy(new BigNumber(1).plus(pricePerShare))
+            );
+        }
+
+        let maxProfit = 0;
+        if (fromToken === DAI_CONTRACT_ADDRESS) {
+            maxProfit = new BigNumber(1).minus(pricePerShare).multipliedBy(toAmount);
+            maxProfit = new BigNumber(Web3.utils.fromWei(maxProfit.toFixed(0)));
+        }
+
+        let minAmountReceivedBN = new BigNumber(0);
+        let price = new BigNumber(pricing.price);
+        let guaranteedPrice = new BigNumber(pricing.guaranteedPrice);
+        let buyAmount = new BigNumber(pricing.buyAmount);
+
+        if (price.gte(guaranteedPrice)) {
+            minAmountReceivedBN = guaranteedPrice
+                .multipliedBy(buyAmount)
+                .dividedBy(price);
+        } else {
+            minAmountReceivedBN = price
+                .multipliedBy(buyAmount)
+                .dividedBy(guaranteedPrice);
+        }
+
+        let minAmountReceived = convertAmountToDisplay(
+            new BN(minAmountReceivedBN.toFixed(0)),
+            pricing.buyTokenAddress
         );
+
+        return {
+            pricePerShare: pricePerShare.toFixed(3),
+            maxProfit: maxProfit.toFixed(2),
+            priceImpact: 0,
+            impliedOdds: impliedOdds.toFixed(2),
+            minAmountReceived: minAmountReceived,
+        };
+    } catch (error) {
+        console.log(error);
+
+        return {
+            pricePerShare: 0,
+            maxProfit: 0,
+            priceImpact: 0,
+            impliedOdds: 0,
+            minAmountReceived: 0,
+        };
     }
-
-    let maxProfit = 0;
-    if (fromToken === DAI_CONTRACT_ADDRESS) {
-        maxProfit = new BigNumber(1).minus(pricePerShare).multipliedBy(toAmount);
-        maxProfit = new BigNumber(Web3.utils.fromWei(maxProfit.toFixed(0)));
-    }
-
-    let minAmountReceivedBN = new BigNumber(0);
-    let price = new BigNumber(pricing.price);
-    let guaranteedPrice = new BigNumber(pricing.guaranteedPrice);
-    let buyAmount = new BigNumber(pricing.buyAmount);
-
-    if (price.gte(guaranteedPrice)) {
-        minAmountReceivedBN = guaranteedPrice
-            .multipliedBy(buyAmount)
-            .dividedBy(price);
-    } else {
-        minAmountReceivedBN = price
-            .multipliedBy(buyAmount)
-            .dividedBy(guaranteedPrice);
-    }
-
-    let minAmountReceived = convertAmountToDisplay(
-        new BN(minAmountReceivedBN.toFixed(0)),
-        pricing.buyTokenAddress
-    );
-
-    return {
-        pricePerShare: pricePerShare.toFixed(3),
-        maxProfit: maxProfit.toFixed(2),
-        priceImpact: 0,
-        impliedOdds: impliedOdds.toFixed(2),
-        minAmountReceived: minAmountReceived,
-    };
 };
 
 export const timeConverter = UNIX_timestamp => {
