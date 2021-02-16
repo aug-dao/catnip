@@ -593,6 +593,7 @@ export const TradingProvider = ({ children }) => {
         const { erc20, shareToken, marketContract } = contractInstances;
 
         if (erc20 && shareToken && marketContract) {
+            // return;
             //loop through all the outcome tokens and check if it claimmable 
             //meaning if the market associated with it was finalized and if it is the winning outcome
             let claimableTokens = [];
@@ -637,8 +638,8 @@ export const TradingProvider = ({ children }) => {
                                 balance = balance.toFixed(2);
 
                                 balancesOfClaimableTokensForDisplay[outcomeTokens[j]] = balance;
-                                tokenSymbols[outcomeTokens[j]] = outcomeSymbols[j];
-                                tokenIcons[outcomeTokens[j]] = outcomeIcons[j];
+                                tokenSymbols[outcomeTokens[j]] = outcomeSymbols[outcomeTokens[j]];
+                                tokenIcons[outcomeTokens[j]] = outcomeIcons[outcomeTokens[j]];
                             }
 
                         }

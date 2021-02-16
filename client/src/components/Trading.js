@@ -726,7 +726,7 @@ export default function Trading({
                                                         }
                                                     >
                                                         <img
-                                                            src={market.info.outcomeIcons[index]}
+                                                            src={market.info.outcomeIcons[outcomeToken]}
                                                             alt=""
                                                         />{' '}
                                                         <span>{market.info[outcomeToken.toLowerCase()]}</span>
@@ -763,7 +763,7 @@ export default function Trading({
                                                             }
                                                         >
                                                             <img
-                                                                src={market.info.outcomeIcons[index]}
+                                                                src={market.info.outcomeIcons[outcomeToken]}
                                                                 alt=""
                                                             />{' '}
                                                             <span>{market.info[outcomeToken.toLowerCase()]}</span>
@@ -847,7 +847,7 @@ export default function Trading({
                                                         }
                                                     >
                                                         <img
-                                                            src={market.info.outcomeIcons[index]}
+                                                            src={market.info.outcomeIcons[outcomeToken]}
                                                             alt=""
                                                         />{' '}
                                                         <span>{market.info[outcomeToken.toLowerCase()]}</span>
@@ -884,7 +884,7 @@ export default function Trading({
                                                             }
                                                         >
                                                             <img
-                                                                src={market.info.outcomeIcons[index]}
+                                                                src={market.info.outcomeIcons[outcomeToken]}
                                                                 alt=""
                                                             />{' '}
                                                             <span>{market.info[outcomeToken.toLowerCase()]}</span>
@@ -1214,42 +1214,43 @@ export default function Trading({
                                         </div>
                                         {}
                                         {market.info.outcomeTokens.map((outcomeToken, index) => (
-                                            <div className="flex-item">
-                                                <div className="flex-item">
-                                                    <img
-                                                        src={market.info.outcomeIcons[index]}
-                                                        display="inline"
-                                                        alt={"outcome-icon-number: " + index}
-                                                    />
-                                                    <div>
-                                                        <Typography>
-                                                            {balances[outcomeToken]}{' '}
-                                                            {market.info.outcomeSymbols[index]}
-                                                        </Typography>
-                                                        {window.ethereum && (
-                                                            <Link
-                                                                className="holding_num"
-                                                                onClick={() =>
-                                                                    addTokenToMetamask(
-                                                                        outcomeToken
-                                                                    )
-                                                                }
-                                                                component="button"
-                                                                variant="body2"
-                                                            >
-                                                                Show in wallet
-                                                            </Link>
-                                                        )}
+                                            <div>
+                                                < div className="flex-item">
+                                                    <div className="flex-item">
+                                                        <img
+                                                            src={market.info.outcomeIcons[outcomeToken]}
+                                                            display="inline"
+                                                            alt={"outcome-icon-number: " + index}
+                                                        />
+                                                        <div>
+                                                            <Typography>
+                                                                {balances[outcomeToken]}{' '}
+                                                                {market.info.outcomeSymbols[outcomeToken]}
+                                                            </Typography>
+                                                            {window.ethereum && (
+                                                                <Link
+                                                                    className="holding_num"
+                                                                    onClick={() =>
+                                                                        addTokenToMetamask(
+                                                                            outcomeToken
+                                                                        )
+                                                                    }
+                                                                    component="button"
+                                                                    variant="body2"
+                                                                >
+                                                                    Show in wallet
+                                                                </Link>
+                                                            )}
+                                                        </div>
                                                     </div>
+                                                    <Typography
+                                                        variant="body2"
+                                                        padding="20px"
+                                                    >
+                                                        ${prices[outcomeToken]}
+                                                    </Typography>
                                                 </div>
-                                                <Typography
-                                                    variant="body2"
-                                                    padding="20px"
-                                                >
-                                                    ${prices[outcomeToken]}
-                                                </Typography>
                                             </div>
-
                                         ))}
 
                                     </div>

@@ -136,14 +136,14 @@ export default {
                 outcomeTokens: ['0x3af375d9f77Ddd4F16F86A5D51a9386b7B4493Fa'.toLowerCase(),
                 '0x44Ea84a85616F8e9cD719Fc843DE31D852ad7240'.toLowerCase()
                 ],
-                outcomeSymbols: [
-                    'yTrump',
-                    'nTrump'
-                ],
-                outcomeIcons: [
-                    'https://cloudflare-ipfs.com/ipfs/QmRWo92JEL6s2ydN1fK2Q3KAX2rzBnTnfqkABFYHmA5EUT',
-                    'https://cloudflare-ipfs.com/ipfs/QmUVCPwVDCTzM2kBxejB85MS2m3KRjSW7f2w81pSr8ZvTL',
-                ],
+                outcomeSymbols: {
+                    ['0x3af375d9f77Ddd4F16F86A5D51a9386b7B4493Fa'.toLowerCase()]: 'yTrump',
+                    ['0x44Ea84a85616F8e9cD719Fc843DE31D852ad7240'.toLowerCase()]: 'nTrump'
+                },
+                outcomeIcons: {
+                    ['0x3af375d9f77Ddd4F16F86A5D51a9386b7B4493Fa'.toLowerCase()]: 'https://cloudflare-ipfs.com/ipfs/QmRWo92JEL6s2ydN1fK2Q3KAX2rzBnTnfqkABFYHmA5EUT',
+                    ['0x44Ea84a85616F8e9cD719Fc843DE31D852ad7240'.toLowerCase()]: 'https://cloudflare-ipfs.com/ipfs/QmUVCPwVDCTzM2kBxejB85MS2m3KRjSW7f2w81pSr8ZvTL'
+                },
                 ['0x3af375d9f77Ddd4F16F86A5D51a9386b7B4493Fa'.toLowerCase()]: 'YES',
                 ['0x44Ea84a85616F8e9cD719Fc843DE31D852ad7240'.toLowerCase()]: 'NO',
                 pool: '0xed0413d19cdf94759bbe3fe9981c4bd085b430cf'.toLowerCase(),
@@ -169,14 +169,14 @@ export default {
                 outcomeTokens: ['0xf732ee9ccbf0df22f53fbdd9ec88d62df298fbf8'.toLowerCase(),
                 '0x542439Eca879E52E03E0d6E87bcdCA165634245D'.toLowerCase()
                 ],
-                outcomeSymbols: [
-                    'yBlue',
-                    'nBlue'
-                ],
-                outcomeIcons: [
-                    'https://cloudflare-ipfs.com/ipfs/QmUA2ExuPSRPHepiRqe3VH4oZKHkw6URoNtFB7UqHN8Vgh',
-                    'https://cloudflare-ipfs.com/ipfs/QmZfAjSUevTSJe5Lqg22vx4zAPGrkafDKz33LJG2GWoAqG',
-                ],
+                outcomeSymbols: {
+                    ['0xf732ee9ccbf0df22f53fbdd9ec88d62df298fbf8'.toLowerCase()]: 'yBlue',
+                    ['0x542439Eca879E52E03E0d6E87bcdCA165634245D'.toLowerCase()]: 'nBlue'
+                },
+                outcomeIcons: {
+                    ['0xf732ee9ccbf0df22f53fbdd9ec88d62df298fbf8'.toLowerCase()]: 'https://cloudflare-ipfs.com/ipfs/QmUA2ExuPSRPHepiRqe3VH4oZKHkw6URoNtFB7UqHN8Vgh',
+                    ['0x542439Eca879E52E03E0d6E87bcdCA165634245D'.toLowerCase()]: 'https://cloudflare-ipfs.com/ipfs/QmZfAjSUevTSJe5Lqg22vx4zAPGrkafDKz33LJG2GWoAqG'
+                },
                 ['0xf732ee9ccbf0df22f53fbdd9ec88d62df298fbf8'.toLowerCase()]: 'YES',
                 ['0x542439Eca879E52E03E0d6E87bcdCA165634245D'.toLowerCase()]: 'NO',
                 pool: '0x68c74e157f35a3e40f1b02bba3e6e3827d534059'.toLowerCase(),
@@ -202,14 +202,14 @@ export default {
                 outcomeTokens: ['0x934E03e671E09528A52cb3373dc7Bb7CA475b924'.toLowerCase(),
                 '0x55b2969a6D832c6091Ba1AF4ed6d0E6E7c2C0d90'.toLowerCase()
                 ],
-                outcomeSymbols: [
-                    'yINAUG',
-                    'nINAUG'
-                ],
-                outcomeIcons: [
-                    'https://cloudflare-ipfs.com/ipfs/Qmc14RQHBa9zezBYERJqMDAknkfmC14VN8coPz9KYiMKMU',
-                    'https://cloudflare-ipfs.com/ipfs/QmPPHjD2wYJzs46kfYrGFsELLj2a2NQjiKWtoHTs1yVvfF',
-                ],
+                outcomeSymbols: {
+                    ['0x934E03e671E09528A52cb3373dc7Bb7CA475b924'.toLowerCase()]: 'yINAUG',
+                    ['0x55b2969a6D832c6091Ba1AF4ed6d0E6E7c2C0d90'.toLowerCase()]: 'nINAUG'
+                },
+                outcomeIcons: {
+                    ['0x934E03e671E09528A52cb3373dc7Bb7CA475b924'.toLowerCase()]: 'https://cloudflare-ipfs.com/ipfs/Qmc14RQHBa9zezBYERJqMDAknkfmC14VN8coPz9KYiMKMU',
+                    ['0x55b2969a6D832c6091Ba1AF4ed6d0E6E7c2C0d90'.toLowerCase()]: 'https://cloudflare-ipfs.com/ipfs/QmPPHjD2wYJzs46kfYrGFsELLj2a2NQjiKWtoHTs1yVvfF'
+                },
                 ['0x934E03e671E09528A52cb3373dc7Bb7CA475b924'.toLowerCase()]: 'YES',
                 ['0x55b2969a6D832c6091Ba1AF4ed6d0E6E7c2C0d90'.toLowerCase()]: 'NO',
                 pool: '0x91ffe46e57d7c3f5f6e4f0856f2a674d0d820f93'.toLowerCase(),
@@ -238,14 +238,14 @@ export default {
                 outcomeTokens: ['0x7d1d38ef81EBDFc0EEE7b987cE569563C3C2Fee0'.toLowerCase(),
                 '0x6E93403916A0cf7b51908da63eE60753E389Bd0A'.toLowerCase()
                 ],
-                outcomeSymbols: [
-                    'yBILLS',
-                    'nBILLS'
-                ],
-                outcomeIcons: [
-                    'https://cloudflare-ipfs.com/ipfs/QmbEDv7Jy6Aouj5jFJU88uocQYQMtSVgeUbaPSULGMuaKX',
-                    'https://cloudflare-ipfs.com/ipfs/QmbEDv7Jy6Aouj5jFJU88uocQYQMtSVgeUbaPSULGMuaKX',
-                ],
+                outcomeSymbols: {
+                    ['0x7d1d38ef81EBDFc0EEE7b987cE569563C3C2Fee0'.toLowerCase()]: 'yBILLS',
+                    ['0x6E93403916A0cf7b51908da63eE60753E389Bd0A'.toLowerCase()]: 'nBILLS'
+                },
+                outcomeIcons: {
+                    ['0x7d1d38ef81EBDFc0EEE7b987cE569563C3C2Fee0'.toLowerCase()]: 'https://cloudflare-ipfs.com/ipfs/QmbEDv7Jy6Aouj5jFJU88uocQYQMtSVgeUbaPSULGMuaKX',
+                    ['0x6E93403916A0cf7b51908da63eE60753E389Bd0A'.toLowerCase()]: 'https://cloudflare-ipfs.com/ipfs/QmZKyUfrWPmhTwonM7utmXUaaM2FKdoJmFpfojZzXhAvrR'
+                },
                 ["0x7d1d38ef81EBDFc0EEE7b987cE569563C3C2Fee0".toLowerCase()]: 'YES',
                 ["0x6E93403916A0cf7b51908da63eE60753E389Bd0A".toLowerCase()]: 'NO',
                 pool: "0xc7d919fe3418abad0979569041bed141726e9b86".toLowerCase(),
@@ -261,7 +261,7 @@ export default {
                 yesIcon:
                     'https://cloudflare-ipfs.com/ipfs/QmbEDv7Jy6Aouj5jFJU88uocQYQMtSVgeUbaPSULGMuaKX',
                 noIcon:
-                    'https://cloudflare-ipfs.com/ipfs/QmbEDv7Jy6Aouj5jFJU88uocQYQMtSVgeUbaPSULGMuaKX',
+                    'https://cloudflare-ipfs.com/ipfs/QmZKyUfrWPmhTwonM7utmXUaaM2FKdoJmFpfojZzXhAvrR',
                 marketQuestion:
                     'Will the Buffalo Bills Win the 2021 AFC Championship Game?',
                 endTime: "1611619200",
@@ -272,14 +272,14 @@ export default {
                 outcomeTokens: ['0xD12653380cb0d88ede6Cd8129Ed56FAbCc21928D'.toLowerCase(),
                 '0x15D4abb1c530A45cFbdDd1a595E7a9d6304f84Cb'.toLowerCase()
                 ],
-                outcomeSymbols: [
-                    'yBUCCS',
-                    'nBUCCS'
-                ],
-                outcomeIcons: [
-                    'https://cloudflare-ipfs.com/ipfs/QmQVw7Mb9X6NvThWfgSVncwGh53vZvnBNLZzWHMufjFqdD',
-                    'https://cloudflare-ipfs.com/ipfs/QmXobRt9JNPiZmNw8fy5f1PUyTWkVrthMmEz7aRwq9ji3Q',
-                ],
+                outcomeSymbols: {
+                    ['0xD12653380cb0d88ede6Cd8129Ed56FAbCc21928D'.toLowerCase()]: 'yBUCCS',
+                    ['0x15D4abb1c530A45cFbdDd1a595E7a9d6304f84Cb'.toLowerCase()]: 'nBUCCS'
+                },
+                outcomeIcons: {
+                    ['0xD12653380cb0d88ede6Cd8129Ed56FAbCc21928D'.toLowerCase()]: 'https://cloudflare-ipfs.com/ipfs/QmQVw7Mb9X6NvThWfgSVncwGh53vZvnBNLZzWHMufjFqdD',
+                    ['0x15D4abb1c530A45cFbdDd1a595E7a9d6304f84Cb'.toLowerCase()]: 'https://cloudflare-ipfs.com/ipfs/QmXobRt9JNPiZmNw8fy5f1PUyTWkVrthMmEz7aRwq9ji3Q'
+                },
                 ["0xD12653380cb0d88ede6Cd8129Ed56FAbCc21928D".toLowerCase()]: 'YES',
                 ["0x15D4abb1c530A45cFbdDd1a595E7a9d6304f84Cb".toLowerCase()]: 'NO',
                 pool: "0xea09809ad3768504fe81bddc69e11653c1e7e629".toLowerCase(),
@@ -306,14 +306,14 @@ export default {
                 outcomeTokens: ['0xd4cabf0b165cbf076058f55766c7805bb5169dcf'.toLowerCase(),
                 '0xffc16ab7d366273466c705f03cfeaca8dd964f89'.toLowerCase()
                 ],
-                outcomeSymbols: [
-                    'Bucs',
-                    'Chiefs'
-                ],
-                outcomeIcons: [
-                    'https://cloudflare-ipfs.com/ipfs/QmQVw7Mb9X6NvThWfgSVncwGh53vZvnBNLZzWHMufjFqdD',
-                    'https://cloudflare-ipfs.com/ipfs/QmcrygUUrksinSjewEvTvAE5yZtUCpAPVRjb46HwcjNx5s',
-                ],
+                outcomeSymbols: {
+                    ['0xd4cabf0b165cbf076058f55766c7805bb5169dcf'.toLowerCase()]: 'Bucs',
+                    ['0xffc16ab7d366273466c705f03cfeaca8dd964f89'.toLowerCase()]: 'Chiefs'
+                },
+                outcomeIcons: {
+                    ['0xd4cabf0b165cbf076058f55766c7805bb5169dcf'.toLowerCase()]: 'https://cloudflare-ipfs.com/ipfs/QmQVw7Mb9X6NvThWfgSVncwGh53vZvnBNLZzWHMufjFqdD',
+                    ['0xffc16ab7d366273466c705f03cfeaca8dd964f89'.toLowerCase()]: 'https://cloudflare-ipfs.com/ipfs/QmcrygUUrksinSjewEvTvAE5yZtUCpAPVRjb46HwcjNx5s'
+                },
                 ["0xd4cabf0b165cbf076058f55766c7805bb5169dcf".toLowerCase()]: 'Bucs',
                 ["0xffc16ab7d366273466c705f03cfeaca8dd964f89".toLowerCase()]: 'Chiefs',
                 pool: "0xd4f73d51098df4dbe841cbbe3fa77d735422f656".toLowerCase(),
