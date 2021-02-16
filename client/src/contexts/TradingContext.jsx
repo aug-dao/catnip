@@ -176,6 +176,11 @@ export const TradingProvider = ({ children }) => {
                     gotSwapFee = Number(gotSwapFee);
                     setSwapFee(gotSwapFee);
                 });
+            pool.methods
+                .getSwapFee()
+                .call().then(isPublicSwap => {
+                    setSwapDisabled(isSwapDisabled);
+                });
         }
     }, [market, contractInstances]);
 
