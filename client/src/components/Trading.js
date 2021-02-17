@@ -614,18 +614,19 @@ export default function Trading({
                                             <div
                                                 className={classes.tooltip_item}
                                             >
-                                                <Typography
-                                                    color="inherit"
-                                                    variant="h5"
-                                                >
-                                                    Terms:
+                                                {market.info.extraInfo
+                                                    .longDescription ? <div><Typography
+                                                        color="inherit"
+                                                        variant="h5"
+                                                    >
+                                                        Terms:
                                                 </Typography>
-                                                <Typography color="inherit">
-                                                    {
-                                                        market.info.extraInfo
-                                                            .longDescription
-                                                    }
-                                                </Typography>
+                                                        <Typography color="inherit">
+                                                            {
+                                                                market.info.extraInfo
+                                                                    .longDescription
+                                                            }
+                                                        </Typography></div> : <div></div>}
                                             </div>
                                             <div
                                                 className={classes.tooltip_item}

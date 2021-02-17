@@ -350,7 +350,7 @@ export default {
                     longDescription:
                         ""
                 },
-                endTime: '1613547117',
+                endTime: '1613952000',
 
             },
         },
