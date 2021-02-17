@@ -100,6 +100,7 @@ export const TradingProvider = ({ children }) => {
     const [hasWinningTokens, setHasWinningTokens] = useState(false);
 
     const [isSwapDisabled, setSwapDisabled] = useState(false);
+    const [currentTokensInThePool, setCurrentTokensInThePool] = useState([]);
 
     useEffect(() => {
         const ls = window.localStorage;
@@ -123,6 +124,7 @@ export const TradingProvider = ({ children }) => {
         setToToken(toTokenAddress);
         setFromAmountDisplay("100");
         setFromAmount(convertDisplayToAmount("100", fromTokenAddress));
+        setCurrentTokensInThePool(marketInfo.outcomeTokens);
     }, []);
 
     useEffect(() => {
@@ -177,10 +179,11 @@ export const TradingProvider = ({ children }) => {
                     setSwapFee(gotSwapFee);
                 });
             pool.methods
-                .getSwapFee()
+                .isPublicSwap()
                 .call().then(isPublicSwap => {
-                    setSwapDisabled(isSwapDisabled);
+                    setSwapDisabled(!isPublicSwap);
                 });
+
         }
     }, [market, contractInstances]);
 
@@ -1237,6 +1240,8 @@ export const TradingProvider = ({ children }) => {
     );
 
     const updateMarket = useCallback(async marketAddress => {
+        const { pool } = contractInstances;
+
         const info = MARKET_INFO[marketAddress];
         setMarket({
             address: marketAddress,
@@ -1248,6 +1253,25 @@ export const TradingProvider = ({ children }) => {
         setFromAmountDisplay("100");
         setToToken(isMarket0 ? info.outcomeTokens[0] : info.outcomeTokens[1]);
         setHasEnoughLiquidity(true);
+        // if (pool) {
+        //     pool.methods
+        //         .getCurrentTokens()
+        //         .call().then(currentTokensInThePool => {
+
+
+        //             //covert all tokens to lowercase
+        //             let currentTokensInThePoolLowerCase = [];
+        //             currentTokensInThePool.forEach(currentToken => {
+        //                 //remove DAI from consideration
+        //                 if (currentToken.toLowerCase() == DAI_CONTRACT_ADDRESS) {
+        //                     return;
+        //                 }
+        //                 currentTokensInThePoolLowerCase.push(currentToken.toLowerCase());
+        //             });
+        //             console.log("              *** currentTokens", currentTokensInThePoolLowerCase);
+        //             setCurrentTokensInThePool(currentTokensInThePoolLowerCase);
+        //         });
+        // }
     }, []);
 
     const handleChange = useCallback(
@@ -1325,7 +1349,7 @@ export const TradingProvider = ({ children }) => {
             tokenSymbol = await erc20.methods.symbol().call();
             decimals = await erc20.methods.decimals().call();
 
-            tokenImage = info.outcomeIcons[info.outcomeTokens.indexOf(tokenAddress)];
+            tokenImage = info.outcomeIcons[tokenAddress];
             const provider = window.ethereum;
             try {
                 provider.sendAsync(
@@ -1403,6 +1427,7 @@ export const TradingProvider = ({ children }) => {
                 updateMarket,
                 addTokenToMetamask,
                 getTokenSymbol,
+                currentTokensInThePool,
             }}
         >
             {children}

@@ -127,7 +127,8 @@ export default {
             '0x0946A3Eab3d638c606459b0A9F1E76EB5324985F'.toLowerCase(),
             '0x827f9A41cA4f4C6aD8098f18a045c8115d4D2749'.toLowerCase(),
             '0xc8EfC74f5b5742E4d1c15ACa63684116EDe96111'.toLowerCase(),
-            '0x948b73ED9F9b22D25941D4A07A2ab6dDfC678C06'.toLowerCase()
+            '0x948b73ED9F9b22D25941D4A07A2ab6dDfC678C06'.toLowerCase(),
+            '0x5f623023Ab1e7fF12B8fc02E4ee8CDcaD67d0e80'.toLowerCase(),
         ],
         marketInfo: {
             ['0x1ebb89156091eb0d59603c18379c03a5c84d7355'.toLowerCase()]: {
@@ -147,11 +148,6 @@ export default {
                 ['0x3af375d9f77Ddd4F16F86A5D51a9386b7B4493Fa'.toLowerCase()]: 'YES',
                 ['0x44Ea84a85616F8e9cD719Fc843DE31D852ad7240'.toLowerCase()]: 'NO',
                 pool: '0xed0413d19cdf94759bbe3fe9981c4bd085b430cf'.toLowerCase(),
-                symbolPostfix: 'Trump',
-                yesIcon:
-                    'https://cloudflare-ipfs.com/ipfs/QmRWo92JEL6s2ydN1fK2Q3KAX2rzBnTnfqkABFYHmA5EUT',
-                noIcon:
-                    'https://cloudflare-ipfs.com/ipfs/QmUVCPwVDCTzM2kBxejB85MS2m3KRjSW7f2w81pSr8ZvTL',
                 marketQuestion:
                     'Will Trump Win the 2020 U.S. Presidential Election?',
                 extraInfo: {
@@ -180,11 +176,6 @@ export default {
                 ['0xf732ee9ccbf0df22f53fbdd9ec88d62df298fbf8'.toLowerCase()]: 'YES',
                 ['0x542439Eca879E52E03E0d6E87bcdCA165634245D'.toLowerCase()]: 'NO',
                 pool: '0x68c74e157f35a3e40f1b02bba3e6e3827d534059'.toLowerCase(),
-                symbolPostfix: 'Blue',
-                yesIcon:
-                    'https://cloudflare-ipfs.com/ipfs/QmUA2ExuPSRPHepiRqe3VH4oZKHkw6URoNtFB7UqHN8Vgh',
-                noIcon:
-                    'https://cloudflare-ipfs.com/ipfs/QmZfAjSUevTSJe5Lqg22vx4zAPGrkafDKz33LJG2GWoAqG',
                 marketQuestion:
                     'Will the Democrats Win the Presidency, the Senate, and the House?',
                 extraInfo: {
@@ -213,11 +204,6 @@ export default {
                 ['0x934E03e671E09528A52cb3373dc7Bb7CA475b924'.toLowerCase()]: 'YES',
                 ['0x55b2969a6D832c6091Ba1AF4ed6d0E6E7c2C0d90'.toLowerCase()]: 'NO',
                 pool: '0x91ffe46e57d7c3f5f6e4f0856f2a674d0d820f93'.toLowerCase(),
-                symbolPostfix: 'INAUG',
-                yesIcon:
-                    'https://cloudflare-ipfs.com/ipfs/Qmc14RQHBa9zezBYERJqMDAknkfmC14VN8coPz9KYiMKMU',
-                noIcon:
-                    'https://cloudflare-ipfs.com/ipfs/QmPPHjD2wYJzs46kfYrGFsELLj2a2NQjiKWtoHTs1yVvfF',
                 marketQuestion:
                     'Will Donald Trump Attend the 2021 U.S. Presidential Inauguration?',
                 extraInfo: {
@@ -249,7 +235,6 @@ export default {
                 ["0x7d1d38ef81EBDFc0EEE7b987cE569563C3C2Fee0".toLowerCase()]: 'YES',
                 ["0x6E93403916A0cf7b51908da63eE60753E389Bd0A".toLowerCase()]: 'NO',
                 pool: "0xc7d919fe3418abad0979569041bed141726e9b86".toLowerCase(),
-                symbolPostfix: 'BILLS',
                 extraInfo: {
                     "categories": ["Sports", "American Football", "NFL"],
                     "description": "Will the Buffalo Bills Win the 2021 AFC Championship Game?",
@@ -258,10 +243,7 @@ export default {
                     "offsetName": null,
                     "template": null
                 },
-                yesIcon:
-                    'https://cloudflare-ipfs.com/ipfs/QmbEDv7Jy6Aouj5jFJU88uocQYQMtSVgeUbaPSULGMuaKX',
-                noIcon:
-                    'https://cloudflare-ipfs.com/ipfs/QmZKyUfrWPmhTwonM7utmXUaaM2FKdoJmFpfojZzXhAvrR',
+
                 marketQuestion:
                     'Will the Buffalo Bills Win the 2021 AFC Championship Game?',
                 endTime: "1611619200",
@@ -283,7 +265,6 @@ export default {
                 ["0xD12653380cb0d88ede6Cd8129Ed56FAbCc21928D".toLowerCase()]: 'YES',
                 ["0x15D4abb1c530A45cFbdDd1a595E7a9d6304f84Cb".toLowerCase()]: 'NO',
                 pool: "0xea09809ad3768504fe81bddc69e11653c1e7e629".toLowerCase(),
-                symbolPostfix: 'BUCCS',
                 extraInfo: {
                     "categories": ["Sports", "American Football", "NFL"],
                     "description": "Will the Tampa Bay Buccaneers Win the 2021 NFC Championship Game?",
@@ -292,12 +273,8 @@ export default {
                     "offsetName": null,
                     "template": null
                 },
-                yesIcon:
-                    'https://cloudflare-ipfs.com/ipfs/QmQVw7Mb9X6NvThWfgSVncwGh53vZvnBNLZzWHMufjFqdD',
-                noIcon:
-                    'https://cloudflare-ipfs.com/ipfs/QmXobRt9JNPiZmNw8fy5f1PUyTWkVrthMmEz7aRwq9ji3Q',
-                marketQuestion:
-                    'Will the Tampa Bay Buccaneers Win the 2021 NFC Championship Game?',
+
+                marketQuestion: 'Will the Tampa Bay Buccaneers Win the 2021 NFC Championship Game?',
                 endTime: "1611619200",
             },
             ['0x948b73ED9F9b22D25941D4A07A2ab6dDfC678C06'.toLowerCase()]: {
@@ -317,11 +294,7 @@ export default {
                 ["0xd4cabf0b165cbf076058f55766c7805bb5169dcf".toLowerCase()]: 'Bucs',
                 ["0xffc16ab7d366273466c705f03cfeaca8dd964f89".toLowerCase()]: 'Chiefs',
                 pool: "0xd4f73d51098df4dbe841cbbe3fa77d735422f656".toLowerCase(),
-                symbolPostfix: 'SB',
-                yesIcon:
-                    'https://cloudflare-ipfs.com/ipfs/QmQVw7Mb9X6NvThWfgSVncwGh53vZvnBNLZzWHMufjFqdD',
-                noIcon:
-                    'https://cloudflare-ipfs.com/ipfs/QmcrygUUrksinSjewEvTvAE5yZtUCpAPVRjb46HwcjNx5s',
+
                 marketQuestion:
                     'Which NFL Team Will Win the 2021 Super Bowl?',
                 extraInfo: {
@@ -332,6 +305,52 @@ export default {
                         "If the game in question has not taken place by market expiration time or fewer than 55 minutes of game time have elapsed, then the market shall resolve to Invalid.  If the game is suspended after at least 55 minutes of play and not resumed by market expiration time, then the score when the game is halted shall determine the market outcome. The market shall resolve to whichever team has a higher score at that time or to Invalid if the score is tied. If the game is still in play at market expiration time and at least 55 minutes of game time have elapsed, then the market shall resolve to whichever team has a higher score at that time or to Invalid if the score is tied.",
                 },
                 endTime: '1612828800',
+
+            },
+            ['0x5f623023Ab1e7fF12B8fc02E4ee8CDcaD67d0e80'.toLowerCase()]: {
+                yes: "0x56f63e2970e39a34ff2a0ac21deb5819d5ff67f4".toLowerCase(),
+                no: "0x5e07303e583e66ec8c7bb9df0c91586cc6bc5895".toLowerCase(),
+                outcomeTokens: [
+                    '0x56f63e2970e39a34ff2a0ac21deb5819d5ff67f4'.toLowerCase(),
+                    '0x5e07303e583e66ec8c7bb9df0c91586cc6bc5895'.toLowerCase(),
+                    // '0xa914ee19bfe0778e9f0368a93f42fc9b7bac54e6'.toLowerCase(),
+                    '0x62fdd6b24e054534613f7921991d25e3baa6f985'.toLowerCase(),
+                    '0x7d3ed4e5b056d9f0038fda98986b4574947f1d58'.toLowerCase()
+                ],
+                outcomeSymbols: {
+                    ['0x56f63e2970e39a34ff2a0ac21deb5819d5ff67f4'.toLowerCase()]: 'DJOKVK',
+                    ['0x5e07303e583e66ec8c7bb9df0c91586cc6bc5895'.toLowerCase()]: 'MEDVDV',
+                    // ['0xa914ee19bfe0778e9f0368a93f42fc9b7bac54e6'.toLowerCase()]: 'NADAL',
+                    ['0x62fdd6b24e054534613f7921991d25e3baa6f985'.toLowerCase()]: 'TSIPAS',
+                    ['0x7d3ed4e5b056d9f0038fda98986b4574947f1d58'.toLowerCase()]: 'KARTSV',
+                },
+                outcomeIcons: {
+                    ['0x56f63e2970e39a34ff2a0ac21deb5819d5ff67f4'.toLowerCase()]: "https://cloudflare-ipfs.com/ipfs/QmfFXdC9uZ56wUWHC4JCkY1A3TN46FJW2PDjphywmvUxwm",
+                    ['0x5e07303e583e66ec8c7bb9df0c91586cc6bc5895'.toLowerCase()]: "https://cloudflare-ipfs.com/ipfs/QmTGphLD1KQTag48mchn8Eu4ShMT9Z8ah6SCXiUsUcMLBe",
+                    // ['0xa914ee19bfe0778e9f0368a93f42fc9b7bac54e6'.toLowerCase()]: "https://cloudflare-ipfs.com/ipfs/QmUdSDCCKCxGZrFTMeGwxKTdCYkgjZmS2nXMVD9kvHXe6M",
+                    ['0x62fdd6b24e054534613f7921991d25e3baa6f985'.toLowerCase()]: "https://cloudflare-ipfs.com/ipfs/QmPgDDtjrzkHkpJYsyhmdaCTsoZotAhm5LymKq5yxFSwVn",
+                    ['0x7d3ed4e5b056d9f0038fda98986b4574947f1d58'.toLowerCase()]: "https://cloudflare-ipfs.com/ipfs/QmTfcqthw78xVNNXVTbupWhZ3Di3TJZUNRzgDHnhADL91C"
+                },
+                ['0x56f63e2970e39a34ff2a0ac21deb5819d5ff67f4'.toLowerCase()]: 'Novak Djokovic',
+                ['0x5e07303e583e66ec8c7bb9df0c91586cc6bc5895'.toLowerCase()]: 'Daniil Medvedev',
+                // ['0xa914ee19bfe0778e9f0368a93f42fc9b7bac54e6'.toLowerCase()]: 'Rafael Nadal',
+                ['0x62fdd6b24e054534613f7921991d25e3baa6f985'.toLowerCase()]: 'Stefanos Tsitsipas',
+                ['0x7d3ed4e5b056d9f0038fda98986b4574947f1d58'.toLowerCase()]: 'Aslan Karatsev',
+                pool: "0xca151702b0705047f4906d57d2c60d34900c4374".toLowerCase(),
+                marketQuestion:
+                    '🔥 Who Will Win the 2021 Australian Open Men\'s Singles Tournament?',
+                extraInfo: {
+                    categories: [
+                        "Sports",
+                        "Tennis",
+                        "Australian Open"
+                    ],
+                    description:
+                        'Who Will Win the 2021 Australian Open Men\'s Singles Tournament?',
+                    longDescription:
+                        ""
+                },
+                endTime: '1613547117',
 
             },
         },
