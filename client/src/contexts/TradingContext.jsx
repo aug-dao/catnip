@@ -100,6 +100,8 @@ export const TradingProvider = ({ children }) => {
     const [hasWinningTokens, setHasWinningTokens] = useState(false);
 
     const [isSwapDisabled, setSwapDisabled] = useState(false);
+    const [isTradingHalted, setIsTradingHalted] = useState(false);
+
     const [currentTokensInThePool, setCurrentTokensInThePool] = useState([]);
 
     useEffect(() => {
@@ -181,7 +183,7 @@ export const TradingProvider = ({ children }) => {
             pool.methods
                 .isPublicSwap()
                 .call().then(isPublicSwap => {
-                    setSwapDisabled(!isPublicSwap);
+                    setIsTradingHalted(!isPublicSwap);
                 });
 
         }
@@ -1422,6 +1424,7 @@ export const TradingProvider = ({ children }) => {
                 getMax,
                 handleChange,
                 isSwapDisabled,
+                isTradingHalted,
                 approve,
                 swapFee,
                 updateMarket,

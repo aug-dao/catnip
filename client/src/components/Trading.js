@@ -423,6 +423,7 @@ export default function Trading({
         hasEnoughBalance,
         hasEnoughLiquidity,
         isSwapDisabled,
+        isTradingHalted,
         reversePair,
         getMax,
         handleChange,
@@ -502,6 +503,11 @@ export default function Trading({
                                         Update Feb. 11th
                                     </strong>
                                     : The election market has now settled to nTrump. To redeem your winnings, connect your wallet and click “CLAIM DAI.” <br /> There are no further active markets right now, come back soon for more!
+                                </div>
+                            )}
+                            {isTradingHalted && (
+                                <div className="slippage_alert">
+                                    Trading will be resumed once the current match is complete
                                 </div>
                             )}
                             {market.address === MARKETS[1] ||
@@ -971,7 +977,7 @@ export default function Trading({
                                                 <StyledButton
                                                     variant="contained"
                                                     onClick={swapBranch}
-                                                    disabled={isSwapDisabled}
+                                                    disabled={isSwapDisabled || isTradingHalted}
                                                 >
                                                     Swap
                                                 </StyledButton>
