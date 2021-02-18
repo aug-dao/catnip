@@ -315,27 +315,27 @@ export default {
                     '0x5e07303e583e66ec8c7bb9df0c91586cc6bc5895'.toLowerCase(),
                     // '0xa914ee19bfe0778e9f0368a93f42fc9b7bac54e6'.toLowerCase(),
                     '0x62fdd6b24e054534613f7921991d25e3baa6f985'.toLowerCase(),
-                    '0x7d3ed4e5b056d9f0038fda98986b4574947f1d58'.toLowerCase()
+                    // '0x7d3ed4e5b056d9f0038fda98986b4574947f1d58'.toLowerCase()
                 ],
                 outcomeSymbols: {
                     ['0x56f63e2970e39a34ff2a0ac21deb5819d5ff67f4'.toLowerCase()]: 'DJOKVK',
                     ['0x5e07303e583e66ec8c7bb9df0c91586cc6bc5895'.toLowerCase()]: 'MEDVDV',
                     // ['0xa914ee19bfe0778e9f0368a93f42fc9b7bac54e6'.toLowerCase()]: 'NADAL',
                     ['0x62fdd6b24e054534613f7921991d25e3baa6f985'.toLowerCase()]: 'TSIPAS',
-                    ['0x7d3ed4e5b056d9f0038fda98986b4574947f1d58'.toLowerCase()]: 'KARTSV',
+                    // ['0x7d3ed4e5b056d9f0038fda98986b4574947f1d58'.toLowerCase()]: 'KARTSV',
                 },
                 outcomeIcons: {
                     ['0x56f63e2970e39a34ff2a0ac21deb5819d5ff67f4'.toLowerCase()]: "https://cloudflare-ipfs.com/ipfs/QmfFXdC9uZ56wUWHC4JCkY1A3TN46FJW2PDjphywmvUxwm",
                     ['0x5e07303e583e66ec8c7bb9df0c91586cc6bc5895'.toLowerCase()]: "https://cloudflare-ipfs.com/ipfs/QmTGphLD1KQTag48mchn8Eu4ShMT9Z8ah6SCXiUsUcMLBe",
                     // ['0xa914ee19bfe0778e9f0368a93f42fc9b7bac54e6'.toLowerCase()]: "https://cloudflare-ipfs.com/ipfs/QmUdSDCCKCxGZrFTMeGwxKTdCYkgjZmS2nXMVD9kvHXe6M",
                     ['0x62fdd6b24e054534613f7921991d25e3baa6f985'.toLowerCase()]: "https://cloudflare-ipfs.com/ipfs/QmPgDDtjrzkHkpJYsyhmdaCTsoZotAhm5LymKq5yxFSwVn",
-                    ['0x7d3ed4e5b056d9f0038fda98986b4574947f1d58'.toLowerCase()]: "https://cloudflare-ipfs.com/ipfs/QmTfcqthw78xVNNXVTbupWhZ3Di3TJZUNRzgDHnhADL91C"
+                    // ['0x7d3ed4e5b056d9f0038fda98986b4574947f1d58'.toLowerCase()]: "https://cloudflare-ipfs.com/ipfs/QmTfcqthw78xVNNXVTbupWhZ3Di3TJZUNRzgDHnhADL91C"
                 },
                 ['0x56f63e2970e39a34ff2a0ac21deb5819d5ff67f4'.toLowerCase()]: 'Novak Djokovic',
                 ['0x5e07303e583e66ec8c7bb9df0c91586cc6bc5895'.toLowerCase()]: 'Daniil Medvedev',
                 // ['0xa914ee19bfe0778e9f0368a93f42fc9b7bac54e6'.toLowerCase()]: 'Rafael Nadal',
                 ['0x62fdd6b24e054534613f7921991d25e3baa6f985'.toLowerCase()]: 'Stefanos Tsitsipas',
-                ['0x7d3ed4e5b056d9f0038fda98986b4574947f1d58'.toLowerCase()]: 'Aslan Karatsev',
+                // ['0x7d3ed4e5b056d9f0038fda98986b4574947f1d58'.toLowerCase()]: 'Aslan Karatsev',
                 pool: "0xca151702b0705047f4906d57d2c60d34900c4374".toLowerCase(),
                 marketQuestion:
                     '🔥 Who Will Win the 2021 Australian Open Men\'s Singles Tournament?',
